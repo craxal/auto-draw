@@ -1,0 +1,25 @@
+{
+  "name": "auto-draw",
+  "version": "1.0.0",
+  "description": "An app that lets you teach your computer how to draw.",
+  "main": "./dist/main/main.js",
+  "scripts": {
+    "build": "gulp",
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "electron": "^26.1.0",
+    "gulp": "^4.0.2",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

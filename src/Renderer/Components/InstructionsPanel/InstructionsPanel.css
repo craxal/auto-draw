@@ -1,0 +1,23 @@
+@import url('../InstructionBlock/InstructionBlock.css');
+@import url('../InstructionRow/InstructionRow.css');
+
+.instructions-panel {
+    color: #00FF00;
+    display: grid;
+    font-family: 'Fira Code';
+    grid-template-rows: auto 1fr;
+}
+
+.instructions-panel label {
+    font-weight: bold;
+}
+
+.instructions-panel .instruction-list {
+    align-items: center;
+    background: #000000;
+    border-radius: 4px;
+    display: grid;
+    grid-auto-rows: min-content;
+    grid-template-columns: auto 1fr;
+    padding: 8px 0;
+}

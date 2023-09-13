@@ -1,0 +1,20 @@
+@import url('../InstructionsPanel/InstructionsPanel.css');
+@import url('../Canvas/Canvas.css');
+
+.shell {
+    background: #1E1E1E;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: 1fr auto;
+    height: 100%;
+    width: 100%;
+    padding: 8px;
+}
+
+.shell .canvas {
+    grid-column: 1;
+}
+
+.shell .instructions-panel {
+    grid-column: 2;
+}

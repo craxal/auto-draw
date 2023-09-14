@@ -133,8 +133,8 @@ function TurnInstructionBlock(props: {
             {`Turn ${props.instruction instanceof TurnLeftInstruction ? 'left' : 'right'} `}
             <input
                 type='number'
-                min={-180}
-                max={180}
+                min={-720}
+                max={720}
                 step={1}
                 value={props.instruction.angle.degrees}
                 onChange={(e) => onAngleChange(e.target.value)}
@@ -169,8 +169,8 @@ function ArcInstructionBlock(props: {
             {`Arc ${props.instruction instanceof ArcLeftInstruction ? 'left' : 'right'} `}
             <input
                 type='number'
-                min={-180}
-                max={180}
+                min={-720}
+                max={720}
                 step={1}
                 value={props.instruction.angle.degrees}
                 onChange={(e) => onAngleChange(e.target.value)}

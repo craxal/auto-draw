@@ -7,14 +7,6 @@ export function Canvas(props: {
 }): JSX.Element {
     const canvasElementRef = React.useRef<HTMLCanvasElement>(null);
 
-    React.useEffect(() => {
-        const elementContext = canvasElementRef.current?.getContext('2d');
-        if (!!elementContext) {
-            const context = new DrawContext(elementContext);
-            props.render(context);
-        }
-    });
-
     React.useLayoutEffect(() => {
         if (!!canvasElementRef.current) {
             const clientRect = canvasElementRef.current.getBoundingClientRect();
@@ -22,8 +14,13 @@ export function Canvas(props: {
             canvasElementRef.current.width = clientRect.width;
             canvasElementRef.current.height = clientRect.height;
 
+            const elementContext = canvasElementRef.current?.getContext('2d');
+            if (!!elementContext) {
+                const context = new DrawContext(elementContext);
+                props.render(context);
+            }
         }
-    })
+    });
 
     return (
         <canvas className="canvas" width={800} height={500} ref={canvasElementRef} />

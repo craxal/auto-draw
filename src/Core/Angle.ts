@@ -21,24 +21,24 @@ export class Angle {
     public get degrees(): number { return this.#degrees; }
     public get radians(): number { return this.#degrees * Math.PI / 180; }
 
+    public static normalize(angle: Angle) {
+        const normalizedValue = ((angle.degrees % 360) + 360) % 360;
+        return normalizedValue > 180
+            ? new Angle({ degrees: normalizedValue - 360 })
+            : new Angle({ degrees: normalizedValue });
+    }
+
     public static add(...angles: Angle[]): Angle {
-        return new Angle({ degrees: reduceAngle(angles.reduce((sum, a) => sum += a.degrees, 0)) });
+        return new Angle({ degrees: angles.reduce((sum, a) => sum += a.degrees, 0) });
     }
 
     public static subtract(a: Angle, ...angles: Angle[]): Angle {
-        return new Angle({ degrees: reduceAngle(angles.reduce((diff, a) => diff -= a.degrees, a.degrees)) });
+        return new Angle({ degrees: angles.reduce((diff, a) => diff -= a.degrees, a.degrees) });
     }
 
     public toString(): string {
         return `${this.#degrees}°`;
     }
-}
-
-function reduceAngle(value: number): number {
-    const normalizedValue = ((value % 360) + 360) % 360;
-    return normalizedValue > 180
-        ? normalizedValue - 360
-        : normalizedValue;
 }
 
 export function cos(angle: Angle): number {

@@ -20,7 +20,7 @@ export function Shell(props: {
         new MoveForwardInstruction(70),
         new TurnRightInstruction(),
         new MoveForwardInstruction(60),
-        new TurnRightInstruction(),
+        new TurnRightInstruction(120),
         new MoveForwardInstruction(50),
         new PenColorInstruction(Color.red),
         new ArcRightInstruction(135, 40),

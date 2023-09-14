@@ -32,11 +32,11 @@ export class DrawContext {
     }
 
     public turnLeft(angle: Angle = Angle.right): void {
-        this.pen.angle = Angle.subtract(this.pen.angle, angle);
+        this.pen.angle = Angle.normalize(Angle.subtract(this.pen.angle, angle))
     }
 
     public turnRight(angle: Angle = Angle.right): void {
-        this.pen.angle = Angle.add(this.pen.angle, angle);
+        this.pen.angle = Angle.normalize(Angle.add(this.pen.angle, angle));
     }
 
     public moveForward(distance: number): void {
@@ -83,7 +83,7 @@ export class DrawContext {
             center.x + radius * cos(penAnglePlusRightMinusAngle),
             center.y + radius * sin(penAnglePlusRightMinusAngle),
         );
-        this.pen.angle = Angle.subtract(this.pen.angle, angle);
+        this.pen.angle = Angle.normalize(Angle.subtract(this.pen.angle, angle));
     }
 
     public arcRight(angle: Angle, radius: number): void {
@@ -112,7 +112,7 @@ export class DrawContext {
             center.x + radius * cos(angleMinusPenAnglePlusRight),
             center.y + radius * sin(angleMinusPenAnglePlusRight),
         );
-        this.pen.angle = Angle.add(this.pen.angle, angle);
+        this.pen.angle = Angle.normalize(Angle.add(this.pen.angle, angle));
     }
 
     public execute(instructions: Instruction[]): void {

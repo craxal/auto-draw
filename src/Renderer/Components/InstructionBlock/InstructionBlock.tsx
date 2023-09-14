@@ -1,11 +1,17 @@
 import { Color } from '../../../Core/Color';
-import { Instruction, MoveForwardInstruction, PenColorInstruction, TurnLeftInstruction, TurnRightInstruction } from '../../../Core/Instruction';
+import { ArcLeftInstruction, ArcRightInstruction, Instruction, MoveForwardInstruction, PenColorInstruction, PenDownInstruction, PenUpInstruction, TurnLeftInstruction, TurnRightInstruction } from '../../../Core/Instruction';
 
 export function InstructionBlock(props: {
     instruction: Instruction;
     onChange(instruction: Instruction): void;
 }): JSX.Element {
     switch (props.instruction.name) {
+        case "penDown": return (
+            <PenPositionBlock instruction={props.instruction} />
+        );
+        case "penUp": return (
+            <PenPositionBlock instruction={props.instruction} />
+        );
         case "penColor": return (
             <PenColorInstructionBlock
                 instruction={props.instruction as PenColorInstruction}
@@ -21,14 +27,24 @@ export function InstructionBlock(props: {
         case "turnLeft": return (
             <TurnInstructionBlock
                 instruction={props.instruction as TurnLeftInstruction}
-                direction='left'
                 onChange={(instruction) => props.onChange(instruction)}
             />
         );
         case "turnRight": return (
             <TurnInstructionBlock
                 instruction={props.instruction as TurnRightInstruction}
-                direction='right'
+                onChange={(instruction) => props.onChange(instruction)}
+            />
+        );
+        case "arcLeft": return (
+            <ArcInstructionBlock
+                instruction={props.instruction as ArcLeftInstruction}
+                onChange={(instruction) => props.onChange(instruction)}
+            />
+        );
+        case "arcRight": return (
+            <ArcInstructionBlock
+                instruction={props.instruction as ArcRightInstruction}
                 onChange={(instruction) => props.onChange(instruction)}
             />
         );
@@ -38,6 +54,20 @@ export function InstructionBlock(props: {
             </div>
         );
     }
+}
+
+function PenPositionBlock(props: {
+    instruction: PenDownInstruction | PenUpInstruction;
+}): JSX.Element {
+    const text = props.instruction instanceof PenDownInstruction
+        ? "Place pen down"
+        : "Pick pen up";
+
+    return (
+        <div className='instruction-block'>
+            {text}
+        </div>
+    );
 }
 
 function PenColorInstructionBlock(props: {
@@ -51,7 +81,7 @@ function PenColorInstructionBlock(props: {
 
     return (
         <div className='instruction-block'>
-            {'Set pen color to '}
+            {'Change color to '}
             <input
                 type='color'
                 value={props.instruction.color.toHex()}
@@ -88,29 +118,72 @@ function MoveForwardInstructionBlock(props: {
 
 function TurnInstructionBlock(props: {
     instruction: TurnLeftInstruction | TurnRightInstruction;
-    direction: "left" | "right";
     onChange(instruction: Instruction): void;
 }): JSX.Element {
     function onAngleChange(value: string): void {
         const newAngle = parseInt(value);
-        props.onChange(props.direction === "right"
-            ? new TurnRightInstruction(newAngle)
-            : new TurnLeftInstruction(newAngle)
+        props.onChange(props.instruction instanceof TurnLeftInstruction
+            ? new TurnLeftInstruction(newAngle)
+            : new TurnRightInstruction(newAngle)
         );
     }
 
     return (
         <div className='instruction-block'>
-            {`Turn ${props.direction} `}
+            {`Turn ${props.instruction instanceof TurnLeftInstruction ? 'left' : 'right'} `}
             <input
                 type='number'
-                min={-360}
-                max={360}
+                min={-180}
+                max={180}
                 step={1}
                 value={props.instruction.angle.degrees}
                 onChange={(e) => onAngleChange(e.target.value)}
             />
             {'°'}
+        </div>
+    );
+}
+
+function ArcInstructionBlock(props: {
+    instruction: ArcLeftInstruction | ArcRightInstruction;
+    onChange(instruction: Instruction): void;
+}): JSX.Element {
+    function onAngleChange(value: string): void {
+        const newAngle = parseInt(value);
+        props.onChange(props.instruction instanceof ArcLeftInstruction
+            ? new ArcLeftInstruction(newAngle, props.instruction.radius)
+            : new ArcRightInstruction(newAngle, props.instruction.radius)
+        );
+    }
+
+    function onRadiusChange(value: string): void {
+        const newRadius = parseInt(value);
+        props.onChange(props.instruction instanceof ArcLeftInstruction
+            ? new ArcLeftInstruction(props.instruction.angle.degrees, newRadius)
+            : new ArcRightInstruction(props.instruction.angle.degrees, newRadius)
+        );
+    }
+
+    return (
+        <div className='instruction-block'>
+            {`Arc ${props.instruction instanceof ArcLeftInstruction ? 'left' : 'right'} `}
+            <input
+                type='number'
+                min={-180}
+                max={180}
+                step={1}
+                value={props.instruction.angle.degrees}
+                onChange={(e) => onAngleChange(e.target.value)}
+            />
+            {'° with radius '}
+            <input
+                type='number'
+                min={0}
+                max={10_000}
+                step={1}
+                value={props.instruction.radius}
+                onChange={(e) => onRadiusChange(e.target.value)}
+            />
         </div>
     );
 }

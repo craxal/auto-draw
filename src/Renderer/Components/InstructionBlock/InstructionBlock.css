@@ -1,6 +1,9 @@
 .instruction-block {
+    align-items: center;
     background: #00FF00;
-    color: #000000;
     border-radius: 2px;
+    color: #000000;
+    display: flex;
+    gap: 4px;
     padding: 4px;
 }

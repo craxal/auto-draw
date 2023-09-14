@@ -78,9 +78,10 @@ export class DrawContext {
             this.#context.stroke();
         }
 
+        const penAnglePlusRightMinusAngle = Angle.subtract(Angle.add(this.pen.angle, Angle.right), angle);
         this.pen.coordinates = new Point(
-            center.x - radius * cos(Angle.subtract(angle, this.pen.angle, Angle.right)),
-            center.y - radius * sin(Angle.subtract(angle, this.pen.angle, Angle.right)),
+            center.x + radius * cos(penAnglePlusRightMinusAngle),
+            center.y + radius * sin(penAnglePlusRightMinusAngle),
         );
         this.pen.angle = Angle.subtract(this.pen.angle, angle);
     }
@@ -106,9 +107,10 @@ export class DrawContext {
             this.#context.stroke();
         }
 
+        const angleMinusPenAnglePlusRight = Angle.subtract(Angle.add(angle, this.pen.angle), Angle.right);
         this.pen.coordinates = new Point(
-            center.x + radius * cos(Angle.subtract(angle, this.pen.angle, Angle.right)),
-            center.y + radius * sin(Angle.subtract(angle, this.pen.angle, Angle.right)),
+            center.x + radius * cos(angleMinusPenAnglePlusRight),
+            center.y + radius * sin(angleMinusPenAnglePlusRight),
         );
         this.pen.angle = Angle.add(this.pen.angle, angle);
     }
@@ -116,7 +118,7 @@ export class DrawContext {
     public execute(instructions: Instruction[]): void {
         for (const instruction of instructions) {
             instruction.execute(this);
-            Log.debug(`Pen: ${this.pen.toString()}`);
+            Log.debug(`${instruction.name}: ${this.pen.toString()}`);
         }
         this.#drawCursor();
     }
@@ -124,7 +126,6 @@ export class DrawContext {
     #drawCursor(): void {
         this.#context.save();
 
-        Log.info('Pen angle is ', this.pen.angle.degrees);
         this.#context.translate(this.pen.coordinates.x, this.pen.coordinates.y);
         this.#context.rotate(Angle.add(this.pen.angle, Angle.right).radians);
 

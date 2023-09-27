@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import { Color } from '../../../Core/Color';
 import { ArcLeftInstruction, ArcRightInstruction, Instruction, MoveForwardInstruction, PenColorInstruction, PenDownInstruction, TurnRightInstruction } from '../../../Core/Instruction';
 import { Canvas } from '../Canvas/Canvas';
@@ -34,7 +34,7 @@ export function Shell(props: {
     }
 
     return (
-        <div className='shell'>
+        <div className={'shell'}>
             <Canvas render={(context) => context.execute(instructions)} />
             <InstructionsPanel instructions={instructions} onChange={(instructions) => onChange(instructions)} />
         </div>

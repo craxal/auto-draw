@@ -12,6 +12,7 @@ export class DrawContext {
     constructor(context: CanvasRenderingContext2D) {
         this.#context = context;
         this.#context.lineWidth = 3;
+        this.#context.lineCap = 'round';
         context.translate(context.canvas.width / 2, context.canvas.height / 2);
     }
 

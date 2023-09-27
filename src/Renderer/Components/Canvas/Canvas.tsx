@@ -23,6 +23,6 @@ export function Canvas(props: {
     });
 
     return (
-        <canvas className="canvas" width={800} height={500} ref={canvasElementRef} />
+        <canvas className={'canvas'} width={800} height={500} ref={canvasElementRef} />
     );
 }

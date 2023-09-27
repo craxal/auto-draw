@@ -1,7 +1,7 @@
 const regex = /^#(?<r>[0-9A-F]{2})(?<g>[0-9A-F]{2})(?<b>[0-9A-F]{2})$/i;
 
 function toHexString(n: number): string {
-    return `${n.toString(16).padStart(2, "0")}`;
+    return `${n.toString(16).padStart(2, '0')}`;
 }
 
 export class Color {
@@ -29,9 +29,9 @@ export class Color {
         const match = regex.exec(hex);
         if (!!match) {
             return new Color(
-                Number.parseInt(match.groups?.r ?? "0", 16),
-                Number.parseInt(match.groups?.g ?? "0", 16),
-                Number.parseInt(match.groups?.b ?? "0", 16),
+                Number.parseInt(match.groups?.r ?? '0', 16),
+                Number.parseInt(match.groups?.g ?? '0', 16),
+                Number.parseInt(match.groups?.b ?? '0', 16),
             );
         } else {
             throw new Error(`Unable to parse color value from ${hex}`);

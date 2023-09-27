@@ -5,11 +5,27 @@
     color: #00FF00;
     display: grid;
     font-family: 'Fira Code';
+    gap: 4px;
     grid-template-rows: auto 1fr;
 }
 
-.instructions-panel label {
+.instructions-panel-label {
+    align-items: center;
+    display: grid;
+    gap: 4px;
+    grid-template-columns: auto 1fr;
+}
+
+.instructions-panel-label .icon {
+    fill: #00FF00;
+    grid-column: 1;
+    height: 24px;
+    width: 24px;
+}
+
+.instructions-panel-label label {
     font-weight: bold;
+    grid-column: 2;
 }
 
 .instructions-panel .instruction-list {

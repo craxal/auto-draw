@@ -7,11 +7,11 @@ export function InstructionRow(props: {
     onChange(instruction: Instruction): void;
 }): JSX.Element {
     return (
-        <div className='instruction-row'>
-            <div className='instruction-number'>
+        <div className={'instruction-row'}>
+            <div className={'instruction-number'}>
                 {props.index + 1}
             </div>
-            <div className='instruction-container'>
+            <div className={'instruction-container'}>
                 <InstructionBlock instruction={props.instruction} onChange={(instruction) => props.onChange(instruction)} />
             </div>
         </div>

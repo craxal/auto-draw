@@ -1,4 +1,5 @@
 import { Instruction, TurnLeftInstruction, TurnRightInstruction } from '../../../Core/Instruction';
+import { Icon } from '../Icon/Icon';
 
 export function TurnInstructionBlock(props: {
     instruction: TurnLeftInstruction | TurnRightInstruction;
@@ -13,7 +14,8 @@ export function TurnInstructionBlock(props: {
     }
 
     return (
-        <div className={'instruction-block'}>
+        <>
+            <Icon name={props.instruction instanceof TurnLeftInstruction ? 'ArrowLeft' : 'ArrowRight'} />
             {`Turn ${props.instruction instanceof TurnLeftInstruction ? 'left' : 'right'} `}
             <input
                 type={'number'}
@@ -23,6 +25,6 @@ export function TurnInstructionBlock(props: {
                 value={props.instruction.angle.degrees}
                 onChange={(e) => onAngleChange(e.target.value)} />
             {'°'}
-        </div>
+        </>
     );
 }

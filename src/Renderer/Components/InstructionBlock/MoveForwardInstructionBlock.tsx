@@ -1,4 +1,5 @@
 import { Instruction, MoveForwardInstruction } from '../../../Core/Instruction';
+import { Icon } from '../Icon/Icon';
 
 export function MoveForwardInstructionBlock(props: {
     instruction: MoveForwardInstruction;
@@ -10,7 +11,8 @@ export function MoveForwardInstructionBlock(props: {
     }
 
     return (
-        <div className={'instruction-block'}>
+        <>
+            <Icon name={'ArrowUp'} />
             {'Move forward '}
             <input
                 type={'number'}
@@ -20,6 +22,6 @@ export function MoveForwardInstructionBlock(props: {
                 value={props.instruction.distance}
                 onChange={(e) => onDistanceChange(e.target.value)} />
             {' pixels'}
-        </div>
+        </>
     );
 }

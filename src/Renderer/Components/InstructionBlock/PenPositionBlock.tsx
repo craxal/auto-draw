@@ -1,4 +1,5 @@
 import { PenDownInstruction, PenUpInstruction } from '../../../Core/Instruction';
+import { Icon } from '../Icon/Icon';
 
 export function PenPositionBlock(props: {
     instruction: PenDownInstruction | PenUpInstruction;
@@ -8,8 +9,9 @@ export function PenPositionBlock(props: {
         : 'Pick pen up';
 
     return (
-        <div className={'instruction-block'}>
+        <>
+            <Icon name={'Pen'} />
             {text}
-        </div>
+        </>
     );
 }

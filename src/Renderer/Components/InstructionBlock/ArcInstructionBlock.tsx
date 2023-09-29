@@ -1,4 +1,5 @@
 import { ArcLeftInstruction, ArcRightInstruction, Instruction } from '../../../Core/Instruction';
+import { Icon } from '../Icon/Icon';
 
 export function ArcInstructionBlock(props: {
     instruction: ArcLeftInstruction | ArcRightInstruction;
@@ -21,7 +22,8 @@ export function ArcInstructionBlock(props: {
     }
 
     return (
-        <div className={'instruction-block'}>
+        <>
+            <Icon name={props.instruction instanceof ArcLeftInstruction ? 'RotateLeft' : 'RotateRight'} />
             {`Arc ${props.instruction instanceof ArcLeftInstruction ? 'left' : 'right'} `}
             <input
                 type={'number'}
@@ -38,6 +40,6 @@ export function ArcInstructionBlock(props: {
                 step={1}
                 value={props.instruction.radius}
                 onChange={(e) => onRadiusChange(e.target.value)} />
-        </div>
+        </>
     );
 }

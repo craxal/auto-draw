@@ -1,38 +1,24 @@
 .instruction-row {
     display: contents;
     font-family: 'Fira Code';
-}
 
-.instruction-row .instruction-number {
-    color: #A1A1A1;
-    align-content: center;
-    display: grid;
-    grid-column: 1;
-    height: 100%;
-    justify-content: end;
-    padding: 4px;
-    width: 100%;
-}
+    & .instruction-number {
+        background: #000000;
+        color: #a1a1a1;
+        align-content: center;
+        display: grid;
+        grid-column: 1;
+        height: 100%;
+        justify-content: end;
+        padding: 4px;
+        width: 100%;
+    }
 
-.instruction-row .instruction-container {
-    align-content: center;
-    display: grid;
-    grid-column: 2;
-    padding: 4px;
-}
-
-.instruction-row:nth-child(even) .instruction-number {
-    background: #1E1E1E;
-}
-
-.instruction-row:nth-child(odd) .instruction-number {
-    background: #000000;
-}
-
-.instruction-row:nth-child(even) .instruction-container {
-    background: #1E1E1E;
-}
-
-.instruction-row:nth-child(odd) .instruction-container {
-    background: #000000;
+    & .instruction-container {
+        background: #000000;
+        align-content: center;
+        display: grid;
+        grid-column: 2;
+        padding: 4px;
+    }
 }

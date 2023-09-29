@@ -1,10 +1,15 @@
 import { Instruction, MoveForwardInstruction } from '../../../Core/Instruction';
 import { Icon } from '../Icon/Icon';
+import { openInstructionContextMenu } from './InstructionBlockMenu';
 
 export function MoveForwardInstructionBlock(props: {
     instruction: MoveForwardInstruction;
     onChange(instruction: Instruction): void;
 }): JSX.Element {
+    function onIconClick(): void {
+        openInstructionContextMenu((instruction) => props.onChange(instruction));
+    }
+
     function onDistanceChange(value: string): void {
         const newDistance = parseInt(value);
         props.onChange(new MoveForwardInstruction(newDistance));
@@ -12,7 +17,9 @@ export function MoveForwardInstructionBlock(props: {
 
     return (
         <>
-            <Icon name={'ArrowUp'} />
+            <button onClick={(_e) => onIconClick()}>
+                <Icon name={'ArrowUp'} />
+            </button>
             {'Move forward '}
             <input
                 type={'number'}

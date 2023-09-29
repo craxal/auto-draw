@@ -10,7 +10,7 @@ export interface Instruction {
 export class PenColorInstruction implements Instruction {
     public color: Color;
 
-    constructor(color: Color) {
+    constructor(color: Color = Color.black) {
         this.color = color;
     }
 
@@ -69,7 +69,7 @@ export class ArcLeftInstruction implements Instruction {
     public angle: Angle;
     public radius: number;
 
-    constructor(angle: number, radius: number) {
+    constructor(angle: number = 0, radius: number = 0) {
         this.angle = new Angle({ degrees: angle });
         this.radius = radius;
     }
@@ -85,7 +85,7 @@ export class ArcRightInstruction implements Instruction {
     public angle: Angle;
     public radius: number;
 
-    constructor(angle: number, radius: number) {
+    constructor(angle: number = 0, radius: number = 0) {
         this.angle = new Angle({ degrees: angle });
         this.radius = radius;
     }
@@ -100,7 +100,7 @@ export class ArcRightInstruction implements Instruction {
 export class MoveForwardInstruction implements Instruction {
     public distance: number;
 
-    constructor(distance: number) {
+    constructor(distance: number = 0) {
         this.distance = distance;
     }
 

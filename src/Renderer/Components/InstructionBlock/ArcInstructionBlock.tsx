@@ -1,10 +1,15 @@
 import { ArcLeftInstruction, ArcRightInstruction, Instruction } from '../../../Core/Instruction';
 import { Icon } from '../Icon/Icon';
+import { openInstructionContextMenu } from './InstructionBlockMenu';
 
 export function ArcInstructionBlock(props: {
     instruction: ArcLeftInstruction | ArcRightInstruction;
     onChange(instruction: Instruction): void;
 }): JSX.Element {
+    function onIconClick(): void {
+        openInstructionContextMenu((instruction) => props.onChange(instruction));
+    }
+
     function onAngleChange(value: string): void {
         const newAngle = parseInt(value);
         props.onChange(props.instruction instanceof ArcLeftInstruction
@@ -23,7 +28,9 @@ export function ArcInstructionBlock(props: {
 
     return (
         <>
-            <Icon name={props.instruction instanceof ArcLeftInstruction ? 'RotateLeft' : 'RotateRight'} />
+            <button onClick={(_e) => onIconClick()}>
+                <Icon name={props.instruction instanceof ArcLeftInstruction ? 'RotateLeft' : 'RotateRight'} />
+            </button>
             {`Arc ${props.instruction instanceof ArcLeftInstruction ? 'left' : 'right'} `}
             <input
                 type={'number'}

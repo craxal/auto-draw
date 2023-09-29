@@ -14,10 +14,16 @@ export function InstructionBlock(props: {
 }): JSX.Element {
     const innerBlock = match(props.instruction.name,
         ['penDown', (
-            <PenPositionBlock instruction={props.instruction} />
+            <PenPositionBlock
+                instruction={props.instruction}
+                onChange={(instruction) => props.onChange(instruction)}
+            />
         )],
         ['penUp', (
-            <PenPositionBlock instruction={props.instruction} />
+            <PenPositionBlock
+                instruction={props.instruction}
+                onChange={(instruction) => props.onChange(instruction)}
+            />
         )],
         ['penColor', (
             <PenColorInstructionBlock

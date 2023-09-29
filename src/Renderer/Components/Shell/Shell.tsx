@@ -30,7 +30,7 @@ export function Shell(props: {
     ]);
 
     function onAdd(): void {
-        setInstructions([...instructions, new MoveForwardInstruction(0)])
+        setInstructions([...instructions, new MoveForwardInstruction()])
     }
 
     function onChange(instructions: Instruction[]): void {

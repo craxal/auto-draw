@@ -29,6 +29,10 @@ export function Shell(props: {
         // new PenUp(),
     ]);
 
+    function onAdd(): void {
+        setInstructions([...instructions, new MoveForwardInstruction(0)])
+    }
+
     function onChange(instructions: Instruction[]): void {
         setInstructions(instructions);
     }
@@ -36,7 +40,10 @@ export function Shell(props: {
     return (
         <div className={'shell'}>
             <Canvas render={(context) => context.execute(instructions)} />
-            <InstructionsPanel instructions={instructions} onChange={(instructions) => onChange(instructions)} />
+            <InstructionsPanel
+                instructions={instructions}
+                onAdd={() => onAdd()}
+                onChange={(instructions) => onChange(instructions)} />
         </div>
     );
 }

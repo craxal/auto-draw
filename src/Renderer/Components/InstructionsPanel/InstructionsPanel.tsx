@@ -4,11 +4,17 @@ import { InstructionRow } from '../InstructionRow/InstructionRow';
 
 export function InstructionsPanel(props: {
     instructions: Instruction[];
+    onAdd(): void;
     onChange(instructions: Instruction[]): void;
 }): JSX.Element {
-    function onInstructionChange(instruction: Instruction, index: number): void {
+    function onInstructionChange(index: number, instruction: Instruction): void {
         const newInstructions = [...props.instructions];
         newInstructions[index] = instruction;
+        props.onChange(newInstructions);
+    }
+
+    function onInstructionDelete(index: number): void {
+        const newInstructions = props.instructions.toSpliced(index, 1);
         props.onChange(newInstructions);
     }
 
@@ -29,13 +35,17 @@ export function InstructionsPanel(props: {
                             key={index}
                             index={index}
                             instruction={instruction}
-                            onChange={(newInstruction) => onInstructionChange(newInstruction, index)} />
+                            onChange={(newInstruction) => onInstructionChange(index, newInstruction)}
+                            onDelete={() => onInstructionDelete(index)}
+                        />
                     ))
                 }
             </div>
-            <button>
-                Add
-            </button>
+            <div className={'instructions-panel-buttons'}>
+                <button onClick={(_e) => props.onAdd()}>
+                    <Icon name={'Plus'} />
+                </button>
+            </div>
         </div>
     );
 }

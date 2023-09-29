@@ -5,6 +5,7 @@ export function InstructionRow(props: {
     index: number;
     instruction: Instruction;
     onChange(instruction: Instruction): void;
+    onDelete(): void;
 }): JSX.Element {
     return (
         <div className={'instruction-row'}>
@@ -12,7 +13,11 @@ export function InstructionRow(props: {
                 {props.index + 1}
             </div>
             <div className={'instruction-container'}>
-                <InstructionBlock instruction={props.instruction} onChange={(instruction) => props.onChange(instruction)} />
+                <InstructionBlock
+                    instruction={props.instruction}
+                    onChange={(instruction) => props.onChange(instruction)}
+                    onDelete={() => props.onDelete()}
+                />
             </div>
         </div>
     )

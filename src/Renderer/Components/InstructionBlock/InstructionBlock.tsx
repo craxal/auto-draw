@@ -1,5 +1,6 @@
 import { ArcLeftInstruction, ArcRightInstruction, Instruction, MoveForwardInstruction, PenColorInstruction, TurnLeftInstruction, TurnRightInstruction } from '../../../Core/Instruction';
 import { match } from '../../../Core/Match';
+import { Icon } from '../Icon/Icon';
 import { ArcInstructionBlock } from './ArcInstructionBlock';
 import { MoveForwardInstructionBlock } from './MoveForwardInstructionBlock';
 import { PenColorInstructionBlock } from './PenColorInstructionBlock';
@@ -9,6 +10,7 @@ import { TurnInstructionBlock } from './TurnInstructionBlock';
 export function InstructionBlock(props: {
     instruction: Instruction;
     onChange(instruction: Instruction): void;
+    onDelete(): void;
 }): JSX.Element {
     const innerBlock = match(props.instruction.name,
         ['penDown', (
@@ -59,10 +61,13 @@ export function InstructionBlock(props: {
     return (
         <div className={'instruction-block'}>
             <div className={'handle'}>
-                {innerBlock}
-                <button>Delete</button>
+                <Icon name={'GripVertical'} className='handle' />
             </div>
+            {innerBlock}
+            <div className={'spacer'} />
+            <button onClick={(_e) => props.onDelete()}>
+                <Icon name={'Trash'} />
+            </button>
         </div>
-    )
-
+    );
 }

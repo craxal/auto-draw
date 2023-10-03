@@ -1,5 +1,6 @@
 import { Instruction } from '../../../Core/Instruction';
 import { Icon } from '../Icon/Icon';
+import { InstructionButtonRow } from '../InstructionRow/InstructionButtonRow';
 import { InstructionRow } from '../InstructionRow/InstructionRow';
 
 export function InstructionsPanel(props: {
@@ -36,11 +37,10 @@ export function InstructionsPanel(props: {
                         />
                     ))
                 }
-            </div>
-            <div className={'instructions-panel-buttons'}>
-                <button onClick={(_e) => props.onAdd()}>
-                    <Icon name={'Plus'} />
-                </button>
+                <InstructionButtonRow
+                    index={props.instructions.length}
+                    onAdd={() => props.onAdd()}
+                />
             </div>
         </div>
     );

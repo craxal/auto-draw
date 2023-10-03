@@ -4,7 +4,6 @@
 .instructions-panel {
     color: #00ff00;
     display: grid;
-    font-family: 'Fira Code';
     gap: 4px;
     grid-template-rows: auto 1fr auto;
 

@@ -1,6 +1,5 @@
 .instruction-row {
     display: contents;
-    font-family: 'Fira Code';
 
     & .instruction-number {
         background: #000000;
@@ -20,5 +19,43 @@
         display: grid;
         grid-column: 2;
         padding: 4px;
+        min-height: 44px;
+    }
+
+    & .instruction-buttons {
+        background: #000000;
+        display: flex;
+        gap: 4px;
+        grid-column: 2;
+        padding: 4px;
+        min-height: 44px;
+
+        & button {
+            background: #000000;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            color: #00ff00;
+            flex-grow: 1;
+
+            & .button-contents {
+                display: flex;
+                gap: 4px;
+            }
+
+            .icon svg * {
+                fill: #00ff00;
+            }
+
+            &:hover {
+                background: #a1ffa1;
+                border: 1px solid #000000;
+                color: #000000;
+                cursor: pointer;
+
+                .icon svg * {
+                    fill: #000000;
+                }
+            }
+        }
     }
 }

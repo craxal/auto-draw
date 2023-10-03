@@ -7,19 +7,15 @@ export function InstructionsPanel(props: {
     onAdd(): void;
     onChange(instructions: Instruction[]): void;
 }): JSX.Element {
-    function onInstructionChange(index: number, instruction: Instruction): void {
+    function handleInstructionChange(index: number, instruction: Instruction): void {
         const newInstructions = [...props.instructions];
         newInstructions[index] = instruction;
         props.onChange(newInstructions);
     }
 
-    function onInstructionDelete(index: number): void {
+    function handleInstructionDelete(index: number): void {
         const newInstructions = props.instructions.toSpliced(index, 1);
         props.onChange(newInstructions);
-    }
-
-    function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
-        const data = event.dataTransfer.getData('application/autodraw-instruction');
     }
 
     return (
@@ -28,15 +24,15 @@ export function InstructionsPanel(props: {
                 <Icon name={'Code'} />
                 <label htmlFor={'instruction-list'}>Instructions</label>
             </div>
-            <div id={'instruction-list'} className={'instruction-list'} onDragOver={(e) => handleDragOver(e)}>
+            <div id={'instruction-list'} className={'instruction-list'}>
                 {
                     props.instructions.map((instruction, index) => (
                         <InstructionRow
                             key={index}
                             index={index}
                             instruction={instruction}
-                            onChange={(newInstruction) => onInstructionChange(index, newInstruction)}
-                            onDelete={() => onInstructionDelete(index)}
+                            onChange={(newInstruction) => handleInstructionChange(index, newInstruction)}
+                            onDelete={() => handleInstructionDelete(index)}
                         />
                     ))
                 }

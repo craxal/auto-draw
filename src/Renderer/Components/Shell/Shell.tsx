@@ -1,13 +1,12 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { Color } from '../../../Core/Graphics/Color';
 import { ArcLeftInstruction, ArcRightInstruction, Instruction, MoveForwardInstruction, PenColorInstruction, PenDownInstruction, TurnRightInstruction } from '../../../Core/Instruction';
 import { Canvas } from '../Canvas/Canvas';
 import { InstructionsPanel } from '../InstructionsPanel/InstructionsPanel';
 
 export function Shell(props: {
-
 }): JSX.Element {
-    const [instructions, setInstructions] = React.useState<Instruction[]>([
+    const [instructions, setInstructions] = useState<Instruction[]>([
         new PenColorInstruction(Color.blue),
         new PenDownInstruction(),
         // new TurnRight(),

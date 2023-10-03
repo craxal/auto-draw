@@ -7,9 +7,9 @@ export function Icon(props: {
     className?: string;
 }): JSX.Element {
     const className = [
-        "icon",
-        props.className ?? "",
-    ].join(" ");
+        'icon',
+        props.className ?? '',
+    ].join(' ').trim();
 
     return (
         <div className={className}>

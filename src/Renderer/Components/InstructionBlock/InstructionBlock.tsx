@@ -12,7 +12,7 @@ export function InstructionBlock(props: {
     onChange(instruction: Instruction): void;
     onDelete(): void;
 }): JSX.Element {
-    const innerBlock = match(props.instruction.name,
+    const innerBlock = match(props.instruction.type,
         ['penDown', (
             <PenPositionBlock
                 instruction={props.instruction}

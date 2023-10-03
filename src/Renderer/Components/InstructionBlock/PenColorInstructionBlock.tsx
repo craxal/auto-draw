@@ -1,4 +1,4 @@
-import { Color } from '../../../Core/Color';
+import { Color } from '../../../Core/Graphics/Color';
 import { Instruction, PenColorInstruction } from '../../../Core/Instruction';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';

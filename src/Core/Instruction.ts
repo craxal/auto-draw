@@ -1,6 +1,6 @@
-import { Angle } from './Angle';
-import { Color } from './Color';
-import { DrawContext } from './DrawContext';
+import { Angle } from './Graphics/Angle';
+import { Color } from './Graphics/Color';
+import { DrawContext } from './Graphics/DrawContext';
 
 export interface Instruction {
     readonly name: string;

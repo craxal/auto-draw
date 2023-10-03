@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Color } from '../../../Core/Color';
+import { Color } from '../../../Core/Graphics/Color';
 import { ArcLeftInstruction, ArcRightInstruction, Instruction, MoveForwardInstruction, PenColorInstruction, PenDownInstruction, TurnRightInstruction } from '../../../Core/Instruction';
 import { Canvas } from '../Canvas/Canvas';
 import { InstructionsPanel } from '../InstructionsPanel/InstructionsPanel';

@@ -1,7 +1,7 @@
+import { Instruction } from '../Instruction';
+import { Log } from '../Log';
 import { Angle, cos, sin } from './Angle';
 import { Color } from './Color';
-import { Instruction } from './Instruction';
-import { Log } from './Log';
 import { Pen } from './Pen';
 import { Point } from './Point';
 
@@ -119,7 +119,7 @@ export class DrawContext {
     public execute(instructions: Instruction[]): void {
         for (const instruction of instructions) {
             instruction.execute(this);
-            Log.debug(`${instruction.name}: ${this.pen.toString()}`);
+            Log.debug(`${instruction.type}: ${this.pen.toString()}`);
         }
         this.#drawCursor();
     }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DrawContext } from '../../../Core/DrawContext';
+import { DrawContext } from '../../../Core/Graphics/DrawContext';
 import { Log } from '../../../Core/Log';
 
 export function Canvas(props: {

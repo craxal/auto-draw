@@ -19,7 +19,6 @@
         display: grid;
         grid-column: 2;
         padding: 4px;
-        min-height: 44px;
     }
 
     & .instruction-buttons {
@@ -28,7 +27,6 @@
         gap: 4px;
         grid-column: 2;
         padding: 4px;
-        min-height: 44px;
 
         & button {
             background: #000000;
@@ -36,6 +34,7 @@
             border-radius: 4px;
             color: #00ff00;
             flex-grow: 1;
+            min-height: 36px;
 
             & .button-contents {
                 display: flex;
@@ -58,4 +57,31 @@
             }
         }
     }
+
+    &.drag-drop-source {
+        & .instruction-container {
+            opacity: 0.5;
+        }
+    }
+
+    &.drag-drop-target-before {
+        & .instruction-number {
+            border-top: 4px solid #3e3eff;
+        }
+
+        & .instruction-container {
+            border-top: 4px solid #3e3eff;
+        }
+    }
+
+    &.drag-drop-target-after {
+        & .instruction-number {
+            border-bottom: 4px solid #3e3eff;
+        }
+
+        & .instruction-container {
+            border-bottom: 4px solid #3e3eff;
+        }
+    }
+
 }

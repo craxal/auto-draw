@@ -1,3 +1,4 @@
+import { DragEvent, useState } from 'react';
 import { Instruction } from '../../../Core/Lang/Instruction';
 import { Icon } from '../Icon/Icon';
 import { InstructionButtonRow } from '../InstructionRow/InstructionButtonRow';
@@ -8,6 +9,9 @@ export function InstructionsPanel(props: {
     onAdd(): void;
     onChange(instructions: Instruction[]): void;
 }): JSX.Element {
+    const [dragDropSourceIndex, setDragDropSourceIndex] = useState<number | undefined>();
+    const [dragDropTargetIndex, setDragDropTargetIndex] = useState<number | undefined>();
+
     function handleInstructionChange(index: number, instruction: Instruction): void {
         const newInstructions = [...props.instructions];
         newInstructions[index] = instruction;
@@ -19,23 +23,71 @@ export function InstructionsPanel(props: {
         props.onChange(newInstructions);
     }
 
+    function handleDragStart(event: DragEvent<HTMLDivElement>, index: number): void {
+        setDragDropSourceIndex(index);
+    }
+
+    function handleDragEnter(event: DragEvent<HTMLDivElement>, index: number): void {
+        setDragDropTargetIndex(index);
+
+        event.preventDefault();
+    }
+
+    function handleDragOver(event: DragEvent<HTMLDivElement>): void {
+        event.preventDefault();
+    }
+
+    function handleDragLeave(event: DragEvent<HTMLDivElement>, index: number): void {
+        setDragDropTargetIndex(undefined);
+    }
+
+    function handleDrop(event: DragEvent<HTMLDivElement>): void {
+        event.preventDefault();
+        setDragDropSourceIndex(undefined);
+        setDragDropTargetIndex(undefined);
+
+        if (dragDropSourceIndex !== undefined && dragDropTargetIndex !== undefined) {
+            const newInstructions = [...props.instructions];
+            newInstructions.splice(dragDropTargetIndex, 0, newInstructions.splice(dragDropSourceIndex, 1)[0]);
+            props.onChange(newInstructions);
+        }
+    }
+
     return (
         <div className={'instructions-panel'}>
             <div className={'instructions-panel-label'}>
                 <Icon name={'Code'} />
                 <label htmlFor={'instruction-list'}>Instructions</label>
             </div>
-            <div id={'instruction-list'} className={'instruction-list'}>
+            <div
+                id={'instruction-list'}
+                className={'instruction-list'}
+                onDragOver={(e) => handleDragOver(e)}
+                onDrop={(e) => handleDrop(e)}
+            >
                 {
-                    props.instructions.map((instruction, index) => (
-                        <InstructionRow
-                            key={index}
-                            index={index}
-                            instruction={instruction}
-                            onChange={(newInstruction) => handleInstructionChange(index, newInstruction)}
-                            onDelete={() => handleInstructionDelete(index)}
-                        />
-                    ))
+                    props.instructions.map((instruction, index) => {
+                        let dragDrop: 'source' | 'target-before' | 'target-after' | undefined;
+                        if (dragDropSourceIndex !== undefined && dragDropTargetIndex !== undefined) {
+                            dragDrop = index === dragDropTargetIndex
+                                ? dragDropTargetIndex > dragDropSourceIndex ? 'target-after' : 'target-before'
+                                : 'source';
+                        }
+
+                        return (
+                            <InstructionRow
+                                key={index}
+                                index={index}
+                                instruction={instruction}
+                                dragDrop={dragDrop}
+                                onChange={(newInstruction) => handleInstructionChange(index, newInstruction)}
+                                onDelete={() => handleInstructionDelete(index)}
+                                onDragStart={(e) => handleDragStart(e, index)}
+                                onDragEnter={(e) => handleDragEnter(e, index)}
+                                onDragLeave={(e) => handleDragLeave(e, index)}
+                            />
+                        );
+                    })
                 }
                 <InstructionButtonRow
                     index={props.instructions.length}

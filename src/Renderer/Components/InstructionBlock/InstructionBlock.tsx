@@ -1,3 +1,4 @@
+import { DragEvent } from 'react';
 import { ArcLeftInstruction } from '../../../Core/Lang/ArcLeftInstruction';
 import { ArcRightInstruction } from '../../../Core/Lang/ArcRightInstruction';
 import { Instruction } from '../../../Core/Lang/Instruction';
@@ -17,6 +18,9 @@ export function InstructionBlock(props: {
     instruction: Instruction;
     onChange(instruction: Instruction): void;
     onDelete(): void;
+    onDragStart(event: DragEvent<HTMLDivElement>): void;
+    onDragEnter(event: DragEvent<HTMLDivElement>): void;
+    onDragLeave(event: DragEvent<HTMLDivElement>): void;
 }): JSX.Element {
     const innerBlock = match(props.instruction.type,
         ['penDown', (
@@ -71,8 +75,14 @@ export function InstructionBlock(props: {
     );
 
     return (
-        <div className={'instruction-block'}>
-            <div className={'handle'}>
+        <div
+            className={'instruction-block'}
+            draggable={true}
+            onDragStart={(e) => props.onDragStart(e)}
+            onDragEnter={(e) => props.onDragEnter(e)}
+            onDragLeave={(e) => props.onDragLeave(e)}
+        >
+            <div className={'handle'} >
                 <Icon name={'GripVertical'} className='handle' />
             </div>
             {innerBlock}

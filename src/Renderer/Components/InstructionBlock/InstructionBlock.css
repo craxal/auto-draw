@@ -5,6 +5,7 @@
     color: #000000;
     display: flex;
     gap: 4px;
+    min-height: 36px;
     padding: 4px;
 
     & button {

@@ -35,7 +35,7 @@
         grid-column: 2;
         padding: 2px 4px;
 
-        & button {
+        & .icon-button {
             background: #000000;
             border: 1px solid #00ff00;
             border-radius: 4px;
@@ -43,18 +43,18 @@
             flex-grow: 1;
             min-height: 36px;
 
-            & .button-contents {
+            & .icon-button-contents {
                 display: flex;
                 gap: 4px;
-            }
 
-            .icon svg * {
-                fill: #00ff00;
+                .icon svg * {
+                    fill: #00ff00;
+                }
             }
 
             &:hover {
                 background: #a1ffa1;
-                border: 1px solid #000000;
+                border: 1px solid #a1ffa1;
                 color: #000000;
                 cursor: pointer;
 

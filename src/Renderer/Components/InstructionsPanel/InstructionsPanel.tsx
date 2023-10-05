@@ -1,6 +1,7 @@
 import { DragEvent, useState } from 'react';
 import { Instruction } from '../../../Core/Lang/Instruction';
 import { Icon } from '../Icon/Icon';
+import { IconButton } from '../IconButton/IconButton';
 import { InstructionButtonRow } from '../InstructionRow/InstructionButtonRow';
 import { InstructionRow } from '../InstructionRow/InstructionRow';
 
@@ -54,6 +55,11 @@ export function InstructionsPanel(props: {
             <div className={'instructions-panel-label'}>
                 <Icon name={'Code'} />
                 <label htmlFor={'instruction-list'}>Instructions</label>
+            </div>
+            <div className={'instruction-panel-execute'}>
+                <IconButton icon={'BackwardStep'} />
+                <IconButton icon={'Play'} />
+                <IconButton icon={'ForwardStep'} />
             </div>
             <div
                 id={'instruction-list'}

@@ -1,4 +1,4 @@
-import { Icon } from "../Icon/Icon";
+import { IconButton } from "../IconButton/IconButton";
 
 export function InstructionButtonRow(props: {
     index: number;
@@ -10,12 +10,7 @@ export function InstructionButtonRow(props: {
                 {props.index + 1}
             </div>
             <div className={'instruction-buttons'}>
-                <button onClick={(_e) => props.onAdd()}>
-                    <div className={'button-contents'}>
-                        <Icon name={'Plus'} />
-                        <div className={'button-text'}>Add new instruction</div>
-                    </div>
-                </button>
+                <IconButton icon={'Plus'} label={'Add new instruction'} onClick={() => props.onAdd()} />
             </div>
         </div>
     );

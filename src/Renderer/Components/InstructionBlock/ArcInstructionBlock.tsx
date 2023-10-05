@@ -1,4 +1,6 @@
-import { ArcLeftInstruction, ArcRightInstruction, Instruction } from '../../../Core/Instruction';
+import { ArcLeftInstruction } from '../../../Core/Lang/ArcLeftInstruction';
+import { ArcRightInstruction } from '../../../Core/Lang/ArcRightInstruction';
+import { Instruction } from '../../../Core/Lang/Instruction';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
 

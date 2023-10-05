@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { DrawContext } from '../../../Core/Graphics/DrawContext';
-import { Log } from '../../../Core/Log';
+import { Log } from '../../../Core/Util/Log';
 
 export function Canvas(props: {
     render: (context: DrawContext) => void;

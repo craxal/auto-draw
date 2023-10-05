@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { Color } from '../../../Core/Graphics/Color';
-import { ArcLeftInstruction, ArcRightInstruction, Instruction, MoveForwardInstruction, PenColorInstruction, PenDownInstruction, TurnRightInstruction } from '../../../Core/Instruction';
+import { ArcLeftInstruction } from '../../../Core/Lang/ArcLeftInstruction';
+import { ArcRightInstruction } from '../../../Core/Lang/ArcRightInstruction';
+import { Instruction } from '../../../Core/Lang/Instruction';
+import { MoveForwardInstruction } from '../../../Core/Lang/MoveForwardInstruction';
+import { PenColorInstruction } from '../../../Core/Lang/PenColorInstruction';
+import { PenDownInstruction } from '../../../Core/Lang/PenDownInstruction';
+import { TurnRightInstruction } from '../../../Core/Lang/TurnRightInstruction';
 import { Canvas } from '../Canvas/Canvas';
 import { InstructionsPanel } from '../InstructionsPanel/InstructionsPanel';
 

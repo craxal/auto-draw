@@ -1,4 +1,5 @@
-import { Instruction } from '../../../Core/Instruction';
+import { Instruction } from '../../../Core/Lang/Instruction';
+import { match } from '../../../Core/Util/Match';
 import { InstructionBlock } from '../InstructionBlock/InstructionBlock';
 
 export function InstructionRow(props: {

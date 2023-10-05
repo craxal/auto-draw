@@ -1,5 +1,5 @@
-import { Instruction } from '../Instruction';
-import { Log } from '../Log';
+import { Instruction } from '../Lang/Instruction';
+import { Log } from '../Util/Log';
 import { Angle, cos, sin } from './Angle';
 import { Color } from './Color';
 import { Pen } from './Pen';

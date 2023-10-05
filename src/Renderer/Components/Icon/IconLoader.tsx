@@ -2,8 +2,8 @@ import { randomUUID } from 'crypto';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { Fragment, createElement } from 'react';
-import { Log } from '../../../Core/Log';
-import { match } from '../../../Core/Match';
+import { Log } from '../../../Core/Util/Log';
+import { match } from '../../../Core/Util/Match';
 
 type ElementNodeMemo = {
     tagName: string;

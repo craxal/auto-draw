@@ -1,4 +1,4 @@
-import { Instruction } from '../../../Core/Instruction';
+import { Instruction } from '../../../Core/Lang/Instruction';
 import { Icon } from '../Icon/Icon';
 import { InstructionButtonRow } from '../InstructionRow/InstructionButtonRow';
 import { InstructionRow } from '../InstructionRow/InstructionRow';

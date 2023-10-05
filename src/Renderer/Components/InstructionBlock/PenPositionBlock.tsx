@@ -1,4 +1,6 @@
-import { Instruction, PenDownInstruction, PenUpInstruction } from '../../../Core/Instruction';
+import { Instruction } from '../../../Core/Lang/Instruction';
+import { PenDownInstruction } from '../../../Core/Lang/PenDownInstruction';
+import { PenUpInstruction } from '../../../Core/Lang/PenUpInstruction';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
 

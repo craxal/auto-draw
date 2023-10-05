@@ -1,4 +1,12 @@
-import { ArcLeftInstruction, ArcRightInstruction, Instruction, MoveForwardInstruction, PenColorInstruction, PenDownInstruction, PenUpInstruction, TurnLeftInstruction, TurnRightInstruction } from "../../../Core/Instruction";
+import { ArcLeftInstruction } from '../../../Core/Lang/ArcLeftInstruction';
+import { ArcRightInstruction } from '../../../Core/Lang/ArcRightInstruction';
+import { Instruction } from "../../../Core/Lang/Instruction";
+import { MoveForwardInstruction } from '../../../Core/Lang/MoveForwardInstruction';
+import { PenColorInstruction } from '../../../Core/Lang/PenColorInstruction';
+import { PenDownInstruction } from '../../../Core/Lang/PenDownInstruction';
+import { PenUpInstruction } from '../../../Core/Lang/PenUpInstruction';
+import { TurnLeftInstruction } from '../../../Core/Lang/TurnLeftInstruction';
+import { TurnRightInstruction } from '../../../Core/Lang/TurnRightInstruction';
 import { openContextMenu } from "../../AppWindow";
 
 export async function openInstructionContextMenu(onChange: (instruction: Instruction) => void): Promise<void> {

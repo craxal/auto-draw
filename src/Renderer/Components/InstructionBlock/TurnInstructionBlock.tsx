@@ -1,4 +1,6 @@
-import { Instruction, TurnLeftInstruction, TurnRightInstruction } from '../../../Core/Instruction';
+import { Instruction } from '../../../Core/Lang/Instruction';
+import { TurnLeftInstruction } from '../../../Core/Lang/TurnLeftInstruction';
+import { TurnRightInstruction } from '../../../Core/Lang/TurnRightInstruction';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
 

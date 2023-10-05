@@ -1,5 +1,11 @@
-import { ArcLeftInstruction, ArcRightInstruction, Instruction, MoveForwardInstruction, PenColorInstruction, TurnLeftInstruction, TurnRightInstruction } from '../../../Core/Instruction';
-import { match } from '../../../Core/Match';
+import { ArcLeftInstruction } from '../../../Core/Lang/ArcLeftInstruction';
+import { ArcRightInstruction } from '../../../Core/Lang/ArcRightInstruction';
+import { Instruction } from '../../../Core/Lang/Instruction';
+import { MoveForwardInstruction } from '../../../Core/Lang/MoveForwardInstruction';
+import { PenColorInstruction } from '../../../Core/Lang/PenColorInstruction';
+import { TurnLeftInstruction } from '../../../Core/Lang/TurnLeftInstruction';
+import { TurnRightInstruction } from '../../../Core/Lang/TurnRightInstruction';
+import { match } from '../../../Core/Util/Match';
 import { Icon } from '../Icon/Icon';
 import { ArcInstructionBlock } from './ArcInstructionBlock';
 import { MoveForwardInstructionBlock } from './MoveForwardInstructionBlock';

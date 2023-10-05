@@ -1,4 +1,5 @@
-import { Instruction, MoveForwardInstruction } from '../../../Core/Instruction';
+import { Instruction } from '../../../Core/Lang/Instruction';
+import { MoveForwardInstruction } from '../../../Core/Lang/MoveForwardInstruction';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
 

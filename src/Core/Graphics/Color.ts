@@ -43,6 +43,6 @@ export class Color {
     }
 
     public toString(): string {
-        return `\u001b[37m▕\u001b[38;2;${this.#r};${this.#g};${this.#b}m█\u001b[37m▏\u001b[0m`;
+        return `\u001b[37;40m[\u001b[38;2;${this.#r};${this.#g};${this.#b}m\u25a0\u001b[37m]\u001b[0m`;
     }
 }

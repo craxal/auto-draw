@@ -20,7 +20,6 @@ export function InstructionBlock(props: {
     onDelete(): void;
     onDragStart(event: DragEvent<HTMLDivElement>): void;
     onDragEnter(event: DragEvent<HTMLDivElement>): void;
-    onDragLeave(event: DragEvent<HTMLDivElement>): void;
 }): JSX.Element {
     const innerBlock = match(props.instruction.type,
         ['penDown', (
@@ -80,7 +79,6 @@ export function InstructionBlock(props: {
             draggable={true}
             onDragStart={(e) => props.onDragStart(e)}
             onDragEnter={(e) => props.onDragEnter(e)}
-            onDragLeave={(e) => props.onDragLeave(e)}
         >
             <div className={'handle'} >
                 <Icon name={'GripVertical'} className='handle' />

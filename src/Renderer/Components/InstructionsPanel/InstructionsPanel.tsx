@@ -37,10 +37,6 @@ export function InstructionsPanel(props: {
         event.preventDefault();
     }
 
-    function handleDragLeave(event: DragEvent<HTMLDivElement>, index: number): void {
-        setDragDropTargetIndex(undefined);
-    }
-
     function handleDrop(event: DragEvent<HTMLDivElement>): void {
         event.preventDefault();
         setDragDropSourceIndex(undefined);
@@ -68,10 +64,10 @@ export function InstructionsPanel(props: {
                 {
                     props.instructions.map((instruction, index) => {
                         let dragDrop: 'source' | 'target-before' | 'target-after' | undefined;
-                        if (dragDropSourceIndex !== undefined && dragDropTargetIndex !== undefined) {
-                            dragDrop = index === dragDropTargetIndex
-                                ? dragDropTargetIndex > dragDropSourceIndex ? 'target-after' : 'target-before'
-                                : 'source';
+                        if (index === dragDropSourceIndex) {
+                            dragDrop = 'source';
+                        } else if (index === dragDropTargetIndex) {
+                            dragDrop = dragDropTargetIndex > dragDropSourceIndex! ? 'target-after' : 'target-before';
                         }
 
                         return (
@@ -84,7 +80,6 @@ export function InstructionsPanel(props: {
                                 onDelete={() => handleInstructionDelete(index)}
                                 onDragStart={(e) => handleDragStart(e, index)}
                                 onDragEnter={(e) => handleDragEnter(e, index)}
-                                onDragLeave={(e) => handleDragLeave(e, index)}
                             />
                         );
                     })

@@ -11,7 +11,6 @@ export function InstructionRow(props: {
     onDelete(): void;
     onDragStart(event: DragEvent<HTMLDivElement>): void;
     onDragEnter(event: DragEvent<HTMLDivElement>): void;
-    onDragLeave(event: DragEvent<HTMLDivElement>): void;
 }): JSX.Element {
     const dragDrop = match(props.dragDrop,
         ['source', 'drag-drop-source'],
@@ -36,7 +35,6 @@ export function InstructionRow(props: {
                     onDelete={() => props.onDelete()}
                     onDragStart={(e) => props.onDragStart(e)}
                     onDragEnter={(e) => props.onDragEnter(e)}
-                    onDragLeave={(e) => props.onDragLeave(e)}
                 />
             </div>
         </div>

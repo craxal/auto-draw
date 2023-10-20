@@ -1,9 +1,9 @@
-import { DrawContext } from '../Graphics/DrawContext';
 import { InstructionType } from './InstructionType';
+import { InstructionVisitor } from './InstructionVisitor';
 
 export abstract class Instruction {
     public abstract get type(): InstructionType;
-    public abstract execute(context: DrawContext): void;
+    public abstract accept<TResult>(visitor: InstructionVisitor<TResult>): TResult;
 
     public toString(): string {
         return JSON.stringify({ type: this.type });

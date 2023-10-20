@@ -1,6 +1,8 @@
 import { DragEvent } from 'react';
 import { ArcLeftInstruction } from '../../../Core/Lang/ArcLeftInstruction';
 import { ArcRightInstruction } from '../../../Core/Lang/ArcRightInstruction';
+import { CallFunctionInstruction } from '../../../Core/Lang/CallFunctionInstruction';
+import { DefineFunctionInstruction } from '../../../Core/Lang/DefineFunctionInstruction';
 import { Instruction } from '../../../Core/Lang/Instruction';
 import { MoveForwardInstruction } from '../../../Core/Lang/MoveForwardInstruction';
 import { PenColorInstruction } from '../../../Core/Lang/PenColorInstruction';
@@ -9,6 +11,8 @@ import { TurnRightInstruction } from '../../../Core/Lang/TurnRightInstruction';
 import { match } from '../../../Core/Util/Match';
 import { Icon } from '../Icon/Icon';
 import { ArcInstructionBlock } from './ArcInstructionBlock';
+import { CallFunctionInstructionBlock } from './CallFunctionInstructionBlock';
+import { DefineFunctionInstructionBlock } from './DefineFunctionInstructionBlock';
 import { MoveForwardInstructionBlock } from './MoveForwardInstructionBlock';
 import { PenColorInstructionBlock } from './PenColorInstructionBlock';
 import { PenPositionBlock } from './PenPositionBlock';
@@ -16,6 +20,7 @@ import { TurnInstructionBlock } from './TurnInstructionBlock';
 
 export function InstructionBlock(props: {
     instruction: Instruction;
+    level?: number;
     onChange(instruction: Instruction): void;
     onDelete(): void;
     onDragStart(event: DragEvent<HTMLDivElement>): void;
@@ -70,6 +75,18 @@ export function InstructionBlock(props: {
                 onChange={(instruction) => props.onChange(instruction)}
             />
         )],
+        ['defineFunction', (
+            <DefineFunctionInstructionBlock
+                instruction={props.instruction as DefineFunctionInstruction}
+                onChange={(instruction) => props.onChange(instruction)}
+            />
+        )],
+        ['callFunction', (
+            <CallFunctionInstructionBlock
+                instruction={props.instruction as CallFunctionInstruction}
+                onChange={(instruction) => props.onChange(instruction)}
+            />
+        )],
         (<></>)
     );
 
@@ -80,6 +97,7 @@ export function InstructionBlock(props: {
             onDragStart={(e) => props.onDragStart(e)}
             onDragEnter={(e) => props.onDragEnter(e)}
         >
+            <div className={'level'}></div>
             <div className={'handle'} >
                 <Icon name={'GripVertical'} className='handle' />
             </div>

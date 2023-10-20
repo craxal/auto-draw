@@ -1,4 +1,5 @@
 import { Instruction } from '../Lang/Instruction';
+import { Interpreter } from '../Lang/Interpreter';
 import { Log } from '../Util/Log';
 import { Angle, cos, sin } from './Angle';
 import { Color } from './Color';
@@ -117,8 +118,9 @@ export class DrawContext {
     }
 
     public execute(instructions: Instruction[]): void {
+        const interpreter = new Interpreter(this);
         for (const instruction of instructions) {
-            instruction.execute(this);
+            instruction.accept(interpreter);
             Log.debug(`${instruction.type}: ${this.pen.toString()}`);
         }
         this.#drawCursor();

@@ -1,5 +1,7 @@
 import { ArcLeftInstruction } from '../../../Core/Lang/ArcLeftInstruction';
 import { ArcRightInstruction } from '../../../Core/Lang/ArcRightInstruction';
+import { CallFunctionInstruction } from '../../../Core/Lang/CallFunctionInstruction';
+import { DefineFunctionInstruction } from '../../../Core/Lang/DefineFunctionInstruction';
 import { Instruction } from "../../../Core/Lang/Instruction";
 import { MoveForwardInstruction } from '../../../Core/Lang/MoveForwardInstruction';
 import { PenColorInstruction } from '../../../Core/Lang/PenColorInstruction';
@@ -27,6 +29,10 @@ export async function openInstructionContextMenu(onChange: (instruction: Instruc
                 { type: 'normal', id: 'penUp', label: 'Pen Up', onClick: () => onChange(new PenUpInstruction()) },
                 { type: 'normal', id: 'penDown', label: 'Pen Down', onClick: () => onChange(new PenDownInstruction()) },
                 { type: 'normal', id: 'penColor', label: 'Pen Color', onClick: () => onChange(new PenColorInstruction()) },
+            ],
+            [
+                { type: 'normal', id: 'defineFunction', label: 'Name instructions', onClick: () => onChange(new DefineFunctionInstruction("instructions")) },
+                { type: 'normal', id: 'callFunction', label: 'Follow instructions', onClick: () => onChange(new CallFunctionInstruction("instructions")) },
             ]
         ]
     });

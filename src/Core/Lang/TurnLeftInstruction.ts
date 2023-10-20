@@ -1,7 +1,7 @@
 import { Angle } from '../Graphics/Angle';
-import { DrawContext } from '../Graphics/DrawContext';
 import { Instruction } from './Instruction';
 import { InstructionType } from './InstructionType';
+import { InstructionVisitor } from './InstructionVisitor';
 
 export type TurnLeftInstructionData = {
     type: 'turnLeft';
@@ -21,10 +21,10 @@ export class TurnLeftInstruction extends Instruction {
         return new TurnLeftInstruction(data.angle);
     }
 
-    public get type(): InstructionType { return 'turnLeft'; }
+    public override get type(): InstructionType { return 'turnLeft'; }
 
-    public execute(context: DrawContext): void {
-        context.turnLeft(this.angle);
+    public override accept<TResult>(visitor: InstructionVisitor<TResult>): TResult {
+        return visitor.visitTurnLeftInstruction(this);
     }
 
     public override toString(): string {

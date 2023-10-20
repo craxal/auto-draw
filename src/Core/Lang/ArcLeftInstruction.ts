@@ -1,7 +1,7 @@
 import { Angle } from '../Graphics/Angle';
-import { DrawContext } from '../Graphics/DrawContext';
 import { Instruction } from './Instruction';
 import { InstructionType } from './InstructionType';
+import { InstructionVisitor } from './InstructionVisitor';
 
 export type ArcLeftInstructionData = {
     type: 'arcLeft';
@@ -26,8 +26,8 @@ export class ArcLeftInstruction extends Instruction {
 
     public override get type(): InstructionType { return 'arcLeft'; }
 
-    public override execute(context: DrawContext): void {
-        context.arcLeft(this.angle, this.radius);
+    public override accept<TResult>(visitor: InstructionVisitor<TResult>): TResult {
+        return visitor.visitArcLeftInstruction(this);
     }
 
     public override toString(): string {

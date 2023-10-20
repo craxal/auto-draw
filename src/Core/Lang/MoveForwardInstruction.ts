@@ -1,6 +1,6 @@
-import { DrawContext } from '../Graphics/DrawContext';
 import { Instruction } from './Instruction';
 import { InstructionType } from './InstructionType';
+import { InstructionVisitor } from './InstructionVisitor';
 
 export type MoveForwardInstructionData = {
     type: 'moveForward';
@@ -20,10 +20,10 @@ export class MoveForwardInstruction extends Instruction {
         return new MoveForwardInstruction(data.distance);
     }
 
-    public get type(): InstructionType { return 'moveForward'; }
+    public override get type(): InstructionType { return 'moveForward'; }
 
-    public execute(context: DrawContext): void {
-        context.moveForward(this.distance);
+    public override accept<TResult>(visitor: InstructionVisitor<TResult>): TResult {
+        return visitor.visitMoveForwardInstruction(this);
     }
 
     public override toString(): string {

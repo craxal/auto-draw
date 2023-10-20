@@ -1,7 +1,7 @@
 import { Color } from '../Graphics/Color';
-import { DrawContext } from '../Graphics/DrawContext';
 import { Instruction } from './Instruction';
 import { InstructionType } from './InstructionType';
+import { InstructionVisitor } from './InstructionVisitor';
 
 export type PenColorInstructionData = {
     type: 'penColor';
@@ -21,10 +21,10 @@ export class PenColorInstruction extends Instruction {
         return new PenColorInstruction(Color.fromHex(data.color));
     }
 
-    public get type(): InstructionType { return 'penColor'; }
+    public override get type(): InstructionType { return 'penColor'; }
 
-    public execute(context: DrawContext): void {
-        context.setPenColor(this.color);
+    public override accept<TResult>(visitor: InstructionVisitor<TResult>): TResult {
+        return visitor.visitPenColorInstruction(this);
     }
 
     public override toString(): string {

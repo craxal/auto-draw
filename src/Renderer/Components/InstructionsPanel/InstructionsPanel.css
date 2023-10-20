@@ -39,7 +39,7 @@
         border-radius: 4px;
         display: grid;
         grid-auto-rows: min-content;
-        grid-template-columns: auto 1fr;
+        grid-template-columns: [symbol-begin] auto [symbol-end line-begin] auto [line-end code-begin] 1fr [code-end];
         overflow-y: auto;
     }
 }

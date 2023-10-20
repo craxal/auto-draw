@@ -49,7 +49,7 @@ export function Shell(props: {
     }
 
     function handleCurrentInstructionChange(index: number): void {
-        setCurrentInstruction(Math.max(0, Math.min(index, instructions.length - 1)));
+        setCurrentInstruction(Math.max(0, Math.min(index, instructions.length)));
     }
 
     return (

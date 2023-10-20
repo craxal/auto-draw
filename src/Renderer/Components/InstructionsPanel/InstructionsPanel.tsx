@@ -23,6 +23,10 @@ export function InstructionsPanel(props: {
         props.onCurrentInstructionChange(props.currentInstruction + 1);
     }
 
+    function handlePlayClick(): void {
+        props.onCurrentInstructionChange(props.instructions.length);
+    }
+
     function handleInstructionChange(index: number, instruction: Instruction): void {
         const newInstructions = [...props.instructions];
         newInstructions[index] = instruction;
@@ -68,7 +72,7 @@ export function InstructionsPanel(props: {
             </div>
             <div className={'instruction-panel-execute'}>
                 <IconButton icon={'BackwardStep'} onClick={() => handleBackClick()} />
-                <IconButton icon={'Play'} />
+                <IconButton icon={'Play'} onClick={() => handlePlayClick()} />
                 <IconButton icon={'ForwardStep'} onClick={() => handleForwardClick()} />
             </div>
             <div

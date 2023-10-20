@@ -27,6 +27,7 @@ export function InstructionRow(props: {
 
     return (
         <div className={className}>
+            <div className={'instruction-symbol'}></div>
             <div className={'instruction-number'}>
                 {props.index + 1}
             </div>

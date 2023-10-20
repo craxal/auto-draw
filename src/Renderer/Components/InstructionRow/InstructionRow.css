@@ -65,6 +65,10 @@
         }
     }
 
+    &.current .instruction-number::before {
+        content: '>';
+    }
+
     &.drag-drop-source {
         & .instruction-container {
             opacity: 0.5;

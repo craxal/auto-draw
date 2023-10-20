@@ -7,21 +7,31 @@ import { InstructionRow } from '../InstructionRow/InstructionRow';
 
 export function InstructionsPanel(props: {
     instructions: Instruction[];
+    currentInstruction: number;
     onAdd(): void;
-    onChange(instructions: Instruction[]): void;
+    onInstructionsChange(instructions: Instruction[]): void;
+    onCurrentInstructionChange(index: number): void;
 }): JSX.Element {
     const [dragDropSourceIndex, setDragDropSourceIndex] = useState<number | undefined>();
     const [dragDropTargetIndex, setDragDropTargetIndex] = useState<number | undefined>();
 
+    function handleBackClick(): void {
+        props.onCurrentInstructionChange(props.currentInstruction - 1);
+    }
+
+    function handleForwardClick(): void {
+        props.onCurrentInstructionChange(props.currentInstruction + 1);
+    }
+
     function handleInstructionChange(index: number, instruction: Instruction): void {
         const newInstructions = [...props.instructions];
         newInstructions[index] = instruction;
-        props.onChange(newInstructions);
+        props.onInstructionsChange(newInstructions);
     }
 
     function handleInstructionDelete(index: number): void {
         const newInstructions = props.instructions.toSpliced(index, 1);
-        props.onChange(newInstructions);
+        props.onInstructionsChange(newInstructions);
     }
 
     function handleDragStart(event: DragEvent<HTMLDivElement>, index: number): void {
@@ -46,7 +56,7 @@ export function InstructionsPanel(props: {
         if (dragDropSourceIndex !== undefined && dragDropTargetIndex !== undefined) {
             const newInstructions = [...props.instructions];
             newInstructions.splice(dragDropTargetIndex, 0, newInstructions.splice(dragDropSourceIndex, 1)[0]);
-            props.onChange(newInstructions);
+            props.onInstructionsChange(newInstructions);
         }
     }
 
@@ -57,9 +67,9 @@ export function InstructionsPanel(props: {
                 <label htmlFor={'instruction-list'}>Instructions</label>
             </div>
             <div className={'instruction-panel-execute'}>
-                <IconButton icon={'BackwardStep'} />
+                <IconButton icon={'BackwardStep'} onClick={() => handleBackClick()} />
                 <IconButton icon={'Play'} />
-                <IconButton icon={'ForwardStep'} />
+                <IconButton icon={'ForwardStep'} onClick={() => handleForwardClick()} />
             </div>
             <div
                 id={'instruction-list'}
@@ -82,6 +92,7 @@ export function InstructionsPanel(props: {
                                 index={index}
                                 instruction={instruction}
                                 dragDrop={dragDrop}
+                                current={index === props.currentInstruction}
                                 onChange={(newInstruction) => handleInstructionChange(index, newInstruction)}
                                 onDelete={() => handleInstructionDelete(index)}
                                 onDragStart={(e) => handleDragStart(e, index)}

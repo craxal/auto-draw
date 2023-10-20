@@ -7,6 +7,7 @@ export function InstructionRow(props: {
     index: number;
     instruction: Instruction;
     dragDrop?: 'source' | 'target-before' | 'target-after';
+    current?: boolean;
     onChange(instruction: Instruction): void;
     onDelete(): void;
     onDragStart(event: DragEvent<HTMLDivElement>): void;
@@ -20,6 +21,7 @@ export function InstructionRow(props: {
     );
     const className = [
         'instruction-row',
+        !!props.current ? 'current' : '',
         dragDrop,
     ].join(' ').trim();
 

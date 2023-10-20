@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Color } from '../../../Core/Graphics/Color';
+import { DrawContext } from '../../../Core/Graphics/DrawContext';
 import { ArcLeftInstruction } from '../../../Core/Lang/ArcLeftInstruction';
 import { ArcRightInstruction } from '../../../Core/Lang/ArcRightInstruction';
 import { Instruction } from '../../../Core/Lang/Instruction';
@@ -33,22 +34,34 @@ export function Shell(props: {
         new ArcLeftInstruction(135, 40),
         // new PenUp(),
     ]);
+    const [currentInstruction, setCurrentInstruction] = useState(0);
 
-    function onAdd(): void {
+    function render(context: DrawContext): void {
+        context.execute(instructions.slice(0, currentInstruction));
+    }
+
+    function handleAdd(): void {
         setInstructions([...instructions, new MoveForwardInstruction()])
     }
 
-    function onChange(instructions: Instruction[]): void {
+    function handleInstructionsChange(instructions: Instruction[]): void {
         setInstructions(instructions);
+    }
+
+    function handleCurrentInstructionChange(index: number): void {
+        setCurrentInstruction(Math.max(0, Math.min(index, instructions.length - 1)));
     }
 
     return (
         <div className={'shell'}>
-            <Canvas render={(context) => context.execute(instructions)} />
+            <Canvas render={(context) => render(context)} />
             <InstructionsPanel
                 instructions={instructions}
-                onAdd={() => onAdd()}
-                onChange={(instructions) => onChange(instructions)} />
+                currentInstruction={currentInstruction}
+                onAdd={() => handleAdd()}
+                onInstructionsChange={(instructions) => handleInstructionsChange(instructions)}
+                onCurrentInstructionChange={(index) => handleCurrentInstructionChange(index)}
+            />
         </div>
     );
 }

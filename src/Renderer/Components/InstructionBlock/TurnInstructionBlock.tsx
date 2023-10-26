@@ -1,5 +1,4 @@
 import { Token, TurnLeftToken, TurnRightToken } from '../../../Core/Lang/Lexical/Token';
-import { TurnLeftInstruction } from '../../../Core/Lang/Parser/TurnLeftInstruction';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
 
@@ -19,7 +18,7 @@ export function TurnInstructionBlock(props: {
     return (
         <>
             <button onClick={(_e) => onIconClick()}>
-                <Icon name={props.instruction instanceof TurnLeftInstruction ? 'ArrowLeft' : 'ArrowRight'} />
+                <Icon name={props.instruction.type === 'turnLeft' ? 'ArrowLeft' : 'ArrowRight'} />
             </button>
             {`Turn ${props.instruction.type === 'turnLeft' ? 'left' : 'right'} `}
             <input

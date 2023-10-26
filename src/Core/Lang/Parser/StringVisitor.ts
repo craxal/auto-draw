@@ -1,15 +1,15 @@
-import { ArcLeftInstruction } from "../Parser/ArcLeftInstruction";
-import { ArcRightInstruction } from "../Parser/ArcRightInstruction";
-import { CallFunctionInstruction } from "../Parser/CallFunctionInstruction";
-import { DefineFunctionInstruction } from "../Parser/DefineFunctionInstruction";
-import { InstructionVisitor } from "../Parser/InstructionVisitor";
-import { MoveForwardInstruction } from "../Parser/MoveForwardInstruction";
-import { PenColorInstruction } from "../Parser/PenColorInstruction";
-import { PenDownInstruction } from "../Parser/PenDownInstruction";
-import { PenUpInstruction } from "../Parser/PenUpInstruction";
-import { Program } from "../Parser/Program";
-import { TurnLeftInstruction } from "../Parser/TurnLeftInstruction";
-import { TurnRightInstruction } from "../Parser/TurnRightInstruction";
+import { ArcLeftInstruction } from '../Parser/ArcLeftInstruction';
+import { ArcRightInstruction } from '../Parser/ArcRightInstruction';
+import { CallFunctionInstruction } from '../Parser/CallFunctionInstruction';
+import { DefineFunctionInstruction } from '../Parser/DefineFunctionInstruction';
+import { InstructionVisitor } from '../Parser/InstructionVisitor';
+import { MoveForwardInstruction } from '../Parser/MoveForwardInstruction';
+import { PenColorInstruction } from '../Parser/PenColorInstruction';
+import { PenDownInstruction } from '../Parser/PenDownInstruction';
+import { PenUpInstruction } from '../Parser/PenUpInstruction';
+import { Program } from '../Parser/Program';
+import { TurnLeftInstruction } from '../Parser/TurnLeftInstruction';
+import { TurnRightInstruction } from '../Parser/TurnRightInstruction';
 
 export class StringVisitor implements InstructionVisitor<string> {
     public visitProgram(program: Program): string {

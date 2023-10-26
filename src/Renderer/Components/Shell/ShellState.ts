@@ -1,8 +1,8 @@
-import { Reducer } from "react";
-import { Interpreter } from "../../../Core/Lang/Interpreter/Interpreter";
-import { Token } from "../../../Core/Lang/Lexical/Token";
-import { Parser } from "../../../Core/Lang/Parser/Parser";
-import { Program } from "../../../Core/Lang/Parser/Program";
+import { Reducer } from 'react';
+import { Interpreter } from '../../../Core/Lang/Interpreter/Interpreter';
+import { Token } from '../../../Core/Lang/Lexical/Token';
+import { Parser } from '../../../Core/Lang/Parser/Parser';
+import { Program } from '../../../Core/Lang/Parser/Program';
 
 export type ShellState = {
     instructions: Token[];
@@ -23,7 +23,7 @@ export function getShellStateReducer(): Reducer<ShellState, ShellAction> {
             if (parseResult.type === 'error') {
                 return {
                     ...state,
-                    console: state.console + `Parse error on line ${parseResult.error.token.line + 1}: ${parseResult.error.message}\n`
+                    console: `Parse error on line ${parseResult.error.token.line + 1}: ${parseResult.error.message}\n`,
                 };
             }
 
@@ -32,18 +32,24 @@ export function getShellStateReducer(): Reducer<ShellState, ShellAction> {
             if (interpreterResult.type === 'error') {
                 return {
                     ...state,
-                    console: state.console + `Execution error: ${interpreterResult.error.message}\n`
+                    console: `Execution error: ${interpreterResult.error.message}\n`,
                 };
             }
 
             return {
                 ...state,
-                program: parseResult.result
+                program: parseResult.result,
+                console: '',
             };
         }
 
         function handleSetInstructions(instructions: Token[]): ShellState {
-            return { ...state, instructions: instructions.map((i, index) => ({ ...i, line: index })) };
+            const lineCorrectInstructions = instructions.map((i, index) => ({ ...i, line: index }));
+            if (lineCorrectInstructions.at(-1)?.type !== 'endProgram') {
+                return { ...state, instructions: [...lineCorrectInstructions, { type: 'endProgram', line: lineCorrectInstructions.length }] };
+            } else {
+                return { ...state, instructions: lineCorrectInstructions };
+            }
         }
 
         function handleWriteConsole(message: string): ShellState {

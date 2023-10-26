@@ -1,14 +1,14 @@
-import { ArcLeftInstruction } from "./ArcLeftInstruction";
-import { ArcRightInstruction } from "./ArcRightInstruction";
-import { CallFunctionInstruction } from "./CallFunctionInstruction";
-import { DefineFunctionInstruction } from "./DefineFunctionInstruction";
-import { MoveForwardInstruction } from "./MoveForwardInstruction";
-import { PenColorInstruction } from "./PenColorInstruction";
-import { PenDownInstruction } from "./PenDownInstruction";
-import { PenUpInstruction } from "./PenUpInstruction";
-import { Program } from "./Program";
-import { TurnLeftInstruction } from "./TurnLeftInstruction";
-import { TurnRightInstruction } from "./TurnRightInstruction";
+import { ArcLeftInstruction } from './ArcLeftInstruction';
+import { ArcRightInstruction } from './ArcRightInstruction';
+import { CallFunctionInstruction } from './CallFunctionInstruction';
+import { DefineFunctionInstruction } from './DefineFunctionInstruction';
+import { MoveForwardInstruction } from './MoveForwardInstruction';
+import { PenColorInstruction } from './PenColorInstruction';
+import { PenDownInstruction } from './PenDownInstruction';
+import { PenUpInstruction } from './PenUpInstruction';
+import { Program } from './Program';
+import { TurnLeftInstruction } from './TurnLeftInstruction';
+import { TurnRightInstruction } from './TurnRightInstruction';
 
 export interface InstructionVisitor<TResult> {
     visitProgram(program: Program): TResult;

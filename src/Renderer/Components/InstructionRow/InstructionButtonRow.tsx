@@ -1,4 +1,4 @@
-import { IconButton } from "../IconButton/IconButton";
+import { IconButton } from '../IconButton/IconButton';
 
 export function InstructionButtonRow(props: {
     index: number;

@@ -1,18 +1,18 @@
-import { DrawContext } from "../../Graphics/DrawContext";
-import { Result } from "../../Util/Result";
-import { ArcLeftInstruction } from "../Parser/ArcLeftInstruction";
-import { ArcRightInstruction } from "../Parser/ArcRightInstruction";
-import { CallFunctionInstruction } from "../Parser/CallFunctionInstruction";
-import { DefineFunctionInstruction } from "../Parser/DefineFunctionInstruction";
-import { Instruction } from "../Parser/Instruction";
-import { InstructionVisitor } from "../Parser/InstructionVisitor";
-import { MoveForwardInstruction } from "../Parser/MoveForwardInstruction";
-import { PenColorInstruction } from "../Parser/PenColorInstruction";
-import { PenDownInstruction } from "../Parser/PenDownInstruction";
-import { PenUpInstruction } from "../Parser/PenUpInstruction";
-import { Program } from "../Parser/Program";
-import { TurnLeftInstruction } from "../Parser/TurnLeftInstruction";
-import { TurnRightInstruction } from "../Parser/TurnRightInstruction";
+import { DrawContext } from '../../Graphics/DrawContext';
+import { Result } from '../../Util/Result';
+import { ArcLeftInstruction } from '../Parser/ArcLeftInstruction';
+import { ArcRightInstruction } from '../Parser/ArcRightInstruction';
+import { CallFunctionInstruction } from '../Parser/CallFunctionInstruction';
+import { DefineFunctionInstruction } from '../Parser/DefineFunctionInstruction';
+import { Instruction } from '../Parser/Instruction';
+import { InstructionVisitor } from '../Parser/InstructionVisitor';
+import { MoveForwardInstruction } from '../Parser/MoveForwardInstruction';
+import { PenColorInstruction } from '../Parser/PenColorInstruction';
+import { PenDownInstruction } from '../Parser/PenDownInstruction';
+import { PenUpInstruction } from '../Parser/PenUpInstruction';
+import { Program } from '../Parser/Program';
+import { TurnLeftInstruction } from '../Parser/TurnLeftInstruction';
+import { TurnRightInstruction } from '../Parser/TurnRightInstruction';
 
 type RuntimeError = { message: string };
 

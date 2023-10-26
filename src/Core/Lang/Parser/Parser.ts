@@ -1,18 +1,18 @@
-import { Color } from "../../Graphics/Color";
-import { Result } from "../../Util/Result";
-import { DefineFunctionToken, Token } from "../Lexical/Token";
-import { ArcLeftInstruction } from "./ArcLeftInstruction";
-import { ArcRightInstruction } from "./ArcRightInstruction";
-import { CallFunctionInstruction } from "./CallFunctionInstruction";
-import { DefineFunctionInstruction } from "./DefineFunctionInstruction";
-import { Instruction } from "./Instruction";
-import { MoveForwardInstruction } from "./MoveForwardInstruction";
-import { PenColorInstruction } from "./PenColorInstruction";
-import { PenDownInstruction } from "./PenDownInstruction";
-import { PenUpInstruction } from "./PenUpInstruction";
-import { Program } from "./Program";
-import { TurnLeftInstruction } from "./TurnLeftInstruction";
-import { TurnRightInstruction } from "./TurnRightInstruction";
+import { Color } from '../../Graphics/Color';
+import { Result } from '../../Util/Result';
+import { DefineFunctionToken, Token } from '../Lexical/Token';
+import { ArcLeftInstruction } from './ArcLeftInstruction';
+import { ArcRightInstruction } from './ArcRightInstruction';
+import { CallFunctionInstruction } from './CallFunctionInstruction';
+import { DefineFunctionInstruction } from './DefineFunctionInstruction';
+import { Instruction } from './Instruction';
+import { MoveForwardInstruction } from './MoveForwardInstruction';
+import { PenColorInstruction } from './PenColorInstruction';
+import { PenDownInstruction } from './PenDownInstruction';
+import { PenUpInstruction } from './PenUpInstruction';
+import { Program } from './Program';
+import { TurnLeftInstruction } from './TurnLeftInstruction';
+import { TurnRightInstruction } from './TurnRightInstruction';
 
 export type ParseError = { token: Token; message: string; };
 

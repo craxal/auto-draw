@@ -1,5 +1,5 @@
-import { ContextMenuArgs, ContextMenuItem } from "../Common/ContextMenu";
-import { InternalMenuArgs, InternalMenuItem } from "../Main/ContextMenuManager";
+import { ContextMenuArgs, ContextMenuItem } from '../Common/ContextMenu';
+import { InternalMenuArgs, InternalMenuItem } from '../Main/ContextMenuManager';
 
 declare global {
     interface Window {

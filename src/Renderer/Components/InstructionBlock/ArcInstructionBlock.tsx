@@ -1,5 +1,4 @@
 import { ArcLeftToken, ArcRightToken, Token } from '../../../Core/Lang/Lexical/Token';
-import { ArcLeftInstruction } from '../../../Core/Lang/Parser/ArcLeftInstruction';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
 
@@ -24,7 +23,7 @@ export function ArcInstructionBlock(props: {
     return (
         <>
             <button onClick={(_e) => onIconClick()}>
-                <Icon name={props.instruction instanceof ArcLeftInstruction ? 'RotateLeft' : 'RotateRight'} />
+                <Icon name={props.instruction.type === 'arcLeft' ? 'RotateLeft' : 'RotateRight'} />
             </button>
             {`Arc ${props.instruction.type === 'arcLeft' ? 'left' : 'right'} `}
             <input

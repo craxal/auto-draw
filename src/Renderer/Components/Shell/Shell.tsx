@@ -44,6 +44,9 @@ export function Shell(props: {
                 onCurrentInstructionChange={(index) => handleCurrentInstructionChange(index)}
                 onExecute={() => context.parseInstructions()}
             />
+            <div className={'console'}>
+                <textarea value={context.console} readOnly={true} rows={10} />
+            </div>
         </div>
     );
 }

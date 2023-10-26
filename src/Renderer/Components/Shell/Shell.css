@@ -38,16 +38,33 @@
     display: grid;
     gap: 8px;
     grid-template-columns: 1fr auto;
-    grid-template-rows: 100%;
+    grid-template-rows: 1fr, auto;
     height: 100%;
     width: 100%;
     padding: 8px;
 
     & .canvas {
         grid-column: 1;
+        grid-row: 1;
     }
 
     & .instructions-panel {
         grid-column: 2;
+        grid-row: 1 / 2;
+    }
+
+    & .console {
+        display: grid;
+        grid-column: 1;
+        grid-row: 2;
+
+        & textarea {
+            color: #00ff00;
+            background: #000000;
+            border: 1px solid #a1a1a1;
+            font-size: 12px;
+            padding: 2px;
+            resize: none;
+        }
     }
 }

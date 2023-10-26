@@ -2,6 +2,7 @@ import { DragEvent } from 'react';
 import { ArcLeftToken, ArcRightToken, CallFunctionToken, DefineFunctionToken, MoveForwardToken, PenColorToken, PenDownToken, PenUpToken, Token, TurnLeftToken, TurnRightToken } from '../../../Core/Lang/Lexical/Token';
 import { match } from '../../../Core/Util/Match';
 import { Icon } from '../Icon/Icon';
+import { IconButton } from '../IconButton/IconButton';
 import { ArcInstructionBlock } from './ArcInstructionBlock';
 import { CallFunctionInstructionBlock } from './CallFunctionInstructionBlock';
 import { DefineFunctionInstructionBlock } from './DefineFunctionInstructionBlock';
@@ -12,6 +13,8 @@ import { TurnInstructionBlock } from './TurnInstructionBlock';
 
 export function InstructionBlock(props: {
     instruction: Token;
+    index: number;
+    onAdd(index?: number): void;
     onChange(instruction: Token): void;
     onDelete(): void;
     onDragStart(event: DragEvent<HTMLDivElement>): void;
@@ -77,6 +80,11 @@ export function InstructionBlock(props: {
                 instruction={props.instruction as CallFunctionToken}
                 onChange={(instruction) => props.onChange(instruction)}
             />
+        )],
+        ['endFunction', (
+            <div className={'instruction-buttons'}>
+                <IconButton icon={'Plus'} label={'Add new instruction'} onClick={() => props.onAdd(props.index)} />
+            </div>
         )],
         (<></>)
     );

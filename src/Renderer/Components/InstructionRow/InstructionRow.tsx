@@ -9,6 +9,7 @@ export function InstructionRow(props: {
     indent?: boolean;
     dragDrop?: 'source' | 'target-before' | 'target-after';
     current?: boolean;
+    onAdd(index?: number): void;
     onChange(instruction: Token): void;
     onDelete(): void;
     onDragStart(event: DragEvent<HTMLDivElement>): void;
@@ -36,6 +37,8 @@ export function InstructionRow(props: {
                 <div className={'level'} style={{ width: !!props.indent ? '24px' : undefined }}></div>
                 <InstructionBlock
                     instruction={props.instruction}
+                    index={props.index}
+                    onAdd={(index) => props.onAdd(index)}
                     onChange={(instruction) => props.onChange(instruction)}
                     onDelete={() => props.onDelete()}
                     onDragStart={(e) => props.onDragStart(e)}

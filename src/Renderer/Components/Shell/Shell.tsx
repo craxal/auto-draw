@@ -19,8 +19,9 @@ export function Shell(props: {
         // drawContext.execute(context.lines.slice(0, currentInstruction).map((line) => line.instruction));
     }
 
-    function handleAdd(): void {
-        context.setInstructions([...context.instructions, { type: 'moveForward', line: context.instructions.length, distance: 0 }])
+    function handleAdd(index: number = context.instructions.length): void {
+        const newInstructions = context.instructions.toSpliced(index, 0, { type: 'moveForward', line: context.instructions.length, distance: 0 });
+        context.setInstructions(newInstructions);
     }
 
     function handleInstructionsChange(instructions: Token[]): void {
@@ -37,7 +38,7 @@ export function Shell(props: {
             <InstructionsPanel
                 instructions={context.instructions}
                 currentInstruction={0}
-                onAdd={() => handleAdd()}
+                onAdd={(index) => handleAdd(index)}
                 onInstructionsChange={(instructions) => handleInstructionsChange(instructions)}
                 onCurrentInstructionChange={(index) => handleCurrentInstructionChange(index)}
                 onExecute={() => context.parseInstructions()}

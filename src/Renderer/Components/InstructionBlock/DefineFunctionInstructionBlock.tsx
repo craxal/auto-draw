@@ -17,7 +17,7 @@ export function DefineFunctionInstructionBlock(props: {
     return (
         <>
             <button onClick={(_e) => onIconClick()}>
-                <Icon name={'RectangleList'} />
+                <Icon name={'Code'} />
             </button>
             {'Define function '}
             <input

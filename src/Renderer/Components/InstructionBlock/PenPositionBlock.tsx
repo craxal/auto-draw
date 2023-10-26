@@ -1,5 +1,4 @@
 import { PenDownToken, PenUpToken, Token } from '../../../Core/Lang/Lexical/Token';
-import { PenDownInstruction } from '../../../Core/Lang/Parser/PenDownInstruction';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
 
@@ -11,7 +10,7 @@ export function PenPositionBlock(props: {
         openInstructionContextMenu((instruction) => props.onChange(instruction));
     }
 
-    const text = props.instruction instanceof PenDownInstruction
+    const text = props.instruction.type === 'penDown'
         ? 'Place pen down'
         : 'Pick pen up';
 

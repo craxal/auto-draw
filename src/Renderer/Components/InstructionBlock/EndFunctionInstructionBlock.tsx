@@ -1,9 +1,9 @@
-import { CallFunctionToken, Token } from '../../../Core/Lang/Lexical/Token';
+import { EndFunctionToken, Token } from '../../../Core/Lang/Lexical/Token';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
 
-export function CallFunctionInstructionBlock(props: {
-    instruction: CallFunctionToken;
+export function EndFunctionInstructionBlock(props: {
+    instruction: EndFunctionToken;
     onChange(instruction: Token): void;
 }): JSX.Element {
     function onIconClick(): void {
@@ -19,7 +19,7 @@ export function CallFunctionInstructionBlock(props: {
             <button onClick={(_e) => onIconClick()}>
                 <Icon name={'Code'} />
             </button>
-            {'Call '}
+            {'Define function '}
             <input
                 value={props.instruction.name}
                 onChange={(e) => onNameChange(e.target.value)} />

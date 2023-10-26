@@ -2,6 +2,7 @@ import { IconButton } from "../IconButton/IconButton";
 
 export function InstructionButtonRow(props: {
     index: number;
+    indent?: boolean;
     onAdd(): void;
 }): JSX.Element {
     return (

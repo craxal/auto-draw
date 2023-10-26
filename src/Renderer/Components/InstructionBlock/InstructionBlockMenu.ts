@@ -21,8 +21,9 @@ export async function openInstructionContextMenu(onClick: (instruction: Token) =
                 { type: 'normal', id: 'penColor', label: 'Pen Color', onClick: () => onClick({ type: 'penColor', line: 0, color: '#000000' }) },
             ],
             [
-                { type: 'normal', id: 'defineFunction', label: 'Name instructions', onClick: () => onClick({ type: 'defineFunction', line: 0, name: "do something" }) },
-                { type: 'normal', id: 'callFunction', label: 'Follow instructions', onClick: () => onClick({ type: 'callFunction', line: 0, name: "do something" }) },
+                { type: 'normal', id: 'defineFunction', label: 'Define function', onClick: () => onClick({ type: 'defineFunction', line: 0, name: "do something" }) },
+                { type: 'normal', id: 'endFunction', label: 'End function', onClick: () => onClick({ type: 'endFunction', line: 0, name: "do something" }) },
+                { type: 'normal', id: 'callFunction', label: 'Call function', onClick: () => onClick({ type: 'callFunction', line: 0, name: "do something" }) },
             ]
         ]
     });

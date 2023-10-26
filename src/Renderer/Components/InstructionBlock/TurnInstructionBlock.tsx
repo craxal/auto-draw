@@ -1,12 +1,11 @@
-import { Instruction } from '../../../Core/Lang/Instruction';
-import { TurnLeftInstruction } from '../../../Core/Lang/TurnLeftInstruction';
-import { TurnRightInstruction } from '../../../Core/Lang/TurnRightInstruction';
+import { Token, TurnLeftToken, TurnRightToken } from '../../../Core/Lang/Lexical/Token';
+import { TurnLeftInstruction } from '../../../Core/Lang/Parser/TurnLeftInstruction';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
 
 export function TurnInstructionBlock(props: {
-    instruction: TurnLeftInstruction | TurnRightInstruction;
-    onChange(instruction: Instruction): void;
+    instruction: TurnLeftToken | TurnRightToken;
+    onChange(instruction: Token): void;
 }): JSX.Element {
     function onIconClick(): void {
         openInstructionContextMenu((instruction) => props.onChange(instruction));
@@ -14,10 +13,7 @@ export function TurnInstructionBlock(props: {
 
     function onAngleChange(value: string): void {
         const newAngle = parseInt(value);
-        props.onChange(props.instruction instanceof TurnLeftInstruction
-            ? new TurnLeftInstruction(newAngle)
-            : new TurnRightInstruction(newAngle)
-        );
+        props.onChange({ ...props.instruction, angle: newAngle });
     }
 
     return (
@@ -25,13 +21,13 @@ export function TurnInstructionBlock(props: {
             <button onClick={(_e) => onIconClick()}>
                 <Icon name={props.instruction instanceof TurnLeftInstruction ? 'ArrowLeft' : 'ArrowRight'} />
             </button>
-            {`Turn ${props.instruction instanceof TurnLeftInstruction ? 'left' : 'right'} `}
+            {`Turn ${props.instruction.type === 'turnLeft' ? 'left' : 'right'} `}
             <input
                 type={'number'}
                 min={-720}
                 max={720}
                 step={1}
-                value={props.instruction.angle.degrees}
+                value={props.instruction.angle}
                 onChange={(e) => onAngleChange(e.target.value)} />
             {'°'}
         </>

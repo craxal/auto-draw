@@ -1,12 +1,11 @@
-import { Instruction } from '../../../Core/Lang/Instruction';
-import { PenDownInstruction } from '../../../Core/Lang/PenDownInstruction';
-import { PenUpInstruction } from '../../../Core/Lang/PenUpInstruction';
+import { PenDownToken, PenUpToken, Token } from '../../../Core/Lang/Lexical/Token';
+import { PenDownInstruction } from '../../../Core/Lang/Parser/PenDownInstruction';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
 
 export function PenPositionBlock(props: {
-    instruction: PenDownInstruction | PenUpInstruction;
-    onChange(instruction: Instruction): void;
+    instruction: PenDownToken | PenUpToken;
+    onChange(instruction: Token): void;
 }): JSX.Element {
     function onIconClick(): void {
         openInstructionContextMenu((instruction) => props.onChange(instruction));

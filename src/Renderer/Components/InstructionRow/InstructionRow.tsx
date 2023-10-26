@@ -1,14 +1,15 @@
 import { DragEvent } from 'react';
-import { Instruction } from '../../../Core/Lang/Instruction';
+import { Token } from '../../../Core/Lang/Lexical/Token';
 import { match } from '../../../Core/Util/Match';
 import { InstructionBlock } from '../InstructionBlock/InstructionBlock';
 
 export function InstructionRow(props: {
     index: number;
-    instruction: Instruction;
+    instruction: Token;
+    indent?: boolean;
     dragDrop?: 'source' | 'target-before' | 'target-after';
     current?: boolean;
-    onChange(instruction: Instruction): void;
+    onChange(instruction: Token): void;
     onDelete(): void;
     onDragStart(event: DragEvent<HTMLDivElement>): void;
     onDragEnter(event: DragEvent<HTMLDivElement>): void;
@@ -32,6 +33,7 @@ export function InstructionRow(props: {
                 {props.index + 1}
             </div>
             <div className={'instruction-container'}>
+                <div className={'level'} style={{ width: !!props.indent ? '24px' : undefined }}></div>
                 <InstructionBlock
                     instruction={props.instruction}
                     onChange={(instruction) => props.onChange(instruction)}

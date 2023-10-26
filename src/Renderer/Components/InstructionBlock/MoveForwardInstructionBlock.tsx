@@ -1,11 +1,10 @@
-import { Instruction } from '../../../Core/Lang/Instruction';
-import { MoveForwardInstruction } from '../../../Core/Lang/MoveForwardInstruction';
+import { MoveForwardToken, Token } from '../../../Core/Lang/Lexical/Token';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
 
 export function MoveForwardInstructionBlock(props: {
-    instruction: MoveForwardInstruction;
-    onChange(instruction: Instruction): void;
+    instruction: MoveForwardToken;
+    onChange(instruction: Token): void;
 }): JSX.Element {
     function onIconClick(): void {
         openInstructionContextMenu((instruction) => props.onChange(instruction));
@@ -13,7 +12,7 @@ export function MoveForwardInstructionBlock(props: {
 
     function onDistanceChange(value: string): void {
         const newDistance = parseInt(value);
-        props.onChange(new MoveForwardInstruction(newDistance));
+        props.onChange({ ...props.instruction, distance: newDistance });
     }
 
     return (

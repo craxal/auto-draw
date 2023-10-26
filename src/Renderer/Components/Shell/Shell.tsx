@@ -1,66 +1,46 @@
-import { useState } from 'react';
-import { Color } from '../../../Core/Graphics/Color';
 import { DrawContext } from '../../../Core/Graphics/DrawContext';
-import { ArcLeftInstruction } from '../../../Core/Lang/ArcLeftInstruction';
-import { ArcRightInstruction } from '../../../Core/Lang/ArcRightInstruction';
-import { Instruction } from '../../../Core/Lang/Instruction';
-import { MoveForwardInstruction } from '../../../Core/Lang/MoveForwardInstruction';
-import { PenColorInstruction } from '../../../Core/Lang/PenColorInstruction';
-import { PenDownInstruction } from '../../../Core/Lang/PenDownInstruction';
-import { TurnRightInstruction } from '../../../Core/Lang/TurnRightInstruction';
+import { Interpreter } from '../../../Core/Lang/Interpreter/Interpreter';
+import { Token } from '../../../Core/Lang/Lexical/Token';
 import { Canvas } from '../Canvas/Canvas';
 import { InstructionsPanel } from '../InstructionsPanel/InstructionsPanel';
+import { useShellContext } from './ShellContext';
 
 export function Shell(props: {
+    instructions: Token[],
 }): JSX.Element {
-    const [instructions, setInstructions] = useState<Instruction[]>([
-        new PenColorInstruction(Color.blue),
-        new PenDownInstruction(),
-        // new TurnRight(),
-        new MoveForwardInstruction(100),
-        new TurnRightInstruction(),
-        new MoveForwardInstruction(90),
-        new TurnRightInstruction(),
-        new MoveForwardInstruction(80),
-        new TurnRightInstruction(),
-        new MoveForwardInstruction(70),
-        new TurnRightInstruction(),
-        new MoveForwardInstruction(60),
-        new TurnRightInstruction(120),
-        new MoveForwardInstruction(50),
-        new PenColorInstruction(Color.red),
-        new ArcRightInstruction(135, 40),
-        new MoveForwardInstruction(30),
-        new ArcLeftInstruction(135, 40),
-        // new PenUp(),
-    ]);
-    const [currentInstruction, setCurrentInstruction] = useState(0);
+    const context = useShellContext(props.instructions);
+    // const [currentInstruction, setCurrentInstruction] = useState(context.lines.length);
 
-    function render(context: DrawContext): void {
-        context.execute(instructions.slice(0, currentInstruction));
+    function render(drawContext: DrawContext): void {
+        if (!!context.program) {
+            const interpreter = new Interpreter(drawContext);
+            interpreter.visitProgram(context.program);
+        }
+        // drawContext.execute(context.lines.slice(0, currentInstruction).map((line) => line.instruction));
     }
 
     function handleAdd(): void {
-        setInstructions([...instructions, new MoveForwardInstruction()])
+        context.setInstructions([...context.instructions, { type: 'moveForward', line: context.instructions.length, distance: 0 }])
     }
 
-    function handleInstructionsChange(instructions: Instruction[]): void {
-        setInstructions(instructions);
+    function handleInstructionsChange(instructions: Token[]): void {
+        context.setInstructions(instructions);
     }
 
     function handleCurrentInstructionChange(index: number): void {
-        setCurrentInstruction(Math.max(0, Math.min(index, instructions.length)));
+        // setCurrentInstruction(Math.max(0, Math.min(index, context.instructions.length)));
     }
 
     return (
         <div className={'shell'}>
             <Canvas render={(context) => render(context)} />
             <InstructionsPanel
-                instructions={instructions}
-                currentInstruction={currentInstruction}
+                instructions={context.instructions}
+                currentInstruction={0}
                 onAdd={() => handleAdd()}
                 onInstructionsChange={(instructions) => handleInstructionsChange(instructions)}
                 onCurrentInstructionChange={(index) => handleCurrentInstructionChange(index)}
+                onExecute={() => context.parseInstructions()}
             />
         </div>
     );

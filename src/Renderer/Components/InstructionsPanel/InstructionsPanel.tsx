@@ -1,16 +1,17 @@
 import { DragEvent, useState } from 'react';
-import { Instruction } from '../../../Core/Lang/Instruction';
+import { Token } from '../../../Core/Lang/Lexical/Token';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
 import { InstructionButtonRow } from '../InstructionRow/InstructionButtonRow';
 import { InstructionRow } from '../InstructionRow/InstructionRow';
 
 export function InstructionsPanel(props: {
-    instructions: Instruction[];
+    instructions: Token[];
     currentInstruction: number;
     onAdd(): void;
-    onInstructionsChange(instructions: Instruction[]): void;
+    onInstructionsChange(instructions: Token[]): void;
     onCurrentInstructionChange(index: number): void;
+    onExecute(): void;
 }): JSX.Element {
     const [dragDropSourceIndex, setDragDropSourceIndex] = useState<number | undefined>();
     const [dragDropTargetIndex, setDragDropTargetIndex] = useState<number | undefined>();
@@ -24,18 +25,19 @@ export function InstructionsPanel(props: {
     }
 
     function handlePlayClick(): void {
-        props.onCurrentInstructionChange(props.instructions.length);
+        // props.onCurrentInstructionChange(props.instructions.length);
+        props.onExecute();
     }
 
-    function handleInstructionChange(index: number, instruction: Instruction): void {
+    function handleInstructionChange(index: number, instruction: Token): void {
         const newInstructions = [...props.instructions];
-        newInstructions[index] = instruction;
+        newInstructions[index] = { ...instruction, line: index };
         props.onInstructionsChange(newInstructions);
     }
 
     function handleInstructionDelete(index: number): void {
-        const newInstructions = props.instructions.toSpliced(index, 1);
-        props.onInstructionsChange(newInstructions);
+        // const newInstructions = props.instructions.toSpliced(index, 1);
+        // props.onInstructionsChange(newInstructions);
     }
 
     function handleDragStart(event: DragEvent<HTMLDivElement>, index: number): void {
@@ -60,7 +62,7 @@ export function InstructionsPanel(props: {
         if (dragDropSourceIndex !== undefined && dragDropTargetIndex !== undefined) {
             const newInstructions = [...props.instructions];
             newInstructions.splice(dragDropTargetIndex, 0, newInstructions.splice(dragDropSourceIndex, 1)[0]);
-            props.onInstructionsChange(newInstructions);
+            // props.onInstructionsChange(newInstructions);
         }
     }
 

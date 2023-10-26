@@ -28,6 +28,7 @@
         background: #000000;
         align-content: center;
         display: grid;
+        grid-template-columns: auto 1fr;
         grid-column: code-begin / code-end;
         padding: 2px 4px;
     }

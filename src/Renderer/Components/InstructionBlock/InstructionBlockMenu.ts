@@ -1,38 +1,28 @@
-import { ArcLeftInstruction } from '../../../Core/Lang/ArcLeftInstruction';
-import { ArcRightInstruction } from '../../../Core/Lang/ArcRightInstruction';
-import { CallFunctionInstruction } from '../../../Core/Lang/CallFunctionInstruction';
-import { DefineFunctionInstruction } from '../../../Core/Lang/DefineFunctionInstruction';
-import { Instruction } from "../../../Core/Lang/Instruction";
-import { MoveForwardInstruction } from '../../../Core/Lang/MoveForwardInstruction';
-import { PenColorInstruction } from '../../../Core/Lang/PenColorInstruction';
-import { PenDownInstruction } from '../../../Core/Lang/PenDownInstruction';
-import { PenUpInstruction } from '../../../Core/Lang/PenUpInstruction';
-import { TurnLeftInstruction } from '../../../Core/Lang/TurnLeftInstruction';
-import { TurnRightInstruction } from '../../../Core/Lang/TurnRightInstruction';
+import { Token } from "../../../Core/Lang/Lexical/Token";
 import { openContextMenu } from "../../AppWindow";
 
-export async function openInstructionContextMenu(onChange: (instruction: Instruction) => void): Promise<void> {
+export async function openInstructionContextMenu(onClick: (instruction: Token) => void): Promise<void> {
     await openContextMenu({
         menu: [
             [
-                { type: 'normal', id: 'moveForward', label: 'Move Forward', onClick: () => onChange(new MoveForwardInstruction()) },
+                { type: 'normal', id: 'moveForward', label: 'Move Forward', onClick: () => onClick({ type: 'moveForward', line: 0, distance: 0 }) },
             ],
             [
-                { type: 'normal', id: 'turnLeft', label: 'Turn Left', onClick: () => onChange(new TurnLeftInstruction()) },
-                { type: 'normal', id: 'turnRight', label: 'Turn Right', onClick: () => onChange(new TurnRightInstruction()) },
+                { type: 'normal', id: 'turnLeft', label: 'Turn Left', onClick: () => onClick({ type: 'turnLeft', line: 0, angle: 90 }) },
+                { type: 'normal', id: 'turnRight', label: 'Turn Right', onClick: () => onClick({ type: 'turnRight', line: 0, angle: 90 }) },
             ],
             [
-                { type: 'normal', id: 'arcLeft', label: 'Arc Left', onClick: () => onChange(new ArcLeftInstruction()) },
-                { type: 'normal', id: 'arcRight', label: 'Arc Right', onClick: () => onChange(new ArcRightInstruction()) },
+                { type: 'normal', id: 'arcLeft', label: 'Arc Left', onClick: () => onClick({ type: 'arcLeft', line: 0, angle: 90, radius: 20 }) },
+                { type: 'normal', id: 'arcRight', label: 'Arc Right', onClick: () => onClick({ type: 'arcRight', line: 0, angle: 90, radius: 20 }) },
             ],
             [
-                { type: 'normal', id: 'penUp', label: 'Pen Up', onClick: () => onChange(new PenUpInstruction()) },
-                { type: 'normal', id: 'penDown', label: 'Pen Down', onClick: () => onChange(new PenDownInstruction()) },
-                { type: 'normal', id: 'penColor', label: 'Pen Color', onClick: () => onChange(new PenColorInstruction()) },
+                { type: 'normal', id: 'penUp', label: 'Pen Up', onClick: () => onClick({ type: 'penUp', line: 0 }) },
+                { type: 'normal', id: 'penDown', label: 'Pen Down', onClick: () => onClick({ type: 'penDown', line: 0 }) },
+                { type: 'normal', id: 'penColor', label: 'Pen Color', onClick: () => onClick({ type: 'penColor', line: 0, color: '#000000' }) },
             ],
             [
-                { type: 'normal', id: 'defineFunction', label: 'Name instructions', onClick: () => onChange(new DefineFunctionInstruction("instructions")) },
-                { type: 'normal', id: 'callFunction', label: 'Follow instructions', onClick: () => onChange(new CallFunctionInstruction("instructions")) },
+                { type: 'normal', id: 'defineFunction', label: 'Name instructions', onClick: () => onClick({ type: 'defineFunction', line: 0, name: "do something" }) },
+                { type: 'normal', id: 'callFunction', label: 'Follow instructions', onClick: () => onClick({ type: 'callFunction', line: 0, name: "do something" }) },
             ]
         ]
     });

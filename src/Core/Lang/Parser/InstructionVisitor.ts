@@ -6,10 +6,12 @@ import { MoveForwardInstruction } from "./MoveForwardInstruction";
 import { PenColorInstruction } from "./PenColorInstruction";
 import { PenDownInstruction } from "./PenDownInstruction";
 import { PenUpInstruction } from "./PenUpInstruction";
+import { Program } from "./Program";
 import { TurnLeftInstruction } from "./TurnLeftInstruction";
 import { TurnRightInstruction } from "./TurnRightInstruction";
 
 export interface InstructionVisitor<TResult> {
+    visitProgram(program: Program): TResult;
     visitArcLeftInstruction(instruction: ArcLeftInstruction): TResult;
     visitArcRightInstruction(instruction: ArcRightInstruction): TResult;
     visitMoveForwardInstruction(instruction: MoveForwardInstruction): TResult;

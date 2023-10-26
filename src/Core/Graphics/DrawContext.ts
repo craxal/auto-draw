@@ -1,5 +1,5 @@
-import { Instruction } from '../Lang/Instruction';
-import { Interpreter } from '../Lang/Interpreter';
+import { Interpreter } from '../Lang/Interpreter/Interpreter';
+import { Instruction } from '../Lang/Parser/Instruction';
 import { Log } from '../Util/Log';
 import { Angle, cos, sin } from './Angle';
 import { Color } from './Color';
@@ -121,7 +121,7 @@ export class DrawContext {
         const interpreter = new Interpreter(this);
         for (const instruction of instructions) {
             instruction.accept(interpreter);
-            Log.debug(`${instruction.type}: ${this.pen.toString()}`);
+            Log.debug(`${instruction}: ${this.pen.toString()}`);
         }
         this.#drawCursor();
     }

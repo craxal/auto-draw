@@ -53,7 +53,7 @@ const instructions: Token[] = [
     // { type: 'moveForward', line: 43, distance: 50, },
     // { type: 'turnRight', line: 44, angle: 90, },
     // { type: 'endFunction', line: 45, name: 'Draw a circle', },
-    // { type: 'endProgram', line: 46, },
+    { type: 'endProgram', line: 46, },
 ];
 
 reactRoot.render(<Shell instructions={instructions} />);

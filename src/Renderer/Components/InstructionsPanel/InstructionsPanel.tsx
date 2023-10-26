@@ -2,7 +2,6 @@ import { DragEvent, useState } from 'react';
 import { Token } from '../../../Core/Lang/Lexical/Token';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
-import { InstructionButtonRow } from '../InstructionRow/InstructionButtonRow';
 import { InstructionRow } from '../InstructionRow/InstructionRow';
 
 export function InstructionsPanel(props: {
@@ -109,12 +108,12 @@ export function InstructionsPanel(props: {
             <div className={'instructions-panel-label'}>
                 <Icon name={'Code'} />
                 <label htmlFor={'instruction-list'}>Instructions</label>
-            </div>
-            <div className={'instruction-panel-execute'}>
-                {/* <IconButton icon={'BackwardStep'} onClick={() => handleBackClick()} /> */}
                 <IconButton icon={'Play'} onClick={() => handlePlayClick()} />
-                {/* <IconButton icon={'ForwardStep'} onClick={() => handleForwardClick()} /> */}
             </div>
+            {/* <div className={'instruction-panel-execute'}>
+                <IconButton icon={'BackwardStep'} onClick={() => handleBackClick()} />
+                <IconButton icon={'ForwardStep'} onClick={() => handleForwardClick()} />
+            </div> */}
             <div
                 id={'instruction-list'}
                 className={'instruction-list'}
@@ -124,10 +123,10 @@ export function InstructionsPanel(props: {
                 {
                     getInstructionRows()
                 }
-                <InstructionButtonRow
+                {/* <InstructionButtonRow
                     index={props.instructions.length}
                     onAdd={() => props.onAdd()}
-                />
+                /> */}
             </div>
         </div>
     );

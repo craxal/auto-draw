@@ -83,7 +83,12 @@ export function InstructionBlock(props: {
         )],
         ['endFunction', (
             <div className={'instruction-buttons'}>
-                <IconButton icon={'Plus'} label={'Add new instruction'} onClick={() => props.onAdd(props.index)} />
+                <IconButton icon={'Plus'} label={'Add function instruction'} onClick={() => props.onAdd(props.index)} />
+            </div>
+        )],
+        ['endProgram', (
+            <div className={'instruction-buttons'}>
+                <IconButton icon={'Plus'} label={'Add program instruction'} onClick={() => props.onAdd(props.index)} />
             </div>
         )],
         (<></>)
@@ -92,9 +97,13 @@ export function InstructionBlock(props: {
     return (
         <div
             className={'instruction-block'}
-            draggable={true}
+            draggable={props.instruction.type !== 'endProgram'}
             onDragStart={(e) => props.onDragStart(e)}
-            onDragEnter={(e) => props.onDragEnter(e)}
+            onDragEnter={(e) => {
+                if (props.instruction.type !== 'endProgram') {
+                    props.onDragEnter(e);
+                }
+            }}
         >
             <div className={'handle'} >
                 <Icon name={'GripVertical'} className='handle' />

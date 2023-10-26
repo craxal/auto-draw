@@ -1,5 +1,6 @@
 const { spawn } = require('child_process');
 const gulp = require('gulp');
+const { rm } = require('fs/promises');
 
 function buildTypeScript() {
     return spawn('npx', ['tsc', '-p', '.'], { shell: true, stdio: 'inherit' });
@@ -17,11 +18,7 @@ function buildStatic() {
 }
 
 function clean() {
-    // if (process.platform === "win32") {
-    //     return spawn('pwsh', ['-c', 'rm -Recurse -Force ./dist'], { shell: true, stdio: 'inherit' });
-    // } else {
-    return spawn('rm', ['-dfr', './dist'], { shell: true, stdio: 'inherit' });
-    // }
+    return rm("./dist", { force: true, recursive: true });
 }
 
 const build = gulp.series(

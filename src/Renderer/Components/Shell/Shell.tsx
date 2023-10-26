@@ -16,6 +16,7 @@ export function Shell(props: {
             const interpreter = new Interpreter(drawContext);
             interpreter.visitProgram(context.program);
         }
+        drawContext.drawCursor();
         // drawContext.execute(context.lines.slice(0, currentInstruction).map((line) => line.instruction));
     }
 

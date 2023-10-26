@@ -123,10 +123,10 @@ export class DrawContext {
             instruction.accept(interpreter);
             Log.debug(`${instruction}: ${this.pen.toString()}`);
         }
-        this.#drawCursor();
+        this.drawCursor();
     }
 
-    #drawCursor(): void {
+    public drawCursor(): void {
         this.#context.save();
 
         this.#context.translate(this.pen.coordinates.x, this.pen.coordinates.y);

@@ -17,11 +17,11 @@ function buildStatic() {
 }
 
 function clean() {
-    if (process.platform === "win32") {
-        // return spawn('pwsh', ['-c', 'rm -Recurse -Force ./dist'], { shell: true, stdio: 'inherit' });
-    } else {
-        return spawn('rm', ['-dfr', './dist'], { shell: true, stdio: 'inherit' });
-    }
+    // if (process.platform === "win32") {
+    //     return spawn('pwsh', ['-c', 'rm -Recurse -Force ./dist'], { shell: true, stdio: 'inherit' });
+    // } else {
+    return spawn('rm', ['-dfr', './dist'], { shell: true, stdio: 'inherit' });
+    // }
 }
 
 const build = gulp.series(

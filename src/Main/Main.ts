@@ -1,5 +1,7 @@
-import { app, BrowserWindow } from 'electron';
+import { BrowserWindow, app, ipcMain } from 'electron';
 import * as path from 'path';
+import { ContextMenuArgs } from '../Common/ContextMenu';
+import { openContextMenu } from './ContextMenuManager';
 
 function createWindow() {
     const mainWindow = new BrowserWindow({
@@ -16,6 +18,10 @@ function createWindow() {
     mainWindow.loadFile('./dist/Renderer/Index.html');
     mainWindow.webContents.openDevTools()
 }
+
+ipcMain.handle('context-menu', (e, args: ContextMenuArgs) => {
+    return openContextMenu(args);
+});
 
 app.whenReady().then(() => {
     createWindow()

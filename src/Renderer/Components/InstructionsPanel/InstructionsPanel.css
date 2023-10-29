@@ -1,23 +1,45 @@
 @import url('../InstructionBlock/InstructionBlock.css');
 @import url('../InstructionRow/InstructionRow.css');
+@import url('../IconButton/IconButton.css');
 
 .instructions-panel {
-    color: #00FF00;
+    color: #00ff00;
     display: grid;
-    font-family: 'Fira Code';
-    grid-template-rows: auto 1fr;
-}
+    gap: 4px;
+    grid-template-rows: auto auto 1fr;
 
-.instructions-panel label {
-    font-weight: bold;
-}
+    & .instructions-panel-label {
+        align-items: center;
+        display: grid;
+        gap: 4px;
+        grid-template-columns: auto auto 1fr min-content;
 
-.instructions-panel .instruction-list {
-    align-items: center;
-    background: #000000;
-    border-radius: 4px;
-    display: grid;
-    grid-auto-rows: min-content;
-    grid-template-columns: auto 1fr;
-    padding: 8px 0;
+        & .icon {
+            fill: #00ff00;
+            grid-column: 1;
+            height: 24px;
+            width: 24px;
+        }
+
+        & label {
+            font-weight: bold;
+            grid-column: 2;
+        }
+    }
+
+    /* & .instruction-panel-execute {
+        display: flex;
+        gap: 4px;
+        justify-content: center;
+    } */
+
+    & .instruction-list {
+        align-items: center;
+        background: #000000;
+        border-radius: 4px;
+        display: grid;
+        grid-auto-rows: min-content;
+        grid-template-columns: [symbol-begin] auto [symbol-end line-begin] auto [line-end code-begin] 1fr [code-end];
+        overflow-y: auto;
+    }
 }

@@ -1,189 +1,118 @@
-import { Color } from '../../../Core/Color';
-import { ArcLeftInstruction, ArcRightInstruction, Instruction, MoveForwardInstruction, PenColorInstruction, PenDownInstruction, PenUpInstruction, TurnLeftInstruction, TurnRightInstruction } from '../../../Core/Instruction';
+import { DragEvent } from 'react';
+import { ArcLeftToken, ArcRightToken, CallFunctionToken, DefineFunctionToken, MoveForwardToken, PenColorToken, PenDownToken, PenUpToken, Token, TurnLeftToken, TurnRightToken } from '../../../Core/Lang/Lexical/Token';
+import { match } from '../../../Core/Util/Match';
+import { Icon } from '../Icon/Icon';
+import { IconButton } from '../IconButton/IconButton';
+import { ArcInstructionBlock } from './ArcInstructionBlock';
+import { CallFunctionInstructionBlock } from './CallFunctionInstructionBlock';
+import { DefineFunctionInstructionBlock } from './DefineFunctionInstructionBlock';
+import { MoveForwardInstructionBlock } from './MoveForwardInstructionBlock';
+import { PenColorInstructionBlock } from './PenColorInstructionBlock';
+import { PenPositionBlock } from './PenPositionBlock';
+import { TurnInstructionBlock } from './TurnInstructionBlock';
 
 export function InstructionBlock(props: {
-    instruction: Instruction;
-    onChange(instruction: Instruction): void;
+    instruction: Token;
+    index: number;
+    onAdd(index?: number): void;
+    onChange(instruction: Token): void;
+    onDelete(): void;
+    onDragStart(event: DragEvent<HTMLDivElement>): void;
+    onDragEnter(event: DragEvent<HTMLDivElement>): void;
 }): JSX.Element {
-    switch (props.instruction.name) {
-        case "penDown": return (
-            <PenPositionBlock instruction={props.instruction} />
-        );
-        case "penUp": return (
-            <PenPositionBlock instruction={props.instruction} />
-        );
-        case "penColor": return (
+    const innerBlock = match(props.instruction.type,
+        ['penDown', (
+            <PenPositionBlock
+                instruction={props.instruction as PenDownToken}
+                onChange={(instruction) => props.onChange(instruction)}
+            />
+        )],
+        ['penUp', (
+            <PenPositionBlock
+                instruction={props.instruction as PenUpToken}
+                onChange={(instruction) => props.onChange(instruction)}
+            />
+        )],
+        ['penColor', (
             <PenColorInstructionBlock
-                instruction={props.instruction as PenColorInstruction}
+                instruction={props.instruction as PenColorToken}
                 onChange={(instruction) => props.onChange(instruction)}
             />
-        );
-        case "moveForward": return (
+        )],
+        ['moveForward', (
             <MoveForwardInstructionBlock
-                instruction={props.instruction as MoveForwardInstruction}
+                instruction={props.instruction as MoveForwardToken}
                 onChange={(instruction) => props.onChange(instruction)}
             />
-        );
-        case "turnLeft": return (
+        )],
+        ['turnLeft', (
             <TurnInstructionBlock
-                instruction={props.instruction as TurnLeftInstruction}
+                instruction={props.instruction as TurnLeftToken}
                 onChange={(instruction) => props.onChange(instruction)}
             />
-        );
-        case "turnRight": return (
+        )],
+        ['turnRight', (
             <TurnInstructionBlock
-                instruction={props.instruction as TurnRightInstruction}
+                instruction={props.instruction as TurnRightToken}
                 onChange={(instruction) => props.onChange(instruction)}
             />
-        );
-        case "arcLeft": return (
+        )],
+        ['arcLeft', (
             <ArcInstructionBlock
-                instruction={props.instruction as ArcLeftInstruction}
+                instruction={props.instruction as ArcLeftToken}
                 onChange={(instruction) => props.onChange(instruction)}
             />
-        );
-        case "arcRight": return (
+        )],
+        ['arcRight', (
             <ArcInstructionBlock
-                instruction={props.instruction as ArcRightInstruction}
+                instruction={props.instruction as ArcRightToken}
                 onChange={(instruction) => props.onChange(instruction)}
             />
-        );
-        default: return (
-            <div className='instruction-block'>
-                {props.instruction.name}
+        )],
+        ['defineFunction', (
+            <DefineFunctionInstructionBlock
+                instruction={props.instruction as DefineFunctionToken}
+                onChange={(instruction) => props.onChange(instruction)}
+            />
+        )],
+        ['callFunction', (
+            <CallFunctionInstructionBlock
+                instruction={props.instruction as CallFunctionToken}
+                onChange={(instruction) => props.onChange(instruction)}
+            />
+        )],
+        ['endFunction', (
+            <div className={'instruction-buttons'}>
+                <IconButton icon={'Plus'} label={'Add function instruction'} onClick={() => props.onAdd(props.index)} />
             </div>
-        );
-    }
-}
-
-function PenPositionBlock(props: {
-    instruction: PenDownInstruction | PenUpInstruction;
-}): JSX.Element {
-    const text = props.instruction instanceof PenDownInstruction
-        ? "Place pen down"
-        : "Pick pen up";
-
-    return (
-        <div className='instruction-block'>
-            {text}
-        </div>
+        )],
+        ['endProgram', (
+            <div className={'instruction-buttons'}>
+                <IconButton icon={'Plus'} label={'Add program instruction'} onClick={() => props.onAdd(props.index)} />
+            </div>
+        )],
+        (<></>)
     );
-}
-
-function PenColorInstructionBlock(props: {
-    instruction: PenColorInstruction;
-    onChange(instruction: Instruction): void;
-}): JSX.Element {
-    function onColorChange(value: string): void {
-        const newColor = Color.fromHex(value);
-        props.onChange(new PenColorInstruction(newColor));
-    }
 
     return (
-        <div className='instruction-block'>
-            {'Change color to '}
-            <input
-                type='color'
-                value={props.instruction.color.toHex()}
-                onChange={(e) => onColorChange(e.target.value)}
-            />
-        </div>
-    );
-}
-
-function MoveForwardInstructionBlock(props: {
-    instruction: MoveForwardInstruction;
-    onChange(instruction: Instruction): void;
-}): JSX.Element {
-    function onDistanceChange(value: string): void {
-        const newDistance = parseInt(value);
-        props.onChange(new MoveForwardInstruction(newDistance));
-    }
-
-    return (
-        <div className='instruction-block'>
-            {'Move forward '}
-            <input
-                type='number'
-                min={0}
-                max={10_000}
-                step={1}
-                value={props.instruction.distance}
-                onChange={(e) => onDistanceChange(e.target.value)}
-            />
-            {' pixels'}
-        </div>
-    );
-}
-
-function TurnInstructionBlock(props: {
-    instruction: TurnLeftInstruction | TurnRightInstruction;
-    onChange(instruction: Instruction): void;
-}): JSX.Element {
-    function onAngleChange(value: string): void {
-        const newAngle = parseInt(value);
-        props.onChange(props.instruction instanceof TurnLeftInstruction
-            ? new TurnLeftInstruction(newAngle)
-            : new TurnRightInstruction(newAngle)
-        );
-    }
-
-    return (
-        <div className='instruction-block'>
-            {`Turn ${props.instruction instanceof TurnLeftInstruction ? 'left' : 'right'} `}
-            <input
-                type='number'
-                min={-720}
-                max={720}
-                step={1}
-                value={props.instruction.angle.degrees}
-                onChange={(e) => onAngleChange(e.target.value)}
-            />
-            {'°'}
-        </div>
-    );
-}
-
-function ArcInstructionBlock(props: {
-    instruction: ArcLeftInstruction | ArcRightInstruction;
-    onChange(instruction: Instruction): void;
-}): JSX.Element {
-    function onAngleChange(value: string): void {
-        const newAngle = parseInt(value);
-        props.onChange(props.instruction instanceof ArcLeftInstruction
-            ? new ArcLeftInstruction(newAngle, props.instruction.radius)
-            : new ArcRightInstruction(newAngle, props.instruction.radius)
-        );
-    }
-
-    function onRadiusChange(value: string): void {
-        const newRadius = parseInt(value);
-        props.onChange(props.instruction instanceof ArcLeftInstruction
-            ? new ArcLeftInstruction(props.instruction.angle.degrees, newRadius)
-            : new ArcRightInstruction(props.instruction.angle.degrees, newRadius)
-        );
-    }
-
-    return (
-        <div className='instruction-block'>
-            {`Arc ${props.instruction instanceof ArcLeftInstruction ? 'left' : 'right'} `}
-            <input
-                type='number'
-                min={-720}
-                max={720}
-                step={1}
-                value={props.instruction.angle.degrees}
-                onChange={(e) => onAngleChange(e.target.value)}
-            />
-            {'° with radius '}
-            <input
-                type='number'
-                min={0}
-                max={10_000}
-                step={1}
-                value={props.instruction.radius}
-                onChange={(e) => onRadiusChange(e.target.value)}
-            />
+        <div
+            className={'instruction-block'}
+            draggable={props.instruction.type !== 'endProgram'}
+            onDragStart={(e) => props.onDragStart(e)}
+            onDragEnter={(e) => {
+                if (props.instruction.type !== 'endProgram') {
+                    props.onDragEnter(e);
+                }
+            }}
+        >
+            <div className={'handle'} >
+                <Icon name={'GripVertical'} className='handle' />
+            </div>
+            {innerBlock}
+            <div className={'spacer'} />
+            <button onClick={(_e) => props.onDelete()}>
+                <Icon name={'Trash'} />
+            </button>
         </div>
     );
 }

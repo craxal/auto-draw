@@ -11,6 +11,6 @@ export class Pen {
     public position: PenPosition = 'up';
 
     public toString(): string {
-        return `${this.coordinates.toString()} ${this.angle.toString()} ${this.color.toString()} ${this.position === "up" ? '↑' : '↓'}`;
+        return `${this.coordinates.toString()} ${this.angle.toString()} ${this.color.toString()} ${this.position === 'up' ? '↑' : '↓'}`;
     }
 }

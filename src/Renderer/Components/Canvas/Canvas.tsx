@@ -1,13 +1,15 @@
-import * as React from 'react';
-import { DrawContext } from '../../../Core/DrawContext';
-import { Log } from '../../../Core/Log';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { DrawContext } from '../../../Core/Graphics/DrawContext';
+import { Log } from '../../../Core/Util/Log';
 
 export function Canvas(props: {
     render: (context: DrawContext) => void;
 }): JSX.Element {
-    const canvasElementRef = React.useRef<HTMLCanvasElement>(null);
+    const canvasElementRef = useRef<HTMLCanvasElement>(null);
+    const [width, setWidth] = useState(800);
+    const [height, setHeight] = useState(500);
 
-    React.useLayoutEffect(() => {
+    useLayoutEffect(() => {
         if (!!canvasElementRef.current) {
             const clientRect = canvasElementRef.current.getBoundingClientRect();
             Log.debug(`Canvas resize from (${canvasElementRef.current.width} x ${canvasElementRef.current.height}) to (${clientRect.width} x ${clientRect.height})`)
@@ -22,7 +24,21 @@ export function Canvas(props: {
         }
     });
 
+    useEffect(() => {
+        const observer = new ResizeObserver((entries) => {
+            setWidth(entries[0].contentBoxSize[0].inlineSize);
+            setHeight(entries[0].contentBoxSize[0].blockSize);
+        });
+        if (!!canvasElementRef.current) {
+            observer.observe(canvasElementRef.current);
+        }
+
+        return () => {
+            observer.disconnect();
+        }
+    }, [width, height]);
+
     return (
-        <canvas className="canvas" width={800} height={500} ref={canvasElementRef} />
+        <canvas className={'canvas'} width={width} height={height} ref={canvasElementRef} />
     );
 }

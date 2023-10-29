@@ -1,0 +1,26 @@
+.icon-button {
+    background: #000000;
+    border: 1px solid #00ff00;
+    border-radius: 4px;
+    color: #00ff00;
+
+    & .icon-button-contents {
+        display: flex;
+        gap: 4px;
+
+        .icon svg * {
+            fill: #00ff00;
+        }
+    }
+
+    &:hover {
+        background: #a1ffa1;
+        border: 1px solid #a1ffa1;
+        color: #000000;
+        cursor: pointer;
+
+        .icon svg * {
+            fill: #000000;
+        }
+    }
+}

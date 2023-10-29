@@ -1,9 +1,52 @@
 .instruction-block {
     align-items: center;
-    background: #00FF00;
+    background: #00ff00;
     border-radius: 2px;
     color: #000000;
     display: flex;
     gap: 4px;
+    min-height: 36px;
     padding: 4px;
+
+    & button {
+        background: #00ff00;
+        border: 1px solid #00ff00;
+        border-radius: 4px;
+        color: #000000;
+
+        .icon svg * {
+            fill: #000000;
+        }
+
+        &:hover {
+            background: #a1ffa1;
+            border: 1px solid #000000;
+            color: #000000;
+            cursor: pointer;
+
+            .icon svg * {
+                fill: #000000;
+            }
+        }
+    }
+
+    & input {
+        background-color: #000000;
+        border: 1px solid #000000;
+        border-radius: 2px;
+        color: #00ff00;
+    }
+
+    & .handle {
+        cursor: grab;
+
+        & svg {
+            height: 12px;
+            width: 12px;
+        }
+    }
+
+    & .spacer {
+        flex-grow: 1;
+    }
 }

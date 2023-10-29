@@ -11,6 +11,6 @@ export class Point {
     public get y(): number { return this.#y; }
 
     public toString(): string {
-        return `(${this.#x},${this.#y})`;
+        return `(${Math.round(this.#x)},${Math.round(this.#y)})`;
     }
 }

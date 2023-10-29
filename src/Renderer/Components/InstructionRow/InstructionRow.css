@@ -1,38 +1,87 @@
 .instruction-row {
     display: contents;
-    font-family: 'Fira Code';
-}
 
-.instruction-row .instruction-number {
-    color: #A1A1A1;
-    align-content: center;
-    display: grid;
-    grid-column: 1;
-    height: 100%;
-    justify-content: end;
-    padding: 4px;
-    width: 100%;
-}
+    &::before {
+        content: '';
+        background: transparent;
+        grid-column: symbol-begin / code-end;
+        height: 4px;
+    }
 
-.instruction-row .instruction-container {
-    align-content: center;
-    display: grid;
-    grid-column: 2;
-    padding: 4px;
-}
+    & .instruction-symbol {
+        grid-column: symbol-begin / symbol-end;
+    }
 
-.instruction-row:nth-child(even) .instruction-number {
-    background: #1E1E1E;
-}
+    & .instruction-number {
+        background: #000000;
+        color: #a1a1a1;
+        align-content: center;
+        display: grid;
+        grid-column: line-begin / line-end;
+        height: 100%;
+        justify-content: end;
+        padding: 2px 4px;
+        width: 100%;
+    }
 
-.instruction-row:nth-child(odd) .instruction-number {
-    background: #000000;
-}
+    & .instruction-container {
+        background: #000000;
+        align-content: center;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-column: code-begin / code-end;
+        padding: 2px 4px;
+    }
 
-.instruction-row:nth-child(even) .instruction-container {
-    background: #1E1E1E;
-}
+    & .instruction-buttons {
+        display: flex;
+        gap: 4px;
+        grid-column: code-begin / code-end;
 
-.instruction-row:nth-child(odd) .instruction-container {
-    background: #000000;
+        & .icon-button {
+            background: #000000;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            color: #00ff00;
+            flex-grow: 1;
+
+            & .icon-button-contents {
+                display: flex;
+                gap: 4px;
+
+                .icon svg * {
+                    fill: #00ff00;
+                }
+            }
+
+            &:hover {
+                background: #a1ffa1;
+                border: 1px solid #a1ffa1;
+                color: #000000;
+                cursor: pointer;
+
+                .icon svg * {
+                    fill: #000000;
+                }
+            }
+        }
+    }
+
+    /* &.current .instruction-symbol::before {
+        content: '>';
+    } */
+
+    &.drag-drop-source {
+        & .instruction-container {
+            opacity: 0.5;
+        }
+    }
+
+    &.drag-drop-target-before::before {
+        background: #3e3eff;
+    }
+
+    &.drag-drop-target-after + .instruction-row::before {
+        background: #3e3eff;
+    }
 }

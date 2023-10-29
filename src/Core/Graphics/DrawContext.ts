@@ -1,7 +1,8 @@
+import { Interpreter } from '../Lang/Interpreter/Interpreter';
+import { Instruction } from '../Lang/Parser/Instruction';
+import { Log } from '../Util/Log';
 import { Angle, cos, sin } from './Angle';
 import { Color } from './Color';
-import { Instruction } from './Instruction';
-import { Log } from './Log';
 import { Pen } from './Pen';
 import { Point } from './Point';
 
@@ -12,6 +13,7 @@ export class DrawContext {
     constructor(context: CanvasRenderingContext2D) {
         this.#context = context;
         this.#context.lineWidth = 3;
+        this.#context.lineCap = 'round';
         context.translate(context.canvas.width / 2, context.canvas.height / 2);
     }
 
@@ -116,14 +118,15 @@ export class DrawContext {
     }
 
     public execute(instructions: Instruction[]): void {
+        const interpreter = new Interpreter(this);
         for (const instruction of instructions) {
-            instruction.execute(this);
-            Log.debug(`${instruction.name}: ${this.pen.toString()}`);
+            instruction.accept(interpreter);
+            Log.debug(`${instruction}: ${this.pen.toString()}`);
         }
-        this.#drawCursor();
+        this.drawCursor();
     }
 
-    #drawCursor(): void {
+    public drawCursor(): void {
         this.#context.save();
 
         this.#context.translate(this.pen.coordinates.x, this.pen.coordinates.y);

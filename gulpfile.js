@@ -1,14 +1,16 @@
 const { spawn } = require('child_process');
 const gulp = require('gulp');
+const { rm } = require('fs/promises');
 
 function buildTypeScript() {
-    return spawn('npx', ['tsc', '-p', '.'], { stdio: 'inherit' });
+    return spawn('npx', ['tsc', '-p', '.'], { shell: true, stdio: 'inherit' });
 }
 
 function buildStatic() {
     const globs = [
         './src/**/*.css',
         './src/**/*.html',
+        './src/**/*.svg',
     ];
 
     return gulp.src(globs)
@@ -16,7 +18,7 @@ function buildStatic() {
 }
 
 function clean() {
-    return spawn('rm', ['-rf', './dist'], { stdio: 'inherit' });
+    return rm("./dist", { force: true, recursive: true });
 }
 
 const build = gulp.series(

@@ -1,5 +1,5 @@
-import { Token2 } from "../Lexical/Token2";
-import { Expression } from "./Expression";
+import { Token2 } from '../Lexical/Token2';
+import { Expression } from './Expression';
 
 export interface IStatementVisitor<T> {
     visitBlockStatement(statement: BlockStatement): T;

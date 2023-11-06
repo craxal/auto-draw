@@ -12,7 +12,9 @@ const tokens = scanner.scan();
 const parser = new Parser(tokens);
 const parseResult = parser.parse();
 if (parseResult.type === 'error') {
-    console.error(`${filepath}:${parseResult.error.token.line} > [ERROR] ${parseResult.error.message}`);
+    parseResult.error.forEach((err) => {
+        console.error(`${filepath}:${err.token.line}:${err.token.char} > [ERROR] ${err.message}`);
+    });
 } else {
     const printer = new Printer();
     console.log(printer.print(parseResult.result));

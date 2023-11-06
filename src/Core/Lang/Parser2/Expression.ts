@@ -1,4 +1,4 @@
-import { Token2 } from "../Lexical/Token2";
+import { Token2 } from '../Lexical/Token2';
 
 export abstract class Expression {
     public abstract accept<T>(visitor: IExpressionVisitor<T>): T;

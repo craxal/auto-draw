@@ -1,30 +1,30 @@
-import { Angle } from "../../Graphics/Angle";
-import { Color } from "../../Graphics/Color";
-import { Token2, TokenType2 } from "./Token2";
+import { Angle } from '../../Graphics/Angle';
+import { Color } from '../../Graphics/Color';
+import { Token2, TokenType2 } from './Token2';
 
 type ScannerError = { line: number, message: string };
 
 const keywords = new Map<String, TokenType2>([
-    ["and", 'AND'],
-    ["else", 'ELSE'],
-    ["false", 'FALSE'],
-    ["if", 'IF'],
-    ["let", 'LET'],
-    ["or", 'OR'],
-    ["true", 'TRUE'],
-    ["var", 'VAR'],
-    ["while", 'WHILE'],
+    ['and', 'AND'],
+    ['else', 'ELSE'],
+    ['false', 'FALSE'],
+    ['if', 'IF'],
+    ['let', 'LET'],
+    ['or', 'OR'],
+    ['true', 'TRUE'],
+    ['var', 'VAR'],
+    ['while', 'WHILE'],
 ]);
 const colors = new Map<string, Color>([
-    ["black", Color.black],
-    ["blue", Color.blue],
-    ["gray", Color.gray],
-    ["green", Color.green],
-    ["orange", Color.orange],
-    ["red", Color.red],
-    ["violet", Color.violet],
-    ["white", Color.white],
-    ["yellow", Color.yellow],
+    ['black', Color.black],
+    ['blue', Color.blue],
+    ['gray', Color.gray],
+    ['green', Color.green],
+    ['orange', Color.orange],
+    ['red', Color.red],
+    ['violet', Color.violet],
+    ['white', Color.white],
+    ['yellow', Color.yellow],
 ]);
 
 export class Scanner {
@@ -33,6 +33,7 @@ export class Scanner {
     #start: number = 0;
     #current: number = 0;
     #line: number = 1;
+    #char: number = 1;
     #errors: ScannerError[] = [];
 
     constructor(source: string) {
@@ -46,7 +47,7 @@ export class Scanner {
             this.#scanToken();
         }
 
-        this.#tokens.push(new Token2('EOF', "", null, this.#line));
+        this.#tokens.push(new Token2('EOF', '', null, this.#line, this.#char));
 
         return this.#tokens;
     }
@@ -84,7 +85,7 @@ export class Scanner {
             case ' ': break;
             case '\r': break;
             case '\t': break;
-            case '\n': this.#line++; break;
+            case '\n': this.#line++; this.#char = 1; break;
             default:
                 if (char.match(/[0-9]/)) {
                     this.#addNumberToken();
@@ -105,6 +106,7 @@ export class Scanner {
     }
 
     #advance(): string {
+        this.#char++;
         return this.#source.charAt(this.#current++);
     }
 
@@ -123,13 +125,14 @@ export class Scanner {
         }
 
         this.#current += matchCurrent;
+        this.#char += matchCurrent;
 
         return true;
     }
 
     #addToken(type: TokenType2, literal?: any): void {
         const text = this.#source.substring(this.#start, this.#current);
-        this.#tokens.push(new Token2(type, text, literal, this.#line));
+        this.#tokens.push(new Token2(type, text, literal, this.#line, this.#char));
     }
 
     #addColorToken(): void {

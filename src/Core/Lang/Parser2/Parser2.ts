@@ -46,13 +46,21 @@ let AnotherFunctionToCall = () => {
 export class Parser {
     #tokens: Token2[];
     #current: number = 0;
+    #errors: ParseError[] = [];
 
     constructor(tokens: Token2[]) {
         this.#tokens = tokens;
     }
 
-    public parse(): Result<Program2, ParseError> {
-        return this.#parseProgram();
+    public parse(): Result<Program2, ParseError[]> {
+        const result = this.#parseProgram();
+        if (result.type === 'error') {
+            return { type: 'error', error: [result.error] };
+        } else if (this.#errors.length > 0) {
+            return { type: 'error', error: this.#errors };
+        } else {
+            return result;
+        }
     }
 
     #parseProgram(): Result<Program2, ParseError> {
@@ -60,8 +68,8 @@ export class Parser {
         while (!this.#end()) {
             const result = this.#parseDeclaration();
             if (result.type === 'error') {
-                return result;
-            } else {
+                continue;
+            } else if (!!result.result) {
                 statements.push(result.result);
             }
         }
@@ -74,26 +82,26 @@ export class Parser {
     }
 
     #parseAssignment(): Result<Expression, ParseError> {
-        const expression = this.#parseLogicalOr();
-        if (expression.type === 'error') {
-            return expression;
+        const orResult = this.#parseLogicalOr();
+        if (orResult.type === 'error') {
+            return orResult;
         }
 
         if (this.#match('EQUAL')) {
-            const value = this.#parseEquality();
-            if (value.type === 'error') {
-                return value;
+            const equalToken = this.#previous();
+            const equalityResult = this.#parseEquality();
+            if (equalityResult.type === 'error') {
+                return equalityResult;
             }
 
-            if (value.result instanceof VariableExpression) {
-                const name = value.result.name;
-                return { type: 'result', result: new AssignmentExpression(name, value.result) };
+            if (orResult.result instanceof VariableExpression) {
+                return { type: 'result', result: new AssignmentExpression(orResult.result.name, equalityResult.result) };
             }
 
-            console.log("Invalid assignment target");
+            this.#error(equalToken, 'Invalid assignment target');
         }
 
-        return expression;
+        return orResult;
     }
 
     #parseLogicalOr(): Result<Expression, ParseError> {
@@ -253,7 +261,7 @@ export class Parser {
                 return expression;
             }
 
-            const result = this.#consume('RIGHT_PAREN', "Expected ')' after expression.");
+            const result = this.#consume('RIGHT_PAREN', 'Expected ")" after expression.');
             if (result.type === 'error') {
                 return result;
             } else {
@@ -265,25 +273,29 @@ export class Parser {
             return { type: 'result', result: new VariableExpression(this.#previous()) };
         }
 
-        return { type: 'error', error: { token: this.#peek(), message: 'Invalid expression.' } }
+        return { type: 'error', error: this.#error(this.#peek(), 'Invalid expression.') };
     }
 
-    #parseDeclaration(): Result<Statement, ParseError> {
+    #parseDeclaration(): Result<Statement | undefined, ParseError> {
         if (this.#match('LET') || this.#match('VAR')) {
-            console.log('PARSER >>> Parsing var declaration');
-            return this.#parseVarDeclaration();
+            const result = this.#parseVarDeclaration();
+            if (result.type === 'error') {
+                this.#synchronize();
+                return { type: 'result', result: undefined };
+            } else {
+                return result;
+            }
         }
+
         return this.#parseStatement();
     }
 
     #parseIfStatement(): Result<Statement, ParseError> {
-        console.log('PARSER >>> Parsing condition');
         const condition = this.#parseExpression();
         if (condition.type === 'error') {
             return condition;
         }
 
-        console.log('PARSER >>> Parsing then branch');
         const blockResult = this.#consume('LEFT_BRACE', 'Expected block to follow conditional');
         if (blockResult.type === 'error') {
             return blockResult;
@@ -296,7 +308,6 @@ export class Parser {
 
         let elseBranch: Result<Statement, ParseError> | undefined;
         if (this.#match('ELSE')) {
-            console.log('PARSER >>> Parsing else branch');
             elseBranch = this.#parseStatement();
         }
         if (elseBranch?.type === 'error') {
@@ -307,18 +318,18 @@ export class Parser {
     }
 
     #parseVarDeclaration(): Result<Statement, ParseError> {
-        const name = this.#consume('IDENTIFIER', "Expected variable name.");
+        const name = this.#consume('IDENTIFIER', 'Expected variable name.');
         if (name.type === 'error') {
             return name;
         }
 
-        this.#consume('EQUAL', "Expected variable initialization after declaration.");
+        this.#consume('EQUAL', 'Expected variable initialization after declaration.');
         const initializer = this.#parseExpression();
         if (initializer.type === 'error') {
             return initializer;
         }
 
-        const semicolon = this.#consume('SEMICOLON', "Expected ';' after variable declaration.");
+        const semicolon = this.#consume('SEMICOLON', 'Expected ";" after variable declaration.');
         if (semicolon.type === 'error') {
             return semicolon;
         }
@@ -328,15 +339,12 @@ export class Parser {
 
     #parseStatement(): Result<Statement, ParseError> {
         if (this.#match('IF')) {
-            console.log('PARSER >>> Parsing if statement');
             return this.#parseIfStatement();
         }
         if (this.#match('LEFT_BRACE')) {
-            console.log('PARSER >>> Parsing block');
             return this.#parseBlock();
         }
 
-        console.log('PARSER >>> Parsing expression statement');
         return this.#parseExpressionStatement();
     }
 
@@ -347,12 +355,12 @@ export class Parser {
             const declaration = this.#parseDeclaration();
             if (declaration.type === 'error') {
                 return declaration;
-            } else {
+            } else if (!!declaration.result) {
                 statements.push(declaration.result);
             }
         }
 
-        const brace = this.#consume('RIGHT_BRACE', "Expect '}' after block.");
+        const brace = this.#consume('RIGHT_BRACE', 'Expect "}" after block.');
         if (brace.type === 'error') {
             return brace;
         }
@@ -366,7 +374,7 @@ export class Parser {
             return result;
         }
 
-        const semicolon = this.#consume('SEMICOLON', "Expected ';' after expression.");
+        const semicolon = this.#consume('SEMICOLON', 'Expected ";" after expression.');
         if (semicolon.type === 'error') {
             return semicolon;
         }
@@ -413,7 +421,31 @@ export class Parser {
         if (this.#check(type)) {
             return { type: 'result', result: this.#advance() };
         } else {
-            return { type: 'error', error: { token: this.#peek(), message } };
+            return { type: 'error', error: this.#error(this.#peek(), message) };
+        }
+    }
+
+    #error(token: Token2, message: string): ParseError {
+        const error: ParseError = { token, message };
+        this.#errors.push(error);
+        return error;
+    }
+
+    #synchronize() {
+        this.#advance();
+
+        while (!this.#end()) {
+            if (this.#previous().type == 'SEMICOLON') { return; }
+
+            switch (this.#peek().type) {
+                case 'VAR':
+                case 'LET':
+                case 'IF':
+                case 'WHILE':
+                    return;
+            }
+
+            this.#advance();
         }
     }
 }

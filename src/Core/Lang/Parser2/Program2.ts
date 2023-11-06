@@ -1,5 +1,5 @@
-import { IExpressionVisitor } from "./Expression";
-import { IStatementVisitor, Statement } from "./Statement";
+import { IExpressionVisitor } from './Expression';
+import { IStatementVisitor, Statement } from './Statement';
 
 export interface IProgramVisitor<T, TStmt = T, TExpr = T> extends IStatementVisitor<TStmt>, IExpressionVisitor<TExpr> {
     visitProgram(program: Program2): T;

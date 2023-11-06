@@ -53,15 +53,11 @@ export class Token2 {
         public readonly type: TokenType2,
         public readonly lexeme: string,
         public readonly literal: any,
-        public readonly line: number
-    ) {
-        this.type = type;
-        this.lexeme = lexeme;
-        this.literal = literal;
-        this.line = line;
-    }
+        public readonly line: number,
+        public readonly char: number,
+    ) { }
 
     public toString(): string {
-        return `${this.type} '${this.lexeme}' ${this.literal}`;
+        return `${this.type}:${this.line}:${this.char} '${this.lexeme}'${this.literal ? ` ${this.literal}` : ''}`;
     }
 }

@@ -8,6 +8,7 @@ let MyAngle = 120deg;
 //        PenUp();
 //    }
 //};
+{}
 {
     var a = 1;
     var b = 2;
@@ -18,6 +19,9 @@ let MyAngle = 120deg;
     }
     b = 5;
     DoSomething;
+}
+while false {
+    DoSomethingElse;
 }
 //PenColor(#123456);
 //PenDown();

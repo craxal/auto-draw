@@ -5,7 +5,8 @@ export interface IStatementVisitor<T> {
     visitBlockStatement(statement: BlockStatement): T;
     visitExpressionStatement(statement: ExpressionStatement): T;
     visitIfStatement(statement: IfStatement): T;
-    visitVarStatement(statements: VarStatement): T;
+    visitVarStatement(statement: VarStatement): T;
+    visitWhileStatement(statement: WhileStatement): T;
 }
 
 export abstract class Statement {
@@ -60,5 +61,18 @@ export class VarStatement extends Statement {
 
     public override accept<T>(visitor: IStatementVisitor<T>): T {
         return visitor.visitVarStatement(this);
+    }
+}
+
+export class WhileStatement extends Statement {
+    constructor(
+        public readonly condition: Expression,
+        public readonly body: Statement
+    ) {
+        super();
+    }
+
+    public override accept<T>(visitor: IStatementVisitor<T>): T {
+        return visitor.visitWhileStatement(this);
     }
 }

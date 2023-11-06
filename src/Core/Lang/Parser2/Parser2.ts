@@ -2,7 +2,7 @@ import { Result } from '../../Util/Result';
 import { Token2, TokenType2 } from '../Lexical/Token2';
 import { AssignmentExpression, BinaryExpression, Expression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from './Expression';
 import { Program2 } from './Program2';
-import { BlockStatement, ExpressionStatement, IfStatement, Statement, VarStatement } from './Statement';
+import { BlockStatement, ExpressionStatement, IfStatement, Statement, VarStatement, WhileStatement } from './Statement';
 
 export type ParseError = { token: Token2; message: string; };
 
@@ -11,10 +11,11 @@ program     -> (declaration)* EOF
 
 declaration -> varDecl | statement
 varDecl     -> (LET | VAR) IDENTIFIER EQUAL expression SEMICOLON
-statement   -> exprStmt | blockStmt | ifStmt
+statement   -> exprStmt | blockStmt | ifStmt | whileStmt
 exprStmt    -> expression SEMICOLON
 blockStmt   -> LEFT_BRACE (declaration)* RIGHT_BRACE
 ifStmt      -> IF expression blockStmt (ELSE statement)?
+whileStmt   -> WHILE expression blockStmt
 
 expression  -> assignment
 assignment  -> IDENTIFIER EQUAL assignment | logicalOr
@@ -341,6 +342,9 @@ export class Parser {
         if (this.#match('IF')) {
             return this.#parseIfStatement();
         }
+        if (this.#match('WHILE')) {
+            return this.#parseWhileStatement();
+        }
         if (this.#match('LEFT_BRACE')) {
             return this.#parseBlock();
         }
@@ -360,7 +364,7 @@ export class Parser {
             }
         }
 
-        const brace = this.#consume('RIGHT_BRACE', 'Expect "}" after block.');
+        const brace = this.#consume('RIGHT_BRACE', 'Expected "}" after block.');
         if (brace.type === 'error') {
             return brace;
         }
@@ -380,6 +384,25 @@ export class Parser {
         }
 
         return { type: 'result', result: new ExpressionStatement(result.result) };
+    }
+
+    #parseWhileStatement(): Result<Statement, ParseError> {
+        const condition = this.#parseExpression();
+        if (condition.type === 'error') {
+            return condition;
+        }
+
+        const blockResult = this.#consume('LEFT_BRACE', 'Expected block to follow conditional');
+        if (blockResult.type === 'error') {
+            return blockResult;
+        }
+
+        const body = this.#parseBlock();
+        if (body.type === 'error') {
+            return body;
+        }
+
+        return { type: 'result', result: new WhileStatement(condition.result, body.result) };
     }
 
     #end(): boolean {

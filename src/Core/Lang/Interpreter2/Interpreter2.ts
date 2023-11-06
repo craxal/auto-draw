@@ -4,7 +4,7 @@ import { Result } from '../../Util/Result';
 import { Token2 } from '../Lexical/Token2';
 import { AssignmentExpression, BinaryExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from '../Parser2/Expression';
 import { IProgramVisitor, Program2 } from '../Parser2/Program2';
-import { BlockStatement, ExpressionStatement, IfStatement, VarStatement } from '../Parser2/Statement';
+import { BlockStatement, ExpressionStatement, IfStatement, VarStatement, WhileStatement } from '../Parser2/Statement';
 
 type RuntimeError = { token: Token2; message: string; };
 
@@ -60,6 +60,7 @@ export class Interpreter2 implements IProgramVisitor<Result<any, RuntimeError>>{
         ['PenUp', () => { }],
         ['TurnLeft', (angle: Angle) => { }],
         ['TurnRight', (angle: Angle) => { }],
+        ['Print', (message: string) => this.#print(message)],
     );
 
     public interpret(program: Program2): void {
@@ -127,6 +128,24 @@ export class Interpreter2 implements IProgramVisitor<Result<any, RuntimeError>>{
         }
 
         return this.#environment.define(statement.name, valueResult);
+    }
+
+    public visitWhileStatement(statement: WhileStatement): Result<any, RuntimeError> {
+        while (true) {
+            const conditionResult = statement.condition.accept(this);
+            if (conditionResult.type === 'error') {
+                return conditionResult;
+            } else if (!conditionResult.result) {
+                break;
+            }
+
+            const iterationResult = statement.body.accept(this);
+            if (iterationResult.type === 'error') {
+                return iterationResult;
+            }
+        }
+
+        return { type: 'result', result: undefined };
     }
 
     public visitAssignmentExpression(expression: AssignmentExpression): Result<any, RuntimeError> {
@@ -242,5 +261,9 @@ export class Interpreter2 implements IProgramVisitor<Result<any, RuntimeError>>{
         }
 
         return { token: operator, message: 'Operands must be a number.' };
+    }
+
+    #print(message: string): void {
+        console.log(message);
     }
 }

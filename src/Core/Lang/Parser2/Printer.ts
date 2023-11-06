@@ -1,6 +1,6 @@
 import { AssignmentExpression, BinaryExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from './Expression';
 import { IProgramVisitor, Program2 } from './Program2';
-import { BlockStatement, ExpressionStatement, IfStatement, VarStatement } from './Statement';
+import { BlockStatement, ExpressionStatement, IfStatement, VarStatement, WhileStatement } from './Statement';
 
 export class Printer implements IProgramVisitor<string> {
     public print(program: Program2): void {
@@ -58,6 +58,16 @@ export class Printer implements IProgramVisitor<string> {
             '{var}',
             `├── ${statement.name.lexeme}`,
             `└── ${statement.initializer.accept(this).split('\n').join('\n    ')}`,
+        ];
+
+        return lines.join('\n');
+    }
+
+    public visitWhileStatement(statement: WhileStatement): string {
+        const lines = [
+            '{while}',
+            `├── ${statement.condition.accept(this).split('\n').join('\n│   ')}`,
+            `└── ${statement.body.accept(this).split('\n').join('\n    ')}`,
         ];
 
         return lines.join('\n');

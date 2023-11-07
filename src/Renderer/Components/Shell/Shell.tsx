@@ -2,7 +2,6 @@ import { DrawContext } from '../../../Core/Graphics/DrawContext';
 import { Interpreter } from '../../../Core/Lang/Interpreter/Interpreter';
 import { Token } from '../../../Core/Lang/Lexical/Token';
 import { Canvas } from '../Canvas/Canvas';
-import { InstructionsPanel } from '../InstructionsPanel/InstructionsPanel';
 import { useShellContext } from './ShellContext';
 
 export function Shell(props: {
@@ -36,14 +35,15 @@ export function Shell(props: {
     return (
         <div className={'shell'}>
             <Canvas render={(context) => render(context)} />
-            <InstructionsPanel
+            {/* <InstructionsPanel
                 instructions={context.instructions}
                 currentInstruction={0}
                 onAdd={(index) => handleAdd(index)}
                 onInstructionsChange={(instructions) => handleInstructionsChange(instructions)}
                 onCurrentInstructionChange={(index) => handleCurrentInstructionChange(index)}
                 onExecute={() => context.parseInstructions()}
-            />
+            /> */}
+
             <div className={'console'}>
                 <textarea value={context.console} readOnly={true} rows={10} />
             </div>

@@ -37,7 +37,7 @@ class ShellContext {
 
 export function useShellContext(instructions: Token[]): ShellContext {
     const reducer = getShellStateReducer();
-    const [state, dispatch] = useReducer(reducer, { instructions, console: '' });
+    const [state, dispatch] = useReducer(reducer, { instructions, sourceFilepath: '', sourceText: '', console: '' });
 
     return new ShellContext(state, dispatch);
 }

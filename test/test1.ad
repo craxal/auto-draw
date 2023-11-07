@@ -2,12 +2,12 @@ let MyNum = (3 + 4) * 5;
 let MyColor = #123456;
 let MyAngle = 120deg;
 // let MyComment = 0deg;
-//let MyFunction = (a, b, c) => {
-//    ArcLeft(180, 30);
-//    if MyNum > 4 or MyNum <= 5 {
-//        PenUp();
-//    }
-//};
+fn MyFunction(a, b, c) {
+    ArcLeft(180, 30);
+    if MyNum > 4 or MyNum <= 5 {
+        PenUp();
+    }
+}
 {}
 {
     var a = 1;
@@ -23,13 +23,13 @@ let MyAngle = 120deg;
 while false {
     DoSomethingElse;
 }
-//PenColor(#123456);
-//PenDown();
-//MyFunction(1, 2, 3);
-//ArcLeft(180deg, 30);
-//AnotherFunctionToCall();
-//let AnotherFunctionToCall = () => {
-//    while my_var >= 5 {
-//
-//    }
-//};
+PenColor(#123456);
+PenDown();
+MyFunction(1, 2, 3);
+ArcLeft(180deg, 30);
+AnotherFunctionToCall();
+fn AnotherFunctionToCall() {
+    while my_var >= 5 {
+
+    }
+}

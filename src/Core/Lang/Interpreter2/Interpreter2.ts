@@ -1,12 +1,12 @@
-import { Angle } from '../../Graphics/Angle';
-import { Color } from '../../Graphics/Color';
+import { DrawContext } from '../../Graphics/DrawContext';
 import { Result } from '../../Util/Result';
 import { Token2 } from '../Lexical/Token2';
-import { AssignmentExpression, BinaryExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from '../Parser2/Expression';
+import { AssignmentExpression, BinaryExpression, CallExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from '../Parser2/Expression';
 import { IProgramVisitor, Program2 } from '../Parser2/Program2';
-import { BlockStatement, ExpressionStatement, IfStatement, VarStatement, WhileStatement } from '../Parser2/Statement';
+import { BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, VarStatement, WhileStatement } from '../Parser2/Statement';
+import { AutoDrawCallable, isAutoDrawCallable } from './AutoDrawCallable';
 
-type RuntimeError = { token: Token2; message: string; };
+export type RuntimeError = { token: Token2; message: string; };
 
 class Environment {
     #parent: Environment | undefined;
@@ -50,18 +50,24 @@ class Environment {
     }
 }
 
-export class Interpreter2 implements IProgramVisitor<Result<any, RuntimeError>>{
+export class Interpreter2 implements IProgramVisitor<Result<any, RuntimeError>> {
+    #context: DrawContext;
+
     #environment: Environment = new Environment(undefined,
-        ['ArcLeft', (angle: Angle, radius: number) => { }],
-        ['ArcRight', (angle: Angle, radius: number) => { }],
-        ['MoveForward', (distance: number) => { }],
-        ['PenColor', (color: Color) => { }],
-        ['PenDown', () => { }],
-        ['PenUp', () => { }],
-        ['TurnLeft', (angle: Angle) => { }],
-        ['TurnRight', (angle: Angle) => { }],
-        ['Print', (message: string) => this.#print(message)],
+        ['ArcLeft', { arity: 2, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.arcLeft(args[0], args[1]); } }],
+        ['ArcRight', { arity: 2, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.arcRight(args[0], args[1]); } }],
+        ['MoveForward', { arity: 1, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.moveForward(args[0]); } }],
+        ['PenColor', { arity: 1, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.setPenColor(args[0]); } }],
+        ['PenDown', { arity: 0, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.penDown(); } }],
+        ['PenUp', { arity: 0, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.penUp(); } }],
+        ['TurnLeft', { arity: 1, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.turnLeft(args[0]); } }],
+        ['TurnRight', { arity: 1, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.turnRight(args[0]); } }],
+        ['Print', { arity: 1, call(interpreter: Interpreter2, args: any[]) { console.log(args[0]); } }],
     );
+
+    constructor(context: DrawContext) {
+        this.#context = context;
+    }
 
     public interpret(program: Program2): void {
         const result = program.accept(this);
@@ -110,6 +116,23 @@ export class Interpreter2 implements IProgramVisitor<Result<any, RuntimeError>>{
 
     public visitExpressionStatement(statement: ExpressionStatement): Result<any, RuntimeError> {
         return statement.expression.accept(this);
+    }
+
+    public visitFunctionStatement(statement: FunctionStatement): Result<any, RuntimeError> {
+        const callable: AutoDrawCallable = {
+            arity: statement.parameters.length,
+            call(interpreter: Interpreter2, args: any[]): Result<any, RuntimeError> {
+                const environment = new Environment(interpreter.#environment);
+                for (let argIndex = 0; argIndex < statement.parameters.length; argIndex++) {
+                    environment.define(statement.parameters[argIndex], args[argIndex]);
+                }
+                return interpreter.visitBlockStatement(statement.body);
+            }
+        };
+
+        this.#environment.define(statement.name, callable);
+
+        return { type: 'result', result: undefined };
     }
 
     public visitIfStatement(statement: IfStatement): Result<any, RuntimeError> {
@@ -205,6 +228,31 @@ export class Interpreter2 implements IProgramVisitor<Result<any, RuntimeError>>{
         }
     }
 
+    public visitCallExpression(expression: CallExpression): Result<any, RuntimeError> {
+        const calleeResult = expression.callee.accept(this);
+        if (calleeResult.type === 'error') {
+            return calleeResult;
+        }
+
+        const args: any[] = [];
+        for (const arg of expression.args) {
+            const argResult = arg.accept(this);
+            if (argResult.type === 'error') {
+                return argResult;
+            } else {
+                args.push(argResult.result);
+            }
+        }
+
+        if (!isAutoDrawCallable(calleeResult.result)) {
+            return { type: 'error', error: { token: expression.paren, message: 'Only functions can be called.' } };
+        }
+
+        const callable = calleeResult.result as AutoDrawCallable;
+
+        return callable.call(this, args);
+    }
+
     public visitGroupingExpression(expression: GroupingExpression): Result<any, RuntimeError> {
         return expression.expression.accept(this);
     }
@@ -261,9 +309,5 @@ export class Interpreter2 implements IProgramVisitor<Result<any, RuntimeError>>{
         }
 
         return { token: operator, message: 'Operands must be a number.' };
-    }
-
-    #print(message: string): void {
-        console.log(message);
     }
 }

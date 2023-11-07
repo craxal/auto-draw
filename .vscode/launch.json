@@ -13,7 +13,7 @@
             ],
             "program": "${workspaceFolder}/test/parseTest.js",
             "args": [
-                "./test/test2.ad"
+                "./test/test1.ad"
             ],
             "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": [

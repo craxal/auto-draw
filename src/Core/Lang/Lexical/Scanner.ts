@@ -8,6 +8,7 @@ const keywords = new Map<String, TokenType2>([
     ['and', 'AND'],
     ['else', 'ELSE'],
     ['false', 'FALSE'],
+    ['fn', 'FUNC'],
     ['if', 'IF'],
     ['let', 'LET'],
     ['or', 'OR'],

@@ -1,15 +1,18 @@
 import { Result } from '../../Util/Result';
 import { Token2, TokenType2 } from '../Lexical/Token2';
-import { AssignmentExpression, BinaryExpression, Expression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from './Expression';
+import { AssignmentExpression, BinaryExpression, CallExpression, Expression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from './Expression';
 import { Program2 } from './Program2';
-import { BlockStatement, ExpressionStatement, IfStatement, Statement, VarStatement, WhileStatement } from './Statement';
+import { BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, Statement, VarStatement, WhileStatement } from './Statement';
 
 export type ParseError = { token: Token2; message: string; };
 
 /*
 program     -> (declaration)* EOF
 
-declaration -> varDecl | statement
+declaration -> funcDecl | varDecl | statement
+funDecl     -> FUNC function
+function    -> IDENTIFIER LEFT_PAREN parameters? RIGHT_PAREN blockStmt
+parameters  -> IDENTIFIER (COMMA IDENTIFIER)*
 varDecl     -> (LET | VAR) IDENTIFIER EQUAL expression SEMICOLON
 statement   -> exprStmt | blockStmt | ifStmt | whileStmt
 exprStmt    -> expression SEMICOLON
@@ -25,24 +28,10 @@ equality    -> comparison ((EQUAL_EQUAL | BANG_EQUAL) comparison)*
 comparison  -> term ((LESS | LESS_EQUAL | GREATER | GREATER_EQUAL) term)*
 term        -> factor ((PLUS | MINUS) factor)*
 factor      -> unary ((STAR | SLASH) unary)*
-unary       -> (MINUS | BANG) unary | primary
-primary     -> NUMBER | COLOR | ANGLE | TRUE | FALSE | LEFT_PAREN expression RIGHT_PAREN | IDENTIFIER
-
-let MyVar = (3 + 4) * 5;
-let MyFunction = (a, b, c) => {
-    ArcLeft(180, 30);
-    if MyVar > 4 or MyVar <= 5 {
-        PenUp();
-    }
-};
-PenDown();
-MyFunction(1, 2, 3);
-AnotherFunctionToCall();
-let AnotherFunctionToCall = () => {
-    while my_var >= 5 {
-
-    }
-};
+unary       -> (MINUS | BANG) unary | call
+call        -> primary (LEFT_PAREN arguments RIGHT_PAREN)*
+arguments   -> expression (COMMA expression)*
+primary     -> LEFT_PAREN expression RIGHT_PAREN | NUMBER | COLOR | ANGLE | TRUE | FALSE | IDENTIFIER
 */
 export class Parser {
     #tokens: Token2[];
@@ -83,26 +72,26 @@ export class Parser {
     }
 
     #parseAssignment(): Result<Expression, ParseError> {
-        const orResult = this.#parseLogicalOr();
-        if (orResult.type === 'error') {
-            return orResult;
+        const functionResult = this.#parseLogicalOr();
+        if (functionResult.type === 'error') {
+            return functionResult;
         }
 
         if (this.#match('EQUAL')) {
             const equalToken = this.#previous();
-            const equalityResult = this.#parseEquality();
+            const equalityResult = this.#parseAssignment();
             if (equalityResult.type === 'error') {
                 return equalityResult;
             }
 
-            if (orResult.result instanceof VariableExpression) {
-                return { type: 'result', result: new AssignmentExpression(orResult.result.name, equalityResult.result) };
+            if (functionResult.result instanceof VariableExpression) {
+                return { type: 'result', result: new AssignmentExpression(functionResult.result.name, equalityResult.result) };
             }
 
             this.#error(equalToken, 'Invalid assignment target');
         }
 
-        return orResult;
+        return functionResult;
     }
 
     #parseLogicalOr(): Result<Expression, ParseError> {
@@ -242,7 +231,48 @@ export class Parser {
             }
         }
 
-        return this.#parsePrimary();
+        return this.#parseCall();
+    }
+
+    #parseCall(): Result<Expression, ParseError> {
+        let expression = this.#parsePrimary();
+        if (expression.type === 'error') {
+            return expression;
+        }
+
+        while (true) {
+            if (this.#match('LEFT_PAREN')) {
+                expression = this.#finishCall(expression.result);
+                if (expression.type === 'error') {
+                    return expression;
+                }
+            } else {
+                break;
+            }
+        }
+
+        return expression;
+    }
+
+    #finishCall(callee: Expression): Result<Expression, ParseError> {
+        const args: Expression[] = [];
+        if (!this.#check('RIGHT_PAREN')) {
+            do {
+                const expressionResult = this.#parseExpression();
+                if (expressionResult.type === 'error') {
+                    return expressionResult;
+                } else {
+                    args.push(expressionResult.result);
+                }
+            } while (this.#match('COMMA'));
+        }
+
+        const parenResult = this.#consume('RIGHT_PAREN', 'Expected ")" after arguments.');
+        if (parenResult.type === 'error') {
+            return parenResult;
+        }
+
+        return { type: 'result', result: new CallExpression(callee, parenResult.result, args) };
     }
 
     #parsePrimary(): Result<Expression, ParseError> {
@@ -286,9 +316,70 @@ export class Parser {
             } else {
                 return result;
             }
+        } else if (this.#match('FUNC')) {
+            const result = this.#parseFunction();
+            if (result.type === 'error') {
+                this.#synchronize();
+                return { type: 'result', result: undefined };
+            } else {
+                return result;
+            }
         }
 
-        return this.#parseStatement();
+        const result = this.#parseStatement();
+        if (result.type === 'error') {
+            this.#synchronize();
+            return { type: 'result', result: undefined };
+        } else {
+            return result;
+        }
+    }
+
+    #parseFunction(): Result<Statement, ParseError> {
+        const nameResult = this.#consume('IDENTIFIER', 'Expected function name.');
+        if (nameResult.type === 'error') {
+            return nameResult;
+        }
+
+        const leftParenResult = this.#consume('LEFT_PAREN', 'Expected "(" after function name.');
+        if (leftParenResult.type === 'error') {
+            return leftParenResult;
+        }
+
+        const parameters: Token2[] = [];
+        if (!this.#check('RIGHT_PAREN')) {
+            do {
+                const param = this.#consume('IDENTIFIER', 'Expected parameter.');
+                if (param.type === 'error') {
+                    return param;
+                }
+
+                parameters.push(param.result);
+            } while (this.#match('COMMA'));
+        }
+
+        const parenResult = this.#consume('RIGHT_PAREN', 'Expected ")" after parameters.');
+        if (parenResult.type === 'error') {
+            return parenResult;
+        }
+
+        // const arrowResult = this.#consume('ARROW', 'Expected "=>" after parameters.');
+        // if (arrowResult.type === 'error') {
+        //     return arrowResult;
+        // }
+
+        const braceResult = this.#consume('LEFT_BRACE', 'Expected block to follow parameters.');
+        if (braceResult.type === 'error') {
+            return braceResult;
+        }
+
+        const bodyResult = this.#parseBlock();
+        if (bodyResult.type === 'error') {
+            return bodyResult;
+        }
+
+        return { type: 'result', result: new FunctionStatement(nameResult.result, parameters, bodyResult.result) };
+
     }
 
     #parseIfStatement(): Result<Statement, ParseError> {
@@ -352,7 +443,7 @@ export class Parser {
         return this.#parseExpressionStatement();
     }
 
-    #parseBlock(): Result<Statement, ParseError> {
+    #parseBlock(): Result<BlockStatement, ParseError> {
         const statements: Statement[] = [];
 
         while (!this.#check('RIGHT_BRACE') && !this.#end()) {

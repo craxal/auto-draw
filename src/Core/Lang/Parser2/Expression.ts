@@ -7,7 +7,7 @@ export abstract class Expression {
 export interface IExpressionVisitor<T> {
     visitAssignmentExpression(expression: AssignmentExpression): T;
     visitBinaryExpression(expression: BinaryExpression): T;
-    // visitCall(expr: Expression): T;
+    visitCallExpression(expression: CallExpression): T;
     visitGroupingExpression(expression: GroupingExpression): T;
     visitLogicalExpression(expression: LogicalExpression): T;
     visitLiteralExpression(expression: LiteralExpression): T;
@@ -39,6 +39,20 @@ export class BinaryExpression extends Expression {
 
     public override accept<T>(visitor: IExpressionVisitor<T>): T {
         return visitor.visitBinaryExpression(this);
+    }
+}
+
+export class CallExpression extends Expression {
+    constructor(
+        public readonly callee: Expression,
+        public readonly paren: Token2,
+        public readonly args: Expression[]
+    ) {
+        super();
+    }
+
+    public override accept<T>(visitor: IExpressionVisitor<T>): T {
+        return visitor.visitCallExpression(this);
     }
 }
 

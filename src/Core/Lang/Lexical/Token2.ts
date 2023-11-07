@@ -39,6 +39,7 @@ export type TokenType2 =
     | 'AND'
     | 'ELSE'
     | 'FALSE'
+    | 'FUNC'
     | 'IF'
     | 'LET'
     | 'OR'

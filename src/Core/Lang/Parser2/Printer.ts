@@ -1,6 +1,6 @@
-import { AssignmentExpression, BinaryExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from './Expression';
+import { AssignmentExpression, BinaryExpression, CallExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from './Expression';
 import { IProgramVisitor, Program2 } from './Program2';
-import { BlockStatement, ExpressionStatement, IfStatement, VarStatement, WhileStatement } from './Statement';
+import { BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, VarStatement, WhileStatement } from './Statement';
 
 export class Printer implements IProgramVisitor<string> {
     public print(program: Program2): void {
@@ -30,6 +30,17 @@ export class Printer implements IProgramVisitor<string> {
         const lines = [
             '{~}',
             `└── ${statement.expression.accept(this).split('\n').join('\n    ')}`,
+        ];
+
+        return lines.join('\n');
+    }
+
+    public visitFunctionStatement(statement: FunctionStatement): string {
+        const lines = [
+            `fn`,
+            `├── ${statement.name.lexeme}`,
+            ...statement.parameters.map((param) => `├── ${param.lexeme}`),
+            `└── ${statement.body.accept(this).split('\n').join('\n    ')}`,
         ];
 
         return lines.join('\n');
@@ -89,6 +100,21 @@ export class Printer implements IProgramVisitor<string> {
             `├── ${expression.left.accept(this).split('\n').join('\n│   ')}`,
             `└── ${expression.right.accept(this).split('\n').join('\n    ')}`,
         ];
+
+        return lines.join('\n');
+    }
+
+    public visitCallExpression(expression: CallExpression): string {
+        const lines = expression.args.length > 0
+            ? [
+                `(...)`,
+                `├── ${expression.callee.accept(this).split('\n').join('\n│   ')}`,
+                ...expression.args.slice(0, -1).map((expr) => `├── ${expr.accept(this).split('\n').join('\n│   ')}`),
+                ...expression.args.slice(-1).map((expr) => `└── ${expr.accept(this).split('\n').join('\n    ')}`),
+            ] : [
+                `(...)`,
+                `└── ${expression.callee.accept(this).split('\n').join('\n│   ')}`,
+            ];
 
         return lines.join('\n');
     }

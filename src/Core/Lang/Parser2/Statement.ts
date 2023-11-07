@@ -4,6 +4,7 @@ import { Expression } from './Expression';
 export interface IStatementVisitor<T> {
     visitBlockStatement(statement: BlockStatement): T;
     visitExpressionStatement(statement: ExpressionStatement): T;
+    visitFunctionStatement(statement: FunctionStatement): T;
     visitIfStatement(statement: IfStatement): T;
     visitVarStatement(statement: VarStatement): T;
     visitWhileStatement(statement: WhileStatement): T;
@@ -34,6 +35,20 @@ export class ExpressionStatement extends Statement {
 
     public override accept<T>(visitor: IStatementVisitor<T>): T {
         return visitor.visitExpressionStatement(this);
+    }
+}
+
+export class FunctionStatement extends Statement {
+    constructor(
+        public readonly name: Token2,
+        public readonly parameters: Token2[],
+        public readonly body: BlockStatement
+    ) {
+        super();
+    }
+
+    public override accept<T>(visitor: IStatementVisitor<T>): T {
+        return visitor.visitFunctionStatement(this);
     }
 }
 

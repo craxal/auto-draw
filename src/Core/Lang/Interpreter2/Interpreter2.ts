@@ -8,6 +8,14 @@ import { AutoDrawCallable, isAutoDrawCallable } from './AutoDrawCallable';
 
 export type RuntimeError = { token: Token2; message: string; };
 
+function tryNativeFunction(operation: () => any, token: Token2): Result<any, RuntimeError> {
+    try {
+        return { type: 'result', result: operation() };
+    } catch (error) {
+        return { type: 'error', error: { token, message: (error as Error).message } }
+    }
+}
+
 class Environment {
     #parent: Environment | undefined;
     #values: Map<string, any>;
@@ -41,8 +49,8 @@ class Environment {
 
     public get(name: Token2): Result<any, RuntimeError> {
         const value = this.#values.get(name.lexeme);
-        if (!!value) {
-            return { type: 'result', result: this };
+        if (value !== undefined) {
+            return { type: 'result', result: value };
         }
 
         return this.#parent?.get(name) ??
@@ -51,21 +59,21 @@ class Environment {
 }
 
 export class Interpreter2 implements IProgramVisitor<Result<any, RuntimeError>> {
-    #context: DrawContext;
+    #context: DrawContext | undefined;
 
     #environment: Environment = new Environment(undefined,
-        ['ArcLeft', { arity: 2, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.arcLeft(args[0], args[1]); } }],
-        ['ArcRight', { arity: 2, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.arcRight(args[0], args[1]); } }],
-        ['MoveForward', { arity: 1, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.moveForward(args[0]); } }],
-        ['PenColor', { arity: 1, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.setPenColor(args[0]); } }],
-        ['PenDown', { arity: 0, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.penDown(); } }],
-        ['PenUp', { arity: 0, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.penUp(); } }],
-        ['TurnLeft', { arity: 1, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.turnLeft(args[0]); } }],
-        ['TurnRight', { arity: 1, call(interpreter: Interpreter2, args: any[]) { interpreter.#context.turnRight(args[0]); } }],
-        ['Print', { arity: 1, call(interpreter: Interpreter2, args: any[]) { console.log(args[0]); } }],
+        ['ArcLeft', { arity: 2, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => interpreter.#context?.arcLeft(args[0], args[1]), token); } }],
+        ['ArcRight', { arity: 2, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => interpreter.#context?.arcRight(args[0], args[1]), token); } }],
+        ['MoveForward', { arity: 1, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => interpreter.#context?.moveForward(args[0]), token); } }],
+        ['PenColor', { arity: 1, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => interpreter.#context?.setPenColor(args[0]), token); } }],
+        ['PenDown', { arity: 0, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => interpreter.#context?.penDown(), token); } }],
+        ['PenUp', { arity: 0, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => interpreter.#context?.penUp(), token); } }],
+        ['TurnLeft', { arity: 1, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => interpreter.#context?.turnLeft(args[0]), token); } }],
+        ['TurnRight', { arity: 1, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => interpreter.#context?.turnRight(args[0]), token); } }],
+        ['Print', { arity: 1, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => console.log(args[0]), token); } }],
     );
 
-    constructor(context: DrawContext) {
+    constructor(context?: DrawContext) {
         this.#context = context;
     }
 
@@ -121,7 +129,7 @@ export class Interpreter2 implements IProgramVisitor<Result<any, RuntimeError>> 
     public visitFunctionStatement(statement: FunctionStatement): Result<any, RuntimeError> {
         const callable: AutoDrawCallable = {
             arity: statement.parameters.length,
-            call(interpreter: Interpreter2, args: any[]): Result<any, RuntimeError> {
+            call(interpreter: Interpreter2, token: Token2, args: any[]): Result<any, RuntimeError> {
                 const environment = new Environment(interpreter.#environment);
                 for (let argIndex = 0; argIndex < statement.parameters.length; argIndex++) {
                     environment.define(statement.parameters[argIndex], args[argIndex]);
@@ -150,7 +158,7 @@ export class Interpreter2 implements IProgramVisitor<Result<any, RuntimeError>> 
             return valueResult;
         }
 
-        return this.#environment.define(statement.name, valueResult);
+        return this.#environment.define(statement.name, valueResult.result);
     }
 
     public visitWhileStatement(statement: WhileStatement): Result<any, RuntimeError> {
@@ -177,7 +185,7 @@ export class Interpreter2 implements IProgramVisitor<Result<any, RuntimeError>> 
             return valueResult;
         }
 
-        return this.#environment.set(expression.name, valueResult);
+        return this.#environment.set(expression.name, valueResult.result);
     }
 
     public visitBinaryExpression(expression: BinaryExpression): Result<any, RuntimeError> {
@@ -250,7 +258,7 @@ export class Interpreter2 implements IProgramVisitor<Result<any, RuntimeError>> 
 
         const callable = calleeResult.result as AutoDrawCallable;
 
-        return callable.call(this, args);
+        return callable.call(this, expression.paren, args);
     }
 
     public visitGroupingExpression(expression: GroupingExpression): Result<any, RuntimeError> {

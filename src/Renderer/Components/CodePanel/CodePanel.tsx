@@ -29,9 +29,9 @@ export function CodePanel(props: {
                 <label htmlFor={'code-panel'}>Code</label>
             </div>
             <div className={'code-panel-buttons'}>
-                <IconButton icon={'Play'} onClick={() => handleExecuteClick()} />
-                <IconButton icon={'FileImport'} onClick={() => handleOpenClick()} />
-                <IconButton icon={'FileExport'} onClick={() => handleSaveClick()} />
+                <IconButton icon={'Play'} onClick={() => handleExecuteClick()} title={'Execute'} />
+                <IconButton icon={'FileImport'} onClick={() => handleOpenClick()} title={'Open file'} />
+                <IconButton icon={'FileExport'} onClick={() => handleSaveClick()} title={'Save file'} />
             </div>
             <div className={'code-panel-editor'}>
                 <textarea

@@ -142,7 +142,7 @@ export class Scanner {
         }
 
         const value = this.#source.substring(this.#start, this.#current);
-        this.#addToken('COLOR', colors.get(value) ?? Color.fromHex(value));
+        this.#addToken('COLOR', colors.get(value.slice(1)) ?? Color.fromHex(value));
     }
 
     #addNumberToken(): void {

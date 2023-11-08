@@ -1,0 +1,51 @@
+@import url('../InstructionBlock/InstructionBlock.css');
+@import url('../InstructionRow/InstructionRow.css');
+@import url('../IconButton/IconButton.css');
+
+.code-panel {
+    color: #00ff00;
+    display: grid;
+    gap: 4px;
+    grid-template-rows: auto auto 1fr;
+
+    & .code-panel-label {
+        align-items: center;
+        display: grid;
+        gap: 4px;
+        grid-row: 1;
+        grid-template-columns: auto auto 1fr min-content;
+
+        & .icon {
+            fill: #00ff00;
+            grid-column: 1;
+            height: 24px;
+            width: 24px;
+        }
+
+        & label {
+            font-weight: bold;
+            grid-column: 2;
+        }
+    }
+
+    & .code-panel-buttons {
+        display: flex;
+        gap: 4px;
+        grid-row: 2;
+    }
+
+    & .code-panel-editor {
+        grid-row: 3;
+
+        & textarea {
+            align-items: center;
+            background: #000000;
+            border-radius: 4px;
+            color: #00ff00;
+            height: 100%;
+            overflow-y: auto;
+            padding: 8px;
+            width: 100%;
+        }
+    }
+}

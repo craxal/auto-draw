@@ -4,9 +4,24 @@ import { InternalMenuArgs, InternalMenuItem } from '../Main/ContextMenuManager';
 declare global {
     interface Window {
         app: {
+            saveFile(filepath: string, data: string): Promise<void>;
+            saveAsFile(data: string): Promise<{ filepath: string } | null>;
+            openFile(): Promise<{ filepath: string, data: string } | null>;
             openContextMenu(args: InternalMenuArgs): Promise<string | null>;
         }
     }
+}
+
+export function saveFile(filepath: string, data: string): Promise<void> {
+    return window.app.saveFile(filepath, data);
+}
+
+export function saveAsFile(data: string): Promise<{ filepath: string } | null> {
+    return window.app.saveAsFile(data);
+}
+
+export function openFile(): Promise<{ filepath: string, data: string } | null> {
+    return window.app.openFile();
 }
 
 export async function openContextMenu(args: ContextMenuArgs): Promise<void> {

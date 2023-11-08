@@ -5,6 +5,7 @@ export function IconButton(props: {
     className?: string;
     icon: string;
     label?: string;
+    disabled?: boolean;
     onClick?: () => void;
 }): JSX.Element {
     const className = [
@@ -13,7 +14,7 @@ export function IconButton(props: {
     ].join(' ').trim();
 
     return (
-        <button id={props.id} className={className} onClick={(_e) => props.onClick?.()}>
+        <button id={props.id} className={className} disabled={props.disabled} onClick={(_e) => props.onClick?.()}>
             <div className={'icon-button-contents'}>
                 <Icon name={props.icon} />
                 {

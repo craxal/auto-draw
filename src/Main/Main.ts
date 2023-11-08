@@ -2,6 +2,7 @@ import { BrowserWindow, app, ipcMain } from 'electron';
 import * as path from 'path';
 import { ContextMenuArgs } from '../Common/ContextMenu';
 import { openContextMenu } from './ContextMenuManager';
+import { openFile, saveAsFile, saveFile } from './FileManager';
 
 function createWindow() {
     const mainWindow = new BrowserWindow({
@@ -19,7 +20,19 @@ function createWindow() {
     mainWindow.webContents.openDevTools()
 }
 
-ipcMain.handle('context-menu', (e, args: ContextMenuArgs) => {
+ipcMain.handle('file-save', (_e, args: { filepath: string, data: string }) => {
+    return saveFile(args.filepath, args.data);
+});
+
+ipcMain.handle('file-save-as', (_e, args: { data: string }) => {
+    return saveAsFile(args.data);
+});
+
+ipcMain.handle('file-open', (_e) => {
+    return openFile();
+});
+
+ipcMain.handle('context-menu', (_e, args: ContextMenuArgs) => {
     return openContextMenu(args);
 });
 

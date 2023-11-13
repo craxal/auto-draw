@@ -1,6 +1,7 @@
 @import url('../CodePanel/CodePanel.css');
 @import url('../InstructionsPanel/InstructionsPanel.css');
 @import url('../Canvas/Canvas.css');
+@import url('../Expander/Expander.css');
 
 
 ::-webkit-scrollbar {

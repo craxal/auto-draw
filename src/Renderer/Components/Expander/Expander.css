@@ -1,0 +1,32 @@
+.expander {
+    display: grid;
+
+    & .expander-button {
+        background: transparent;
+        border: none;
+        color: #00ff00;
+        grid-row: 1;
+        grid-template-rows: auto 1fr;
+        padding: 2px 0;
+
+        & .expander-button-content {
+            display: grid;
+            grid-template-columns: 1fr auto;
+
+            & .expander-label {
+                display: grid;
+                grid-column: 1;
+                justify-content: start;
+            }
+
+            & .icon {
+                grid-column: 2;
+                fill: #00ff00;
+            }
+        }
+    }
+
+    & .expander-content {
+        grid-row: 2;
+    }
+}

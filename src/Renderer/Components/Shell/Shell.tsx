@@ -3,6 +3,7 @@ import { Interpreter2 } from '../../../Core/Lang/Interpreter2/Interpreter2';
 import { Token } from '../../../Core/Lang/Lexical/Token';
 import { Canvas } from '../Canvas/Canvas';
 import { CodePanel } from '../CodePanel/CodePanel';
+import { Expander } from '../Expander/Expander';
 import { useShellContext } from './ShellContext';
 
 export function Shell(props: {
@@ -53,9 +54,11 @@ export function Shell(props: {
                 onSaveAs={() => context.saveAsFile()}
                 onExecute={() => context.execute()}
             />
-            <div className={'console'}>
-                <textarea value={context.console} readOnly={true} rows={10} />
-            </div>
+            <Expander label={'Console'}>
+                <div className={'console'}>
+                    <textarea value={context.console} readOnly={true} rows={10} />
+                </div>
+            </Expander>
         </div>
     );
 }

@@ -1,6 +1,5 @@
-import { Result } from '../../Util/Result';
 import { Token2 } from '../Lexical/Token2';
-import { RuntimeError } from './Interpreter2';
+import { RuntimeResult } from './RuntimeResult';
 
 export class Environment {
     #parent: Environment | undefined;
@@ -11,21 +10,21 @@ export class Environment {
         this.#values = new Map(natives);
     }
 
-    public define(name: Token2, value: any): Result<void, RuntimeError> {
+    public define(name: Token2, value: any): RuntimeResult {
         if (this.#values.has(name.lexeme)) {
             return { type: 'error', error: { token: name, message: `Variable '${name.lexeme}' is already defined` } };
         }
 
         this.#values.set(name.lexeme, value);
 
-        return { type: 'result', result: undefined };
+        return { type: 'value', value: undefined };
     }
 
-    public set(name: Token2, value: any): Result<void, RuntimeError> {
+    public set(name: Token2, value: any): RuntimeResult {
         if (this.#values.has(name.lexeme)) {
             this.#values.set(name.lexeme, value);
 
-            return { type: 'result', result: value };
+            return { type: 'value', value };
         }
 
         return this.#parent?.set(name, value) ??
@@ -33,10 +32,10 @@ export class Environment {
 
     }
 
-    public get(name: Token2): Result<any, RuntimeError> {
+    public get(name: Token2): RuntimeResult {
         const value = this.#values.get(name.lexeme);
         if (value !== undefined) {
-            return { type: 'result', result: value };
+            return { type: 'value', value };
         }
 
         return this.#parent?.get(name) ??

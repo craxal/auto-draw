@@ -6,6 +6,7 @@ export interface IStatementVisitor<T> {
     visitExpressionStatement(statement: ExpressionStatement): T;
     visitFunctionStatement(statement: FunctionStatement): T;
     visitIfStatement(statement: IfStatement): T;
+    visitReturnStatement(statement: ReturnStatement): T;
     visitVarStatement(statement: VarStatement): T;
     visitWhileStatement(statement: WhileStatement): T;
 }
@@ -63,6 +64,19 @@ export class IfStatement extends Statement {
 
     public override accept<T>(visitor: IStatementVisitor<T>): T {
         return visitor.visitIfStatement(this);
+    }
+}
+
+export class ReturnStatement extends Statement {
+    constructor(
+        public readonly keyword: Token2,
+        public readonly expression?: Expression,
+    ) {
+        super();
+    }
+
+    public override accept<T>(visitor: IStatementVisitor<T>): T {
+        return visitor.visitReturnStatement(this);
     }
 }
 

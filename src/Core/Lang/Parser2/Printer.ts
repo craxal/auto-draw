@@ -1,6 +1,6 @@
 import { AssignmentExpression, BinaryExpression, CallExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from './Expression';
 import { IProgramVisitor, Program2 } from './Program2';
-import { BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, VarStatement, WhileStatement } from './Statement';
+import { BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, ReturnStatement, VarStatement, WhileStatement } from './Statement';
 
 export class Printer implements IProgramVisitor<string> {
     public print(program: Program2): void {
@@ -59,6 +59,19 @@ export class Printer implements IProgramVisitor<string> {
                 `├── ${statement.condition.accept(this).split('\n').join('\n│   ')}`,
                 `└── ${statement.thenBranch.accept(this).split('\n').join('\n    ')}`,
 
+            ];
+
+        return lines.join('\n');
+    }
+
+    public visitReturnStatement(statement: ReturnStatement): string {
+        const lines = !!statement.expression
+            ? [
+                '{return}',
+                `└── ${statement.expression.accept(this).split('\n').join('\n    ')}`,
+            ]
+            : [
+                '{return}',
             ];
 
         return lines.join('\n');

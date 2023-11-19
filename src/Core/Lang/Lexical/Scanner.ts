@@ -12,6 +12,7 @@ const keywords = new Map<String, TokenType2>([
     ['if', 'IF'],
     ['let', 'LET'],
     ['or', 'OR'],
+    ['return', 'RETURN'],
     ['true', 'TRUE'],
     ['var', 'VAR'],
     ['while', 'WHILE'],

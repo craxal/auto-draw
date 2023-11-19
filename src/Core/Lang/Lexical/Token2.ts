@@ -43,6 +43,7 @@ export type TokenType2 =
     | 'IF'
     | 'LET'
     | 'OR'
+    | 'RETURN'
     | 'TRUE'
     | 'VAR'
     | 'WHILE'

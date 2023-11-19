@@ -2,7 +2,7 @@ import { Result } from '../../Util/Result';
 import { Token2, TokenType2 } from '../Lexical/Token2';
 import { AssignmentExpression, BinaryExpression, CallExpression, Expression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from './Expression';
 import { Program2 } from './Program2';
-import { BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, Statement, VarStatement, WhileStatement } from './Statement';
+import { BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, ReturnStatement, Statement, VarStatement, WhileStatement } from './Statement';
 
 export type ParseError = { token: Token2; message: string; };
 
@@ -14,11 +14,12 @@ funDecl     -> FUNC function
 function    -> IDENTIFIER LEFT_PAREN parameters? RIGHT_PAREN blockStmt
 parameters  -> IDENTIFIER (COMMA IDENTIFIER)*
 varDecl     -> (LET | VAR) IDENTIFIER EQUAL expression SEMICOLON
-statement   -> exprStmt | blockStmt | ifStmt | whileStmt
+statement   -> exprStmt | blockStmt | ifStmt | whileStmt | returnStmt
 exprStmt    -> expression SEMICOLON
 blockStmt   -> LEFT_BRACE (declaration)* RIGHT_BRACE
 ifStmt      -> IF expression blockStmt (ELSE statement)?
 whileStmt   -> WHILE expression blockStmt
+returnStmt  -> RETURN expression? SEMICOLON
 
 expression  -> assignment
 assignment  -> IDENTIFIER EQUAL assignment | logicalOr
@@ -436,6 +437,9 @@ export class Parser {
         if (this.#match('WHILE')) {
             return this.#parseWhileStatement();
         }
+        if (this.#match('RETURN')) {
+            return this.#parseReturnStatement();
+        }
         if (this.#match('LEFT_BRACE')) {
             return this.#parseBlock();
         }
@@ -475,6 +479,23 @@ export class Parser {
         }
 
         return { type: 'result', result: new ExpressionStatement(result.result) };
+    }
+
+    #parseReturnStatement(): Result<Statement, ParseError> {
+        const keyword = this.#previous();
+
+        let value: Expression | undefined;
+        if (!this.#check('SEMICOLON')) {
+            const expressionResult = this.#parseExpression();
+            if (expressionResult.type === 'error') {
+                return expressionResult;
+            } else {
+                value = expressionResult.result;
+            }
+        }
+
+        this.#consume('SEMICOLON', 'Expected ";" after return value.');
+        return { type: 'result', result: new ReturnStatement(keyword, value) };
     }
 
     #parseWhileStatement(): Result<Statement, ParseError> {

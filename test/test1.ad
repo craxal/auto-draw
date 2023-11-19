@@ -27,9 +27,15 @@ PenColor(#123456);
 PenDown();
 MyFunction(1, 2, 3);
 ArcLeft(180deg, 30);
-AnotherFunctionToCall();
-fn AnotherFunctionToCall() {
-    while my_var >= 5 {
+var counter = MakeCounter();
+fn MakeCounter() {
+  var i = 0;
+  fn Count() {
+    i = i + 1;
+    Print(i);
+  }
 
-    }
+  return Count;
 }
+counter();
+counter();

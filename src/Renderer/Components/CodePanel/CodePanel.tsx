@@ -1,3 +1,4 @@
+import { CodeEditor } from '../CodeEditor/CodeEditor';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
 
@@ -33,13 +34,7 @@ export function CodePanel(props: {
                 <IconButton icon={'FileImport'} onClick={() => handleOpenClick()} title={'Open file'} />
                 <IconButton icon={'FileExport'} onClick={() => handleSaveClick()} title={'Save file'} />
             </div>
-            <div className={'code-panel-editor'}>
-                <textarea
-                    spellCheck={false}
-                    value={props.sourceText}
-                    onChange={(e) => props.onSourceTextChange(e.target.value)}
-                />
-            </div>
+            <CodeEditor sourceText={props.sourceText} onChange={(text) => props.onSourceTextChange(text)} />
         </div>
     );
 }

@@ -35,6 +35,7 @@
     }
 
     & .code-panel-editor {
+        border: 1px solid #00ff00;
         grid-row: 3;
 
         & textarea {

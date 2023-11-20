@@ -39,7 +39,7 @@
     background: #1e1e1e;
     display: grid;
     gap: 8px;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr auto;
     height: 100%;
     width: 100%;

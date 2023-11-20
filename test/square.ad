@@ -1,0 +1,15 @@
+fn Square(side) {
+    PenDown();
+    MoveForward(side);
+    TurnRight(90deg);
+    MoveForward(side);
+    TurnRight(90deg);
+    MoveForward(side);
+    TurnRight(90deg);
+    MoveForward(side);
+    TurnRight(90deg);
+    PenUp();
+}
+
+PenColor(#blue);
+Square(100);

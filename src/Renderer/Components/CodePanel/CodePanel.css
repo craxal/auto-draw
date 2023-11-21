@@ -32,6 +32,12 @@
         display: flex;
         gap: 4px;
         grid-row: 2;
+
+        & .separator {
+            background: #00ff00;
+            height: 100%;
+            width: 1px;
+        }
     }
 
     & .code-panel-editor {

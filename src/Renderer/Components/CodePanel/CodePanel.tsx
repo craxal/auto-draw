@@ -19,6 +19,10 @@ export function CodePanel(props: {
         props.onSave();
     }
 
+    function handleSaveAsClick(): void {
+        props.onSaveAs();
+    }
+
     function handleOpenClick(): void {
         props.onOpen();
     }
@@ -30,9 +34,11 @@ export function CodePanel(props: {
                 <label htmlFor={'code-panel'}>Code</label>
             </div>
             <div className={'code-panel-buttons'}>
-                <IconButton icon={'Play'} onClick={() => handleExecuteClick()} title={'Execute'} />
+                <IconButton icon={'File'} onClick={() => handleSaveClick()} title={'Save file'} />
+                <IconButton icon={'FilePen'} onClick={() => handleSaveAsClick()} title={'Save file as'} />
                 <IconButton icon={'FileImport'} onClick={() => handleOpenClick()} title={'Open file'} />
-                <IconButton icon={'FileExport'} onClick={() => handleSaveClick()} title={'Save file'} />
+                <div className={'separator'} />
+                <IconButton icon={'Play'} onClick={() => handleExecuteClick()} title={'Execute'} />
             </div>
             <CodeEditor sourceText={props.sourceText} onChange={(text) => props.onSourceTextChange(text)} />
         </div>

@@ -60,21 +60,14 @@ export function getShellStateReducer(): Reducer<ShellState, ShellAction> {
                 return { ...state, console: message };
             }
 
-            //  Do a "dry" run without actually rendering to find semantic errors.
-            const interpreterResult = new Interpreter2().visitProgram(parseResult.result);
-            if (interpreterResult.type === 'error') {
-                const err = interpreterResult.error;
-                const message = `${state.sourceFilepath}:${err.token.line}:${err.token.char} > [ERROR] ${err.message}`;
-                return {
-                    ...state,
-                    console: message,
-                };
-            }
+            //  Do a "dry" run without actually rendering to get console output and errors.
+            const interpreter = new Interpreter2();
+            interpreter.interpret(parseResult.result);
 
             return {
                 ...state,
                 program: parseResult.result,
-                console: '',
+                console: interpreter.console.join('\n'),
             };
         }
 

@@ -1,5 +1,4 @@
 import { DrawContext } from '../../Graphics/DrawContext';
-import { Result } from '../../Util/Result';
 import { Token2 } from '../Lexical/Token2';
 import { AssignmentExpression, BinaryExpression, CallExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from '../Parser2/Expression';
 import { IProgramVisitor, Program2 } from '../Parser2/Program2';
@@ -11,16 +10,17 @@ import { RuntimeResult } from './RuntimeResult';
 
 export type RuntimeError = { token: Token2; message: string; };
 
-function tryNativeFunction(operation: () => any, token: Token2): Result<any, RuntimeError> {
+function tryNativeFunction(operation: () => any, token: Token2): RuntimeResult {
     try {
-        return { type: 'result', result: operation() };
+        return { type: 'value', value: operation() };
     } catch (error) {
-        return { type: 'error', error: { token, message: (error as Error).message } }
+        return { type: 'error', error: { token, message: (error as Error).message } };
     }
 }
 
 export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
     #context: DrawContext | undefined;
+    #console: string[] = [];
 
     #environment: Environment = new Environment(undefined,
         ['ArcLeft', { arity: 2, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => interpreter.#context?.arcLeft(args[0], args[1]), token); } }],
@@ -31,22 +31,31 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
         ['PenUp', { arity: 0, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => interpreter.#context?.penUp(), token); } }],
         ['TurnLeft', { arity: 1, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => interpreter.#context?.turnLeft(args[0]), token); } }],
         ['TurnRight', { arity: 1, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => interpreter.#context?.turnRight(args[0]), token); } }],
-        ['Print', { arity: 1, call(interpreter: Interpreter2, token: Token2, args: any[]) { return tryNativeFunction(() => console.log(args[0]), token); } }],
+        ['Print', { arity: 1, call(interpreter: Interpreter2, token: Token2, args: any[]) { console.log(`DEBUG >>> Printing '${args[0]}'`); return tryNativeFunction(() => interpreter.#console.push(args[0].toString()), token); } }],
     );
 
     constructor(context?: DrawContext) {
         this.#context = context;
     }
 
+    public get console(): string[] { return this.#console; }
     public get environment(): Environment { return this.#environment; }
+
+    public interpret(program: Program2): void {
+        const result = program.accept(this);
+        if (result.type === 'error') {
+            this.#console.push(result.error.message);
+        }
+    }
 
     public executeBlock(statements: Statement[], environment: Environment): RuntimeResult {
         const previousEnvironment = this.#environment;
         this.#environment = environment;
 
-        for (const stmt of statements) {
-            const result = stmt.accept(this);
-            if (result.type == 'error') {
+        for (const statement of statements) {
+            const result = statement.accept(this);
+            if (result.type !== 'value') {
+                this.#environment = previousEnvironment;
                 return result;
             }
         }
@@ -56,33 +65,8 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
         return { type: 'value', value: undefined };
     }
 
-    public interpret(program: Program2): void {
-        const result = program.accept(this);
-        if (result.type === 'error') {
-            console.log(result.error.message, result.error.token);
-        }
-    }
-
     public visitProgram(program: Program2): RuntimeResult {
-        for (const statement of program.statements) {
-            if (statement instanceof VarStatement) {
-                const defResult = statement.accept(this);
-                if (defResult.type === 'error') {
-                    return defResult;
-                }
-            }
-        }
-
-        for (const statement of program.statements) {
-            if (!(statement instanceof VarStatement)) {
-                const statementResult = statement.accept(this);
-                if (statementResult.type === 'error') {
-                    return statementResult;
-                }
-            }
-        }
-
-        return { type: 'value', value: undefined };
+        return this.executeBlock(program.statements, this.#environment);
     }
 
     public visitBlockStatement(statement: BlockStatement): RuntimeResult {

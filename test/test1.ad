@@ -18,24 +18,29 @@ fn MyFunction(a, b, c) {
         var d = 4;
     }
     b = 5;
-    DoSomething;
+    // DoSomething;
 }
 while false {
-    DoSomethingElse;
+    // DoSomethingElse;
 }
 PenColor(#123456);
 PenDown();
 MyFunction(1, 2, 3);
 ArcLeft(180deg, 30);
-var counter = MakeCounter();
+
 fn MakeCounter() {
   var i = 0;
   fn Count() {
     i = i + 1;
     Print(i);
+    return i;
   }
 
   return Count;
 }
+var counter = MakeCounter();
+
+Print(1);
+
 counter();
 counter();

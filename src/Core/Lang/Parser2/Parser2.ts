@@ -28,7 +28,7 @@ logicalAnd  -> equality (AND equality)*
 equality    -> comparison ((EQUAL_EQUAL | BANG_EQUAL) comparison)*
 comparison  -> term ((LESS | LESS_EQUAL | GREATER | GREATER_EQUAL) term)*
 term        -> factor ((PLUS | MINUS) factor)*
-factor      -> unary ((STAR | SLASH) unary)*
+factor      -> unary ((STAR | SLASH | MOD) unary)*
 unary       -> (MINUS | BANG) unary | call
 call        -> primary (LEFT_PAREN arguments RIGHT_PAREN)*
 arguments   -> expression (COMMA expression)*
@@ -207,7 +207,7 @@ export class Parser {
         }
 
         let expression = result.result;
-        while (this.#match('SLASH', 'STAR')) {
+        while (this.#match('SLASH', 'STAR', 'MOD')) {
             const operator = this.#previous();
 
             const right = this.#parseUnary();

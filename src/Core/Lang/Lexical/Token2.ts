@@ -1,3 +1,5 @@
+import { Value } from "../Types/Value";
+
 export type TokenType2 =
     | 'LEFT_PAREN'
     | 'RIGHT_PAREN'
@@ -20,6 +22,7 @@ export type TokenType2 =
     | 'GREATER_EQUAL'
     | 'LESS'
     | 'LESS_EQUAL'
+    | 'MOD'
 
     // Literals
     | 'ANGLE'
@@ -54,7 +57,7 @@ export class Token2 {
     constructor(
         public readonly type: TokenType2,
         public readonly lexeme: string,
-        public readonly literal: any,
+        public readonly literal: Value | undefined,
         public readonly line: number,
         public readonly char: number,
     ) { }

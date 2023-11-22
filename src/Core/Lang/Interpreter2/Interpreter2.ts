@@ -3,6 +3,16 @@ import { Token2 } from '../Lexical/Token2';
 import { AssignmentExpression, BinaryExpression, CallExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from '../Parser2/Expression';
 import { IProgramVisitor, Program2 } from '../Parser2/Program2';
 import { BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, ReturnStatement, Statement, VarStatement, WhileStatement } from '../Parser2/Statement';
+import { Bool } from '../Types/Bool';
+import { isAddition } from '../Types/IAddition';
+import { isBitwise } from '../Types/IBitwise';
+import { isComparison } from '../Types/IComparison';
+import { isDivision } from '../Types/IDivision';
+import { isEquality } from '../Types/IEquality';
+import { isModulo } from '../Types/IModulo';
+import { isMultiplication } from '../Types/IMultiplication';
+import { isNegation } from '../Types/INegation';
+import { isSubtraction } from '../Types/ISubtraction';
 import { AutoDrawCallable, isAutoDrawCallable } from './AutoDrawCallable';
 import { AutoDrawFunction } from './AutoDrawFunction';
 import { Environment } from './Environment';
@@ -116,7 +126,9 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
             const conditionResult = statement.condition.accept(this);
             if (conditionResult.type !== 'value') {
                 return conditionResult;
-            } else if (!conditionResult.value) {
+            } else if (!(conditionResult.value instanceof Bool)) {
+                // return { type: 'error', error: { token: statement.condition, message: 'Condition must evaluate to a boolean value.' } };
+            } else if (!conditionResult.value.value) {
                 break;
             }
 
@@ -151,37 +163,78 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
         }
         const right = rightResult.value;
 
+        const error = this.#checkOperands(expression.operator, left, right);
+        if (!!error) {
+            return { type: 'error', error };
+        }
+
         switch (expression.operator.type) {
             case 'MINUS':
-                const error1 = this.#checkNumberOperands(expression.operator, left, right);
-                return !!error1 ? { type: 'error', error: error1 } : { type: 'value', value: left - right };
+                if (isSubtraction(left) && isSubtraction(right)) {
+                    return { type: 'value', value: left.subtract(right) };
+                } else {
+                    return { type: 'error', error: { token: expression.operator, message: "Operands cannot subtract." } };
+                }
             case 'SLASH':
-                const error2 = this.#checkNumberOperands(expression.operator, left, right);
-                return !!error2 ? { type: 'error', error: error2 } : { type: 'value', value: left / right };
+                if (isDivision(left) && isDivision(right)) {
+                    return { type: 'value', value: left.divide(right) };
+                } else {
+                    return { type: 'error', error: { token: expression.operator, message: "Operands cannot divide." } };
+                }
+            case 'MOD':
+                if (isModulo(left) && isModulo(right)) {
+                    return { type: 'value', value: left.modulo(right) };
+                } else {
+                    return { type: 'error', error: { token: expression.operator, message: "Operands cannot modulo." } };
+                }
             case 'STAR':
-                const error3 = this.#checkNumberOperands(expression.operator, left, right);
-                return !!error3 ? { type: 'error', error: error3 } : { type: 'value', value: left * right };
+                if (isMultiplication(left) && isMultiplication(right)) {
+                    return { type: 'value', value: left.multiply(right) };
+                } else {
+                    return { type: 'error', error: { token: expression.operator, message: "Operands cannot multiply." } };
+                }
             case 'PLUS':
-                const error4 = this.#checkNumberOperands(expression.operator, left, right);
-                return !!error4 ? { type: 'error', error: error4 } : { type: 'value', value: left + right };
+                if (isAddition(left) && isAddition(right)) {
+                    return { type: 'value', value: left.add(right) };
+                } else {
+                    return { type: 'error', error: { token: expression.operator, message: 'Unable to add operands.' } };
+                }
             case 'GREATER':
-                const error5 = this.#checkNumberOperands(expression.operator, left, right);
-                return !!error5 ? { type: 'error', error: error5 } : { type: 'value', value: left > right };
+                if (isComparison(left) && isComparison(right)) {
+                    return { type: 'value', value: left.greaterThan(right) };
+                } else {
+                    return { type: 'error', error: { token: expression.operator, message: 'Unable to compare operands.' } };
+                }
             case 'GREATER_EQUAL':
-                const error6 = this.#checkNumberOperands(expression.operator, left, right);
-                return !!error6 ? { type: 'error', error: error6 } : { type: 'value', value: left >= right };
+                if (isComparison(left) && isComparison(right)) {
+                    return { type: 'value', value: left.greaterThanOrEqual(right) };
+                } else {
+                    return { type: 'error', error: { token: expression.operator, message: 'Unable to compare operands.' } };
+                }
             case 'LESS':
-                const error7 = this.#checkNumberOperands(expression.operator, left, right);
-                return !!error7 ? { type: 'error', error: error7 } : { type: 'value', value: left < right };
+                if (isComparison(left) && isComparison(right)) {
+                    return { type: 'value', value: left.lessThan(right) };
+                } else {
+                    return { type: 'error', error: { token: expression.operator, message: 'Unable to compare operands.' } };
+                }
             case 'LESS_EQUAL':
-                const error8 = this.#checkNumberOperands(expression.operator, left, right);
-                return !!error8 ? { type: 'error', error: error8 } : { type: 'value', value: left <= right };
+                if (isComparison(left) && isComparison(right)) {
+                    return { type: 'value', value: left.lessThanOrEqual(right) };
+                } else {
+                    return { type: 'error', error: { token: expression.operator, message: 'Unable to compare operands.' } };
+                }
             case 'BANG_EQUAL':
-                const error9 = this.#checkNumberOperands(expression.operator, left, right);
-                return !!error9 ? { type: 'error', error: error9 } : { type: 'value', value: left !== right };
+                if (isEquality(left) && isEquality(right)) {
+                    return { type: 'value', value: left.notEqual(right) };
+                } else {
+                    return { type: 'error', error: { token: expression.operator, message: 'Unable to compare operands.' } };
+                }
             case 'EQUAL_EQUAL':
-                const error10 = this.#checkNumberOperands(expression.operator, left, right);
-                return !!error10 ? { type: 'error', error: error10 } : { type: 'value', value: left === right };
+                if (isEquality(left) && isEquality(right)) {
+                    return { type: 'value', value: left.equal(right) };
+                } else {
+                    return { type: 'error', error: { token: expression.operator, message: 'Unable to compare operands.' } };
+                }
             default: return { type: 'error', error: { token: expression.operator, message: 'Unknown error' } };
         }
     }
@@ -224,6 +277,9 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
         if (left.type !== 'value') {
             return left;
         }
+        if (!(left.value instanceof Bool)) {
+            return { type: 'error', error: { token: expression.operator, message: 'Operands must evaluate to boolean values.' } };
+        }
 
         if (expression.operator.type == 'OR') {
             if (!!left.value) {
@@ -235,7 +291,15 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
             }
         }
 
-        return expression.right.accept(this);
+        const right = expression.right.accept(this);
+        if (right.type !== 'value') {
+            return right;
+        }
+        if (!(right.value instanceof Bool)) {
+            return { type: 'error', error: { token: expression.operator, message: 'Operands must evaluate to boolean values.' } };
+        }
+
+        return right;
     }
 
     public visitUnaryExpression(expression: UnaryExpression): RuntimeResult {
@@ -245,14 +309,24 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
         }
         const right = rightResult.value;
 
-        const error = this.#checkNumberOperands(expression.operator, right);
+        const error = this.#checkOperands(expression.operator, right);
         if (!!error) {
             return { type: 'error', error };
         }
 
         switch (expression.operator.type) {
-            case 'MINUS': return { type: 'value', value: -right };
-            case 'BANG': return { type: 'value', value: !right };
+            case 'MINUS':
+                if (isNegation(right)) {
+                    return { type: 'value', value: right.negate() };
+                } else {
+                    return { type: 'error', error: { token: expression.operator, message: 'Unable to negate operand.' } };
+                }
+            case 'BANG':
+                if (isBitwise(right)) {
+                    return { type: 'value', value: right.not() };
+                } else {
+                    return { type: 'error', error: { token: expression.operator, message: 'Unable to bitwise not operand.' } };
+                }
             default: return { type: 'error', error: { token: expression.operator, message: 'Unknown error' } };
         }
     }
@@ -261,11 +335,11 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
         return this.#environment.get(expression.name);
     }
 
-    #checkNumberOperands(operator: Token2, ...operands: any[]): RuntimeError | undefined {
-        if (operands.every((op) => typeof op === 'number')) {
+    #checkOperands(operator: Token2, ...operands: any[]): RuntimeError | undefined {
+        if (operands.every((op) => typeof op === typeof operands[0])) {
             return;
         }
 
-        return { token: operator, message: 'Operands must be a number.' };
+        return { token: operator, message: 'Operands must be all be of the same type' };
     }
 }

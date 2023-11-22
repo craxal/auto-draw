@@ -1,8 +1,8 @@
 import { Interpreter } from '../Lang/Interpreter/Interpreter';
 import { Instruction } from '../Lang/Parser/Instruction';
+import { Angle } from '../Lang/Types/Angle';
+import { Color } from '../Lang/Types/Color';
 import { Log } from '../Util/Log';
-import { Angle, cos, sin } from './Angle';
-import { Color } from './Color';
 import { Pen } from './Pen';
 import { Point } from './Point';
 
@@ -34,17 +34,17 @@ export class DrawContext {
     }
 
     public turnLeft(angle: Angle = Angle.right): void {
-        this.pen.angle = Angle.normalize(Angle.subtract(this.pen.angle, angle))
+        this.pen.angle = Angle.reduce(Angle.subtract(this.pen.angle, angle));
     }
 
     public turnRight(angle: Angle = Angle.right): void {
-        this.pen.angle = Angle.normalize(Angle.add(this.pen.angle, angle));
+        this.pen.angle = Angle.reduce(Angle.add(this.pen.angle, angle));
     }
 
     public moveForward(distance: number): void {
         const newPosition = new Point(
-            this.pen.coordinates.x + distance * cos(this.pen.angle),
-            this.pen.coordinates.y + distance * sin(this.pen.angle),
+            this.pen.coordinates.x + distance * this.pen.angle.cos(),
+            this.pen.coordinates.y + distance * this.pen.angle.sin(),
         );
 
         this.#context.beginPath();
@@ -63,8 +63,8 @@ export class DrawContext {
         const startAngle = Angle.add(this.pen.angle, Angle.right);
         const endAngle = Angle.add(Angle.subtract(this.pen.angle, angle), Angle.right);
         const center = new Point(
-            this.pen.coordinates.x + radius * sin(this.pen.angle),
-            this.pen.coordinates.y - radius * cos(this.pen.angle),
+            this.pen.coordinates.x + radius * this.pen.angle.sin(),
+            this.pen.coordinates.y - radius * this.pen.angle.cos(),
         );
 
         this.#context.beginPath();
@@ -82,18 +82,18 @@ export class DrawContext {
 
         const penAnglePlusRightMinusAngle = Angle.subtract(Angle.add(this.pen.angle, Angle.right), angle);
         this.pen.coordinates = new Point(
-            center.x + radius * cos(penAnglePlusRightMinusAngle),
-            center.y + radius * sin(penAnglePlusRightMinusAngle),
+            center.x + radius * penAnglePlusRightMinusAngle.cos(),
+            center.y + radius * penAnglePlusRightMinusAngle.sin(),
         );
-        this.pen.angle = Angle.normalize(Angle.subtract(this.pen.angle, angle));
+        this.pen.angle = Angle.reduce(Angle.subtract(this.pen.angle, angle));
     }
 
     public arcRight(angle: Angle, radius: number): void {
         const startAngle = Angle.subtract(this.pen.angle, Angle.right);
         const endAngle = Angle.subtract(Angle.add(this.pen.angle, angle), Angle.right);
         const center = new Point(
-            this.pen.coordinates.x - radius * sin(this.pen.angle),
-            this.pen.coordinates.y + radius * cos(this.pen.angle),
+            this.pen.coordinates.x - radius * this.pen.angle.sin(),
+            this.pen.coordinates.y + radius * this.pen.angle.cos(),
         );
 
         this.#context.beginPath();
@@ -111,10 +111,10 @@ export class DrawContext {
 
         const angleMinusPenAnglePlusRight = Angle.subtract(Angle.add(angle, this.pen.angle), Angle.right);
         this.pen.coordinates = new Point(
-            center.x + radius * cos(angleMinusPenAnglePlusRight),
-            center.y + radius * sin(angleMinusPenAnglePlusRight),
+            center.x + radius * angleMinusPenAnglePlusRight.cos(),
+            center.y + radius * angleMinusPenAnglePlusRight.sin(),
         );
-        this.pen.angle = Angle.normalize(Angle.add(this.pen.angle, angle));
+        this.pen.angle = Angle.reduce(Angle.add(this.pen.angle, angle));
     }
 
     public execute(instructions: Instruction[]): void {

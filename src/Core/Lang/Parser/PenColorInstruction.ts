@@ -1,4 +1,4 @@
-import { Color } from '../../Graphics/Color';
+import { Color } from '../Types/Color';
 import { Instruction } from './Instruction';
 import { InstructionVisitor } from './InstructionVisitor';
 

@@ -1,8 +1,10 @@
-import { Angle } from '../../Graphics/Angle';
-import { Color } from '../../Graphics/Color';
+import { Angle } from '../Types/Angle';
+import { Color } from '../Types/Color';
+import { Integer } from '../Types/Integer';
+import { Value } from '../Types/Value';
 import { Token2, TokenType2 } from './Token2';
 
-type ScannerError = { line: number, message: string };
+type ScannerError = { line: number, message: string; };
 
 const keywords = new Map<String, TokenType2>([
     ['and', 'AND'],
@@ -49,7 +51,7 @@ export class Scanner {
             this.#scanToken();
         }
 
-        this.#tokens.push(new Token2('EOF', '', null, this.#line, this.#char));
+        this.#tokens.push(new Token2('EOF', '', undefined, this.#line, this.#char));
 
         return this.#tokens;
     }
@@ -79,6 +81,7 @@ export class Scanner {
                     this.#addToken('SLASH');
                 }
                 break;
+            case '%': this.#addToken('MOD'); break;
             case '!': this.#addToken(this.#match('=') ? 'BANG_EQUAL' : 'BANG'); break;
             case '=': this.#addToken(this.#match('=') ? 'EQUAL_EQUAL' : this.#match('>') ? 'ARROW' : 'EQUAL'); break;
             case '<': this.#addToken(this.#match('=') ? 'LESS_EQUAL' : 'LESS'); break;
@@ -132,7 +135,7 @@ export class Scanner {
         return true;
     }
 
-    #addToken(type: TokenType2, literal?: any): void {
+    #addToken(type: TokenType2, literal?: Value): void {
         const text = this.#source.substring(this.#start, this.#current);
         this.#tokens.push(new Token2(type, text, literal, this.#line, this.#char));
     }
@@ -156,7 +159,7 @@ export class Scanner {
         } else if (this.#match('rad')) {
             this.#addToken('ANGLE', new Angle({ radians: value }));
         } else {
-            this.#addToken('NUMBER', value);
+            this.#addToken('NUMBER', new Integer(value));
         }
     }
 

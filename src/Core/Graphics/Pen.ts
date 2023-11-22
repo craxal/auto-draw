@@ -1,5 +1,5 @@
-import { Angle } from './Angle';
-import { Color } from './Color';
+import { Angle } from '../Lang/Types/Angle';
+import { Color } from '../Lang/Types/Color';
 import { Point } from './Point';
 
 export type PenPosition = 'up' | 'down';

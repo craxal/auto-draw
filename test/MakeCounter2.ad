@@ -1,0 +1,16 @@
+fn MakeCounter() {
+    var i = 0;
+    fn Count() {
+        i = i + 1;
+        Print(i)
+        return i;
+    }
+
+    return Count;
+}
+
+var counter = MakeCounter();
+counter();
+counter();
+// Oh ho!
+// Yes

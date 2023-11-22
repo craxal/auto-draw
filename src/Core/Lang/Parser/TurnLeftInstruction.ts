@@ -1,4 +1,4 @@
-import { Angle } from '../../Graphics/Angle';
+import { Angle } from '../Types/Angle';
 import { Instruction } from './Instruction';
 import { InstructionVisitor } from './InstructionVisitor';
 

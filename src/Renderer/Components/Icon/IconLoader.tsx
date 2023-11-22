@@ -47,7 +47,7 @@ export class IconLoader {
         function toMemo(node: Node): IconMemo | undefined {
             if (node.nodeType === Node.TEXT_NODE) {
                 return { text: node.nodeValue?.trim() ?? '' };
-            } else {
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
                 const element = node as Element;
                 const memo: IconMemo = { tagName: element.tagName, attributes: {}, children: [] };
 

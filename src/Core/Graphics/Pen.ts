@@ -1,5 +1,5 @@
-import { Angle } from './Angle';
-import { Color } from './Color';
+import { Angle } from '../Lang/Types/Angle';
+import { Color } from '../Lang/Types/Color';
 import { Point } from './Point';
 
 export type PenPosition = 'up' | 'down';
@@ -11,6 +11,6 @@ export class Pen {
     public position: PenPosition = 'up';
 
     public toString(): string {
-        return `${this.coordinates.toString()} ${this.angle.toString()} ${this.color.toString()} ${this.position === 'up' ? '↑' : '↓'}`;
+        return `${this.coordinates.toString()} ${this.angle.toString()} ${this.color.toSwatchString()} ${this.position === 'up' ? '↑' : '↓'}`;
     }
 }

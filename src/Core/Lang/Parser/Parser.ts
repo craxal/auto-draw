@@ -1,6 +1,6 @@
-import { Color } from '../../Graphics/Color';
 import { Result } from '../../Util/Result';
 import { DefineFunctionToken, Token } from '../Lexical/Token';
+import { Color } from '../Types/Color';
 import { ArcLeftInstruction } from './ArcLeftInstruction';
 import { ArcRightInstruction } from './ArcRightInstruction';
 import { CallFunctionInstruction } from './CallFunctionInstruction';

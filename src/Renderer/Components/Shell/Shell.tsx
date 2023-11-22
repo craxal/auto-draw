@@ -1,8 +1,9 @@
 import { DrawContext } from '../../../Core/Graphics/DrawContext';
-import { Interpreter } from '../../../Core/Lang/Interpreter/Interpreter';
+import { Interpreter2 } from '../../../Core/Lang/Interpreter2/Interpreter2';
 import { Token } from '../../../Core/Lang/Lexical/Token';
 import { Canvas } from '../Canvas/Canvas';
-import { InstructionsPanel } from '../InstructionsPanel/InstructionsPanel';
+import { CodePanel } from '../CodePanel/CodePanel';
+import { Expander } from '../Expander/Expander';
 import { useShellContext } from './ShellContext';
 
 export function Shell(props: {
@@ -13,7 +14,7 @@ export function Shell(props: {
 
     function render(drawContext: DrawContext): void {
         if (!!context.program) {
-            const interpreter = new Interpreter(drawContext);
+            const interpreter = new Interpreter2(drawContext);
             interpreter.visitProgram(context.program);
         }
         drawContext.drawCursor();
@@ -36,16 +37,27 @@ export function Shell(props: {
     return (
         <div className={'shell'}>
             <Canvas render={(context) => render(context)} />
-            <InstructionsPanel
+            {/* <InstructionsPanel
                 instructions={context.instructions}
                 currentInstruction={0}
                 onAdd={(index) => handleAdd(index)}
                 onInstructionsChange={(instructions) => handleInstructionsChange(instructions)}
                 onCurrentInstructionChange={(index) => handleCurrentInstructionChange(index)}
                 onExecute={() => context.parseInstructions()}
+            /> */}
+            <CodePanel
+                sourceFilepath={context.sourceFilepath}
+                sourceText={context.sourceText}
+                onSourceTextChange={(text) => context.setSourceText(text)}
+                onOpen={() => context.openFile()}
+                onSave={() => context.saveFile()}
+                onSaveAs={() => context.saveAsFile()}
+                onExecute={() => context.execute()}
             />
             <div className={'console'}>
-                <textarea value={context.console} readOnly={true} rows={10} />
+                <Expander label={'Console'} icon={'Terminal'}>
+                    <textarea value={context.console} readOnly={true} rows={10} />
+                </Expander>
             </div>
         </div>
     );

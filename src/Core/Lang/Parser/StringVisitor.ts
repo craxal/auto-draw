@@ -29,7 +29,7 @@ export class StringVisitor implements InstructionVisitor<string> {
     }
 
     public visitPenColorInstruction(instruction: PenColorInstruction): string {
-        return `Set pen color to ${instruction.color.toString()}`;
+        return `Set pen color to ${instruction.color.toSwatchString()}`;
 
     }
 

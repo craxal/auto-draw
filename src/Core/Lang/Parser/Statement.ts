@@ -4,8 +4,8 @@ import { Expression } from './Expression';
 export interface IStatementVisitor<T> {
     visitBlockStatement(statement: BlockStatement): T;
     visitExpressionStatement(statement: ExpressionStatement): T;
-    visitFunctionStatement(statement: FunctionStatement): T;
     visitIfStatement(statement: IfStatement): T;
+    visitLetStatement(statement: LetStatement): T;
     visitReturnStatement(statement: ReturnStatement): T;
     visitVarStatement(statement: VarStatement): T;
     visitWhileStatement(statement: WhileStatement): T;
@@ -39,20 +39,6 @@ export class ExpressionStatement extends Statement {
     }
 }
 
-export class FunctionStatement extends Statement {
-    constructor(
-        public readonly name: Token,
-        public readonly parameters: Token[],
-        public readonly body: BlockStatement
-    ) {
-        super();
-    }
-
-    public override accept<T>(visitor: IStatementVisitor<T>): T {
-        return visitor.visitFunctionStatement(this);
-    }
-}
-
 export class IfStatement extends Statement {
     constructor(
         public readonly condition: Expression,
@@ -64,6 +50,19 @@ export class IfStatement extends Statement {
 
     public override accept<T>(visitor: IStatementVisitor<T>): T {
         return visitor.visitIfStatement(this);
+    }
+}
+
+export class LetStatement extends Statement {
+    constructor(
+        public readonly name: Token,
+        public readonly initializer: Expression
+    ) {
+        super();
+    }
+
+    public override accept<T>(visitor: IStatementVisitor<T>): T {
+        return visitor.visitLetStatement(this);
     }
 }
 

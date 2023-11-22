@@ -1,9 +1,9 @@
 import { DrawContext } from '../../Graphics/DrawContext';
 import { Result } from '../../Util/Result';
 import { Token } from '../Lexical/Token';
-import { AssignmentExpression, BinaryExpression, CallExpression, Expression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from '../Parser/Expression';
+import { AssignmentExpression, BinaryExpression, CallExpression, Expression, FunctionExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from '../Parser/Expression';
 import { IProgramVisitor, Program2 } from '../Parser/Program';
-import { BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, ReturnStatement, Statement, VarStatement, WhileStatement } from '../Parser/Statement';
+import { BlockStatement, ExpressionStatement, IfStatement, LetStatement, ReturnStatement, Statement, VarStatement, WhileStatement } from '../Parser/Statement';
 import { Bool } from '../Types/Bool';
 import { isAddition } from '../Types/IAddition';
 import { isBitwise } from '../Types/IBitwise';
@@ -96,13 +96,6 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
         return statement.expression.accept(this);
     }
 
-    public visitFunctionStatement(statement: FunctionStatement): RuntimeResult {
-        const autoDrawFunction = new AutoDrawFunction(statement, this.#environment);
-        this.#environment.define(statement.name, autoDrawFunction);
-
-        return { type: 'value', value: undefined };
-    }
-
     public visitIfStatement(statement: IfStatement): RuntimeResult {
         const result = !!statement.condition.accept(this);
         if (result) {
@@ -110,6 +103,15 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
         } else {
             return statement.elseBranch?.accept(this) ?? { type: 'value', value: undefined };
         }
+    }
+
+    public visitLetStatement(statement: LetStatement): RuntimeResult {
+        const valueResult = statement.initializer.accept(this);
+        if (valueResult.type === 'error') {
+            return valueResult;
+        }
+
+        return this.#environment.define(statement.name, valueResult.value);
     }
 
     public visitReturnStatement(statement: ReturnStatement): RuntimeResult {
@@ -278,6 +280,12 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
         const callable = calleeResult.value as AutoDrawCallable;
 
         return callable.call(this, expression.paren, args);
+    }
+
+    public visitFunctionExpression(statement: FunctionExpression): RuntimeResult {
+        const autoDrawFunction = new AutoDrawFunction(statement, this.#environment);
+
+        return { type: 'value', value: autoDrawFunction };
     }
 
     public visitGroupingExpression(expression: GroupingExpression): RuntimeResult {

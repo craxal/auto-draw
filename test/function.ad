@@ -1,0 +1,5 @@
+let MyFunction = fn (a) {
+    Print(a);
+};
+
+MyFunction(1);

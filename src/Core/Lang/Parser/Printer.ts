@@ -1,6 +1,6 @@
-import { AssignmentExpression, BinaryExpression, CallExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from './Expression';
+import { AssignmentExpression, BinaryExpression, CallExpression, FunctionExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from './Expression';
 import { IProgramVisitor, Program2 } from './Program';
-import { BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, ReturnStatement, VarStatement, WhileStatement } from './Statement';
+import { BlockStatement, ExpressionStatement, IfStatement, LetStatement, ReturnStatement, VarStatement, WhileStatement } from './Statement';
 
 export class Printer implements IProgramVisitor<string> {
     public print(program: Program2): void {
@@ -35,17 +35,6 @@ export class Printer implements IProgramVisitor<string> {
         return lines.join('\n');
     }
 
-    public visitFunctionStatement(statement: FunctionStatement): string {
-        const lines = [
-            `fn`,
-            `├── ${statement.name.lexeme}`,
-            ...statement.parameters.map((param) => `├── ${param.lexeme}`),
-            `└── ${statement.body.accept(this).split('\n').join('\n    ')}`,
-        ];
-
-        return lines.join('\n');
-    }
-
     public visitIfStatement(statement: IfStatement): string {
         const lines = !!statement.elseBranch
             ? [
@@ -60,6 +49,16 @@ export class Printer implements IProgramVisitor<string> {
                 `└── ${statement.thenBranch.accept(this).split('\n').join('\n    ')}`,
 
             ];
+
+        return lines.join('\n');
+    }
+
+    public visitLetStatement(statement: LetStatement): string {
+        const lines = [
+            '{let}',
+            `├── ${statement.name.lexeme}`,
+            `└── ${statement.initializer.accept(this).split('\n').join('\n    ')}`,
+        ];
 
         return lines.join('\n');
     }
@@ -128,6 +127,16 @@ export class Printer implements IProgramVisitor<string> {
                 `(...)`,
                 `└── ${expression.callee.accept(this).split('\n').join('\n│   ')}`,
             ];
+
+        return lines.join('\n');
+    }
+
+    public visitFunctionExpression(expression: FunctionExpression): string {
+        const lines = [
+            `fn`,
+            ...expression.parameters.map((param) => `├── ${param.lexeme}`),
+            `└── ${expression.body.accept(this).split('\n').join('\n    ')}`,
+        ];
 
         return lines.join('\n');
     }

@@ -1,4 +1,4 @@
-fn Square(side) {
+let Square = fn (side) {
     PenDown();
     MoveForward(side);
     TurnRight(90deg);
@@ -9,7 +9,7 @@ fn Square(side) {
     MoveForward(side);
     TurnRight(90deg);
     PenUp();
-}
+};
 
 PenColor(#blue);
 Square(100);

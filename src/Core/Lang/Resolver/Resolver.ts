@@ -1,10 +1,10 @@
 import { Result } from "../../Util/Result";
 import { Interpreter2 } from "../Interpreter/Interpreter";
 import { Token } from "../Lexical/Token";
-import { AssignmentExpression, BinaryExpression, CallExpression, Expression, GroupingExpression, IExpressionVisitor, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from "../Parser/Expression";
+import { AssignmentExpression, BinaryExpression, CallExpression, Expression, FunctionExpression, GroupingExpression, IExpressionVisitor, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from "../Parser/Expression";
 import { ParseError } from "../Parser/Parser";
 import { Program2 } from "../Parser/Program";
-import { BlockStatement, ExpressionStatement, FunctionStatement, IStatementVisitor, IfStatement, ReturnStatement, Statement, VarStatement, WhileStatement } from "../Parser/Statement";
+import { BlockStatement, ExpressionStatement, IStatementVisitor, IfStatement, ReturnStatement, Statement, VarStatement, WhileStatement } from "../Parser/Statement";
 
 type FunctionType = 'none' | 'function';
 
@@ -41,18 +41,18 @@ export class Resolver implements IExpressionVisitor<void>, IStatementVisitor<voi
         this.#resolveExpression(statement.expression);
     }
 
-    public visitFunctionStatement(statement: FunctionStatement): void {
-        this.#declare(statement.name);
-        this.#define(statement.name);
-        this.#resolveFunction(statement, 'function');
-    }
-
     public visitIfStatement(statement: IfStatement): void {
         this.#resolveExpression(statement.condition);
         this.#resolveStatement(statement.thenBranch);
         if (!!statement.elseBranch) {
             this.#resolveStatement(statement.elseBranch);
         }
+    }
+
+    public visitLetStatement(statement: VarStatement): void {
+        this.#declare(statement.name);
+        this.#resolveExpression(statement.initializer);
+        this.#define(statement.name);
     }
 
     public visitReturnStatement(statement: ReturnStatement): void {
@@ -92,6 +92,10 @@ export class Resolver implements IExpressionVisitor<void>, IStatementVisitor<voi
         for (const arg of expression.args) {
             this.#resolveExpression(arg);
         }
+    }
+
+    public visitFunctionExpression(expression: FunctionExpression): void {
+        this.#resolveFunction(expression, 'function');
     }
 
     public visitGroupingExpression(expression: GroupingExpression): void {
@@ -138,7 +142,7 @@ export class Resolver implements IExpressionVisitor<void>, IStatementVisitor<voi
         }
     }
 
-    #resolveFunction(fn: FunctionStatement, functionType: FunctionType): void {
+    #resolveFunction(fn: FunctionExpression, functionType: FunctionType): void {
         const enclosingFunction = this.#currentFunction;
         this.#currentFunction = functionType;
 
@@ -147,7 +151,10 @@ export class Resolver implements IExpressionVisitor<void>, IStatementVisitor<voi
             this.#declare(param);
             this.#define(param);
         }
-        this.#resolveStatement(fn.body);
+        for (const stmt of fn.body.statements) {
+            this.#resolveStatement(stmt);
+        }
+
         this.#endScope();
 
         this.#currentFunction = enclosingFunction;

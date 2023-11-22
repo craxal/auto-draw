@@ -1,13 +1,13 @@
-fn MakeCounter() {
+let MakeCount = fn () {
     var i = 0;
-    fn Count() {
+    let Count = fn () {
         i = i + 1;
         Print(i);
         return i;
-    }
+    };
 
     return Count;
-}
+};
 
 var counter = MakeCounter();
 counter();

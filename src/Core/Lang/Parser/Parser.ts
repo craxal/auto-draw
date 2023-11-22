@@ -1,19 +1,16 @@
 import { Result } from '../../Util/Result';
 import { Token, TokenType } from '../Lexical/Token';
-import { AssignmentExpression, BinaryExpression, CallExpression, Expression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from './Expression';
+import { AssignmentExpression, BinaryExpression, CallExpression, Expression, FunctionExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from './Expression';
 import { Program2 } from './Program';
-import { BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, ReturnStatement, Statement, VarStatement, WhileStatement } from './Statement';
+import { BlockStatement, ExpressionStatement, IfStatement, LetStatement, ReturnStatement, Statement, VarStatement, WhileStatement } from './Statement';
 
 export type ParseError = { token: Token; message: string; };
 
 /*
 program     -> (declaration)* EOF
 
-declaration -> funcDecl | varDecl | statement
-funDecl     -> FUNC function
-function    -> IDENTIFIER LEFT_PAREN parameters? RIGHT_PAREN blockStmt
-parameters  -> IDENTIFIER (COMMA IDENTIFIER)*
-varDecl     -> (LET | VAR) IDENTIFIER EQUAL expression SEMICOLON
+declaration -> varDecl | statement
+varDecl     -> (LET | VAR) IDENTIFIER EQUAL (function | expression) SEMICOLON
 statement   -> exprStmt | blockStmt | ifStmt | whileStmt | returnStmt
 exprStmt    -> expression SEMICOLON
 blockStmt   -> LEFT_BRACE (declaration)* RIGHT_BRACE
@@ -33,6 +30,9 @@ unary       -> (MINUS | BANG) unary | call
 call        -> primary (LEFT_PAREN arguments RIGHT_PAREN)*
 arguments   -> expression (COMMA expression)*
 primary     -> LEFT_PAREN expression RIGHT_PAREN | NUMBER | COLOR | ANGLE | TRUE | FALSE | IDENTIFIER
+
+function    -> fn LEFT_PAREN parameters? RIGHT_PAREN blockStmt
+parameters  -> IDENTIFIER (COMMA IDENTIFIER)*
 */
 export class Parser {
     #tokens: Token[];
@@ -309,16 +309,16 @@ export class Parser {
     }
 
     #parseDeclaration(): Result<Statement | undefined, ParseError> {
-        if (this.#match('LET') || this.#match('VAR')) {
-            const result = this.#parseVarDeclaration();
+        if (this.#match('LET')) {
+            const result = this.#parseLetDeclaration();
             if (result.type === 'error') {
                 this.#synchronize();
                 return { type: 'result', result: undefined };
             } else {
                 return result;
             }
-        } else if (this.#match('FUNC')) {
-            const result = this.#parseFunction();
+        } else if (this.#match('VAR')) {
+            const result = this.#parseVarDeclaration();
             if (result.type === 'error') {
                 this.#synchronize();
                 return { type: 'result', result: undefined };
@@ -336,12 +336,33 @@ export class Parser {
         }
     }
 
-    #parseFunction(): Result<Statement, ParseError> {
-        const nameResult = this.#consume('IDENTIFIER', 'Expected function name.');
+    #parseLetDeclaration(): Result<Statement, ParseError> {
+        const nameResult = this.#consume('IDENTIFIER', 'Expected variable name.');
         if (nameResult.type === 'error') {
             return nameResult;
         }
 
+        this.#consume('EQUAL', 'Expected variable initialization after declaration.');
+
+        let initializerResult: Result<Expression, ParseError>;
+        if (this.#match('FUNC')) {
+            initializerResult = this.#parseFunction();
+        } else {
+            initializerResult = this.#parseExpression();
+        }
+        if (initializerResult.type === 'error') {
+            return initializerResult;
+        }
+
+        const semicolonResult = this.#consume('SEMICOLON', 'Expected ";" after constant declaration.');
+        if (semicolonResult.type === 'error') {
+            return semicolonResult;
+        }
+
+        return { type: 'result', result: new LetStatement(nameResult.result, initializerResult.result) };
+    }
+
+    #parseFunction(): Result<Expression, ParseError> {
         const leftParenResult = this.#consume('LEFT_PAREN', 'Expected "(" after function name.');
         if (leftParenResult.type === 'error') {
             return leftParenResult;
@@ -379,8 +400,7 @@ export class Parser {
             return bodyResult;
         }
 
-        return { type: 'result', result: new FunctionStatement(nameResult.result, parameters, bodyResult.result) };
-
+        return { type: 'result', result: new FunctionExpression(parameters, bodyResult.result) };
     }
 
     #parseIfStatement(): Result<Statement, ParseError> {
@@ -411,23 +431,29 @@ export class Parser {
     }
 
     #parseVarDeclaration(): Result<Statement, ParseError> {
-        const name = this.#consume('IDENTIFIER', 'Expected variable name.');
-        if (name.type === 'error') {
-            return name;
+        const nameResult = this.#consume('IDENTIFIER', 'Expected variable name.');
+        if (nameResult.type === 'error') {
+            return nameResult;
         }
 
         this.#consume('EQUAL', 'Expected variable initialization after declaration.');
-        const initializer = this.#parseExpression();
-        if (initializer.type === 'error') {
-            return initializer;
+
+        let initializerResult: Result<Expression, ParseError>;
+        if (this.#match('FUNC')) {
+            initializerResult = this.#parseFunction();
+        } else {
+            initializerResult = this.#parseExpression();
+        }
+        if (initializerResult.type === 'error') {
+            return initializerResult;
         }
 
-        const semicolon = this.#consume('SEMICOLON', 'Expected ";" after variable declaration.');
-        if (semicolon.type === 'error') {
-            return semicolon;
+        const semicolonResult = this.#consume('SEMICOLON', 'Expected ";" after variable declaration.');
+        if (semicolonResult.type === 'error') {
+            return semicolonResult;
         }
 
-        return { type: 'result', result: new VarStatement(name.result, initializer.result) };
+        return { type: 'result', result: new VarStatement(nameResult.result, initializerResult.result) };
     }
 
     #parseStatement(): Result<Statement, ParseError> {

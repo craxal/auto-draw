@@ -1,15 +1,15 @@
 import { Token } from "../Lexical/Token";
-import { FunctionStatement } from "../Parser/Statement";
+import { FunctionExpression } from "../Parser/Expression";
 import { AutoDrawCallable } from "./AutoDrawCallable";
 import { Environment } from "./Environment";
 import { Interpreter2 } from "./Interpreter";
 import { RuntimeResult } from "./RuntimeResult";
 
 export class AutoDrawFunction implements AutoDrawCallable {
-    #declaration: FunctionStatement;
+    #declaration: FunctionExpression;
     #closure: Environment;
 
-    constructor(declaration: FunctionStatement, closure: Environment) {
+    constructor(declaration: FunctionExpression, closure: Environment) {
         this.#declaration = declaration;
         this.#closure = closure;
     }

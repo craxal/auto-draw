@@ -1,5 +1,5 @@
 const { Scanner } = require('../dist/Core/Lang/Lexical/Scanner');
-const { Printer } = require('../dist/Core/Lang/Parser2/Printer');
+const { Printer } = require('../dist/Core/Lang/Parser/Printer');
 const { readFileSync } = require('fs');
 
 const filepath = process.argv[2];

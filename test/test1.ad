@@ -2,12 +2,12 @@ let MyNum = (3 + 4) * 5;
 let MyColor = #123456;
 let MyAngle = 120deg;
 // let MyComment = 0deg;
-fn MyFunction(a, b, c) {
+let MyFunction = fn (a, b, c) {
     ArcLeft(180, 30);
     if MyNum > 4 or MyNum <= 5 {
         PenUp();
     }
-}
+};
 {}
 {
     var a = 1;
@@ -28,16 +28,16 @@ PenDown();
 MyFunction(1, 2, 3);
 ArcLeft(180deg, 30);
 
-fn MakeCounter() {
+let MakeCounter = fn () {
   var i = 0;
-  fn Count() {
+  let Count = fn () {
     i = i + 1;
     Print(i);
     return i;
-  }
+  };
 
   return Count;
-}
+};
 var counter = MakeCounter();
 
 Print(1);

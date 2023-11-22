@@ -1,4 +1,5 @@
 import { Token } from '../Lexical/Token';
+import { BlockStatement } from './Statement';
 
 export abstract class Expression {
     public abstract accept<T>(visitor: IExpressionVisitor<T>): T;
@@ -8,6 +9,7 @@ export interface IExpressionVisitor<T> {
     visitAssignmentExpression(expression: AssignmentExpression): T;
     visitBinaryExpression(expression: BinaryExpression): T;
     visitCallExpression(expression: CallExpression): T;
+    visitFunctionExpression(expression: FunctionExpression): T;
     visitGroupingExpression(expression: GroupingExpression): T;
     visitLogicalExpression(expression: LogicalExpression): T;
     visitLiteralExpression(expression: LiteralExpression): T;
@@ -53,6 +55,19 @@ export class CallExpression extends Expression {
 
     public override accept<T>(visitor: IExpressionVisitor<T>): T {
         return visitor.visitCallExpression(this);
+    }
+}
+
+export class FunctionExpression extends Expression {
+    constructor(
+        public readonly parameters: Token[],
+        public readonly body: BlockStatement,
+    ) {
+        super();
+    }
+
+    public override accept<T>(visitor: IExpressionVisitor<T>): T {
+        return visitor.visitFunctionExpression(this);
     }
 }
 

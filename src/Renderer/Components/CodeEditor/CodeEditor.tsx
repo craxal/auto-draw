@@ -13,11 +13,16 @@ export function CodeEditor(props: {
 
     useEffect(() => {
         if (!!containerElementRef.current) {
-            const editor = window.app.monaco.editor.create(containerElementRef.current, {
+            const options: monaco.editor.IStandaloneEditorConstructionOptions = {
                 value: props.sourceText,
                 theme: 'vs-dark',
-
-            });
+                language: 'autodraw',
+                minimap: { enabled: false }
+            };
+            const editor = window.app.monaco.editor.create(containerElementRef.current, {
+                ...options,
+                'bracketPairColorization.enabled': false,
+            } as any);
 
             editorRef.current = editor;
             subscriptionRef.current = editor.onDidChangeModelContent((_event) => {

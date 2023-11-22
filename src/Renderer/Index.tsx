@@ -25,6 +25,10 @@ window.addEventListener('load', async () => {
             resolve(api);
         });
     });
+    const { autoDrawConfig, autoDrawLang } = await import('./AutoDrawLang');
+    window.app.monaco.languages.register({ id: 'autodraw', extensions: ['.ad'] });
+    window.app.monaco.languages.setMonarchTokensProvider('autodraw', autoDrawLang);
+    window.app.monaco.languages.setLanguageConfiguration('autodraw', autoDrawConfig);
 
     const reactRootElement = document.getElementById('react-root')!;
     const reactRoot = ReactDOM.createRoot(reactRootElement);

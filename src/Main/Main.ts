@@ -17,14 +17,14 @@ function createWindow() {
 
     mainWindow.maximize();
     mainWindow.loadFile('./dist/Renderer/Index.html');
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools();
 }
 
-ipcMain.handle('file-save', (_e, args: { filepath: string, data: string }) => {
+ipcMain.handle('file-save', (_e, args: { filepath: string, data: string; }) => {
     return saveFile(args.filepath, args.data);
 });
 
-ipcMain.handle('file-save-as', (_e, args: { data: string }) => {
+ipcMain.handle('file-save-as', (_e, args: { data: string; }) => {
     return saveAsFile(args.data);
 });
 
@@ -37,14 +37,14 @@ ipcMain.handle('context-menu', (_e, args: ContextMenuArgs) => {
 });
 
 app.whenReady().then(() => {
-    createWindow()
+    createWindow();
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow();
         }
-    })
-})
+    });
+});
 
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') {

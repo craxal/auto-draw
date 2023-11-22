@@ -111,7 +111,7 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
             return valueResult;
         }
 
-        return this.#environment.define(statement.name, valueResult.value);
+        return this.#environment.define(statement.name, valueResult.value!, true);
     }
 
     public visitReturnStatement(statement: ReturnStatement): RuntimeResult {
@@ -129,7 +129,7 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
             return valueResult;
         }
 
-        return this.#environment.define(statement.name, valueResult.value);
+        return this.#environment.define(statement.name, valueResult.value!);
     }
 
     public visitWhileStatement(statement: WhileStatement): RuntimeResult {
@@ -162,10 +162,10 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
         if (distance !== undefined) {
             this.#environment.setAt(distance, expression.name, valueResult.value);
         } else {
-            this.#environment.set(expression.name, valueResult.value);
+            this.#environment.set(expression.name, valueResult.value!);
         }
 
-        return this.#environment.set(expression.name, valueResult.value);
+        return this.#environment.set(expression.name, valueResult.value!);
     }
 
     public visitBinaryExpression(expression: BinaryExpression): RuntimeResult {

@@ -1,15 +1,18 @@
 import { Token } from "../Lexical/Token";
 import { FunctionExpression } from "../Parser/Expression";
+import { Value } from "../Types/Value";
 import { AutoDrawCallable } from "./AutoDrawCallable";
 import { Environment } from "./Environment";
 import { Interpreter2 } from "./Interpreter";
 import { RuntimeResult } from "./RuntimeResult";
 
-export class AutoDrawFunction implements AutoDrawCallable {
+export class AutoDrawFunction extends Value implements AutoDrawCallable {
     #declaration: FunctionExpression;
     #closure: Environment;
 
     constructor(declaration: FunctionExpression, closure: Environment) {
+        super();
+
         this.#declaration = declaration;
         this.#closure = closure;
     }
@@ -19,7 +22,7 @@ export class AutoDrawFunction implements AutoDrawCallable {
     public call(interpreter: Interpreter2, token: Token, args: any[]): RuntimeResult {
         const environment = new Environment(this.#closure);
         for (let argIndex = 0; argIndex < this.#declaration.parameters.length; argIndex++) {
-            environment.define(this.#declaration.parameters[argIndex], args[argIndex]);
+            environment.define(this.#declaration.parameters[argIndex], args[argIndex], true);
         }
 
         const execResult = interpreter.executeBlock(this.#declaration.body.statements, environment);
@@ -28,5 +31,9 @@ export class AutoDrawFunction implements AutoDrawCallable {
         } else {
             return execResult;
         }
+    }
+
+    public toString(): string {
+        return `<function (${this.#declaration.parameters.map((t) => t.lexeme).join(", ")}) >`;
     }
 }

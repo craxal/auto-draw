@@ -6,11 +6,12 @@
     color: #00ff00;
     display: grid;
     gap: 4px;
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto 1fr;
 
-    & .code-panel-label {
+    & .code-panel-header {
         align-items: center;
         display: grid;
+        font-family: 'Fira Code', monospace;
         gap: 4px;
         grid-row: 1;
         grid-template-columns: auto auto 1fr min-content;
@@ -26,23 +27,24 @@
             font-weight: bold;
             grid-column: 2;
         }
-    }
 
-    & .code-panel-buttons {
-        display: flex;
-        gap: 4px;
-        grid-row: 2;
+        & .code-panel-buttons {
+            display: flex;
+            gap: 4px;
+            grid-column: 3;
+            justify-self: end;
 
-        & .separator {
-            background: #00ff00;
-            height: 100%;
-            width: 1px;
+            & .separator {
+                background: #00ff00;
+                margin: 0 4px;
+                width: 1px;
+            }
         }
     }
 
     & .code-panel-editor {
         border: 1px solid #00ff00;
-        grid-row: 3;
+        grid-row: 2;
 
         & textarea {
             align-items: center;

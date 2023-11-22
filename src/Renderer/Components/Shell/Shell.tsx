@@ -54,11 +54,11 @@ export function Shell(props: {
                 onSaveAs={() => context.saveAsFile()}
                 onExecute={() => context.execute()}
             />
-            <Expander label={'Console'}>
-                <div className={'console'}>
+            <div className={'console'}>
+                <Expander label={'Console'} icon={'Terminal'}>
                     <textarea value={context.console} readOnly={true} rows={10} />
-                </div>
-            </Expander>
+                </Expander>
+            </div>
         </div>
     );
 }

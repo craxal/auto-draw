@@ -4,6 +4,7 @@
 @import url('../Expander/Expander.css');
 
 
+/*
 ::-webkit-scrollbar {
     height: 12px;
     width: 12px;
@@ -23,6 +24,7 @@
     background-color: #a1a1a1;
     border: 1px solid #3e3e3e;
 }
+*/
 
 .icon {
     align-items: center;
@@ -62,6 +64,7 @@
 
     & .console {
         display: grid;
+        font-family: 'Fira Code', monospace;
         grid-column: 1;
         grid-row: 2;
 
@@ -70,8 +73,10 @@
             background: #000000;
             border: 1px solid #a1a1a1;
             font-size: 12px;
+            height: 100%;
             padding: 2px;
             resize: none;
+            width: 100%;
         }
     }
 }

@@ -29,17 +29,18 @@ export function CodePanel(props: {
 
     return (
         <div className={'code-panel'}>
-            <div className={'code-panel-label'}>
+            <div className={'code-panel-header'}>
                 <Icon name={'Code'} />
                 <label htmlFor={'code-panel'}>Code</label>
+                <div className={'code-panel-buttons'}>
+                    <IconButton icon={'File'} onClick={() => handleSaveClick()} title={'Save file'} />
+                    <IconButton icon={'FilePen'} onClick={() => handleSaveAsClick()} title={'Save file as'} />
+                    <IconButton icon={'FileImport'} onClick={() => handleOpenClick()} title={'Open file'} />
+                    <div className={'separator'} />
+                    <IconButton icon={'Play'} onClick={() => handleExecuteClick()} title={'Execute'} />
+                </div>
             </div>
-            <div className={'code-panel-buttons'}>
-                <IconButton icon={'File'} onClick={() => handleSaveClick()} title={'Save file'} />
-                <IconButton icon={'FilePen'} onClick={() => handleSaveAsClick()} title={'Save file as'} />
-                <IconButton icon={'FileImport'} onClick={() => handleOpenClick()} title={'Open file'} />
-                <div className={'separator'} />
-                <IconButton icon={'Play'} onClick={() => handleExecuteClick()} title={'Execute'} />
-            </div>
+
             <CodeEditor sourceText={props.sourceText} onChange={(text) => props.onSourceTextChange(text)} />
         </div>
     );

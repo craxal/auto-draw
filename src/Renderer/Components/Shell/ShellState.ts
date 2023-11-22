@@ -4,6 +4,7 @@ import { Scanner } from '../../../Core/Lang/Lexical/Scanner';
 import { Token } from '../../../Core/Lang/Lexical/Token';
 import { Parser as Parser2 } from '../../../Core/Lang/Parser2/Parser2';
 import { Program2 } from '../../../Core/Lang/Parser2/Program2';
+import { Resolver } from '../../../Core/Lang/Resolver/Resolver';
 
 export type ShellState = {
     instructions: Token[];
@@ -60,9 +61,23 @@ export function getShellStateReducer(): Reducer<ShellState, ShellAction> {
                 return { ...state, console: message };
             }
 
-            //  Do a "dry" run without actually rendering to get console output and errors.
             const interpreter = new Interpreter2();
-            interpreter.interpret(parseResult.result);
+            const resolverResult = new Resolver(interpreter).resolve(parseResult.result);
+            if (resolverResult.type === 'error') {
+                const message = resolverResult.error
+                    .map((err) => `${state.sourceFilepath}:${err.token.line}:${err.token.char} > [ERROR] ${err.message}`)
+                    .join('\n');
+
+                return { ...state, console: message };
+            }
+
+            //  Do a "dry" run without actually rendering to get console output and errors.
+            const interpreterResult = interpreter.interpret(parseResult.result);
+            if (interpreterResult.type === 'error') {
+                const message = `${state.sourceFilepath}:${interpreterResult.error.token.line}:${interpreterResult.error.token.char} > [ERROR] ${interpreterResult.error.message}`;
+
+                return { ...state, console: message };
+            }
 
             return {
                 ...state,

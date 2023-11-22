@@ -29,7 +29,10 @@ export class Environment {
 
         return this.#parent?.set(name, value) ??
             { type: 'error', error: { token: name, message: `Undefined Variable '${name.lexeme}'` } };
+    }
 
+    public setAt(distance: number, name: Token2, value: any): RuntimeResult {
+        return this.ancestor(distance).set(name, value);
     }
 
     public get(name: Token2): RuntimeResult {
@@ -40,5 +43,17 @@ export class Environment {
 
         return this.#parent?.get(name) ??
             { type: 'error', error: { token: name, message: `Undefined variable '${name.lexeme}'` } };
+    }
+
+    public getAt(distance: number, name: Token2): RuntimeResult {
+        return this.ancestor(distance).get(name);
+    }
+
+    private ancestor(distance: number): Environment {
+        if (distance === 0) {
+            return this;
+        } else {
+            return this.#parent?.ancestor(distance - 1) ?? this;
+        }
     }
 }

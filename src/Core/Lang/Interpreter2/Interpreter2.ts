@@ -1,6 +1,7 @@
 import { DrawContext } from '../../Graphics/DrawContext';
+import { Result } from '../../Util/Result';
 import { Token2 } from '../Lexical/Token2';
-import { AssignmentExpression, BinaryExpression, CallExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from '../Parser2/Expression';
+import { AssignmentExpression, BinaryExpression, CallExpression, Expression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from '../Parser2/Expression';
 import { IProgramVisitor, Program2 } from '../Parser2/Program2';
 import { BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, ReturnStatement, Statement, VarStatement, WhileStatement } from '../Parser2/Statement';
 import { Bool } from '../Types/Bool';
@@ -44,6 +45,8 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
         ['Print', { arity: 1, call(interpreter: Interpreter2, token: Token2, args: any[]) { console.log(`DEBUG >>> Printing '${args[0]}'`); return tryNativeFunction(() => interpreter.#console.push(args[0].toString()), token); } }],
     );
 
+    #locals = new Map<Expression, number>();
+
     constructor(context?: DrawContext) {
         this.#context = context;
     }
@@ -51,10 +54,12 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
     public get console(): string[] { return this.#console; }
     public get environment(): Environment { return this.#environment; }
 
-    public interpret(program: Program2): void {
+    public interpret(program: Program2): Result<undefined, RuntimeError> {
         const result = program.accept(this);
         if (result.type === 'error') {
-            this.#console.push(result.error.message);
+            return { type: 'error', error: result.error };
+        } else {
+            return { type: 'result', result: undefined };
         }
     }
 
@@ -73,6 +78,10 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
         this.#environment = previousEnvironment;
 
         return { type: 'value', value: undefined };
+    }
+
+    public resolve(expression: Expression, depth: number): void {
+        this.#locals.set(expression, depth);
     }
 
     public visitProgram(program: Program2): RuntimeResult {
@@ -145,6 +154,13 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
         const valueResult = expression.value.accept(this);
         if (valueResult.type !== 'value') {
             return valueResult;
+        }
+
+        const distance = this.#locals.get(expression);
+        if (distance !== undefined) {
+            this.#environment.setAt(distance, expression.name, valueResult.value);
+        } else {
+            this.#environment.set(expression.name, valueResult.value);
         }
 
         return this.#environment.set(expression.name, valueResult.value);
@@ -332,7 +348,16 @@ export class Interpreter2 implements IProgramVisitor<RuntimeResult> {
     }
 
     public visitVariableExpression(expression: VariableExpression): RuntimeResult {
-        return this.#environment.get(expression.name);
+        return this.#lookupVariable(expression.name, expression);
+    }
+
+    #lookupVariable(name: Token2, expression: Expression): RuntimeResult {
+        const distance = this.#locals.get(expression);
+        if (distance !== undefined) {
+            return this.#environment.getAt(distance, name);
+        } else {
+            return this.#environment.get(name);
+        }
     }
 
     #checkOperands(operator: Token2, ...operands: any[]): RuntimeError | undefined {

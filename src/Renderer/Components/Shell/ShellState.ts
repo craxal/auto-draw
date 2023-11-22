@@ -1,10 +1,10 @@
 import { Reducer } from 'react';
-import { Interpreter2 } from '../../../Core/Lang/Interpreter2/Interpreter2';
+import { Interpreter2 } from '../../../Core/Lang/Interpreter/Interpreter';
 import { Scanner } from '../../../Core/Lang/Lexical/Scanner';
-import { Token } from '../../../Core/Lang/Lexical/Token';
-import { Parser as Parser2 } from '../../../Core/Lang/Parser2/Parser2';
-import { Program2 } from '../../../Core/Lang/Parser2/Program2';
+import { Parser as Parser2 } from '../../../Core/Lang/Parser/Parser';
+import { Program2 } from '../../../Core/Lang/Parser/Program';
 import { Resolver } from '../../../Core/Lang/Resolver/Resolver';
+import { Token } from '../InstructionBlock/Token';
 
 export type ShellState = {
     instructions: Token[];

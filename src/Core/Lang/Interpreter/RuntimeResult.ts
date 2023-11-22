@@ -1,4 +1,4 @@
-import { RuntimeError } from './Interpreter2';
+import { RuntimeError } from './Interpreter';
 
 export type RuntimeResult =
     | { type: 'value'; value: any; }

@@ -1,5 +1,5 @@
 import { AssignmentExpression, BinaryExpression, CallExpression, GroupingExpression, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from './Expression';
-import { IProgramVisitor, Program2 } from './Program2';
+import { IProgramVisitor, Program2 } from './Program';
 import { BlockStatement, ExpressionStatement, FunctionStatement, IfStatement, ReturnStatement, VarStatement, WhileStatement } from './Statement';
 
 export class Printer implements IProgramVisitor<string> {

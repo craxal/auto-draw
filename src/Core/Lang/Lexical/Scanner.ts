@@ -2,11 +2,11 @@ import { Angle } from '../Types/Angle';
 import { Color } from '../Types/Color';
 import { Integer } from '../Types/Integer';
 import { Value } from '../Types/Value';
-import { Token2, TokenType2 } from './Token2';
+import { Token, TokenType } from './Token';
 
 type ScannerError = { line: number, message: string; };
 
-const keywords = new Map<String, TokenType2>([
+const keywords = new Map<String, TokenType>([
     ['and', 'AND'],
     ['else', 'ELSE'],
     ['false', 'FALSE'],
@@ -33,7 +33,7 @@ const colors = new Map<string, Color>([
 
 export class Scanner {
     #source: string;
-    #tokens: Token2[] = [];
+    #tokens: Token[] = [];
     #start: number = 0;
     #current: number = 0;
     #line: number = 1;
@@ -44,14 +44,14 @@ export class Scanner {
         this.#source = source;
     }
 
-    public scan(): Token2[] {
+    public scan(): Token[] {
         while (!this.#end()) {
             // We are at the beginning of the next lexeme.
             this.#start = this.#current;
             this.#scanToken();
         }
 
-        this.#tokens.push(new Token2('EOF', '', undefined, this.#line, this.#char));
+        this.#tokens.push(new Token('EOF', '', undefined, this.#line, this.#char));
 
         return this.#tokens;
     }
@@ -135,9 +135,9 @@ export class Scanner {
         return true;
     }
 
-    #addToken(type: TokenType2, literal?: Value): void {
+    #addToken(type: TokenType, literal?: Value): void {
         const text = this.#source.substring(this.#start, this.#current);
-        this.#tokens.push(new Token2(type, text, literal, this.#line, this.#char));
+        this.#tokens.push(new Token(type, text, literal, this.#line, this.#char));
     }
 
     #addColorToken(): void {

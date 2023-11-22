@@ -1,7 +1,7 @@
 import { Dispatch, useReducer } from 'react';
-import { Token } from '../../../Core/Lang/Lexical/Token';
-import { Program2 } from '../../../Core/Lang/Parser2/Program2';
+import { Program2 } from '../../../Core/Lang/Parser/Program';
 import { openFile, saveAsFile, saveFile } from '../../AppWindow';
+import { Token } from '../InstructionBlock/Token';
 import { ShellAction, ShellState, getShellStateReducer } from './ShellState';
 
 class ShellContext {

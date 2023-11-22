@@ -1,4 +1,4 @@
-import { Token2 } from '../Lexical/Token2';
+import { Token } from '../Lexical/Token';
 
 export abstract class Expression {
     public abstract accept<T>(visitor: IExpressionVisitor<T>): T;
@@ -17,7 +17,7 @@ export interface IExpressionVisitor<T> {
 
 export class AssignmentExpression extends Expression {
     constructor(
-        public readonly name: Token2,
+        public readonly name: Token,
         public readonly value: Expression
     ) {
         super();
@@ -31,7 +31,7 @@ export class AssignmentExpression extends Expression {
 export class BinaryExpression extends Expression {
     constructor(
         public readonly left: Expression,
-        public readonly operator: Token2,
+        public readonly operator: Token,
         public readonly right: Expression
     ) {
         super();
@@ -45,7 +45,7 @@ export class BinaryExpression extends Expression {
 export class CallExpression extends Expression {
     constructor(
         public readonly callee: Expression,
-        public readonly paren: Token2,
+        public readonly paren: Token,
         public readonly args: Expression[]
     ) {
         super();
@@ -83,7 +83,7 @@ export class LiteralExpression extends Expression {
 export class LogicalExpression extends Expression {
     constructor(
         public readonly left: Expression,
-        public readonly operator: Token2,
+        public readonly operator: Token,
         public readonly right: Expression
     ) {
         super();
@@ -96,7 +96,7 @@ export class LogicalExpression extends Expression {
 
 export class UnaryExpression extends Expression {
     constructor(
-        public readonly operator: Token2,
+        public readonly operator: Token,
         public readonly right: Expression,
     ) {
         super();
@@ -109,7 +109,7 @@ export class UnaryExpression extends Expression {
 
 export class VariableExpression extends Expression {
     constructor(
-        public readonly name: Token2
+        public readonly name: Token
     ) {
         super();
     }

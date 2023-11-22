@@ -1,8 +1,5 @@
-import { Interpreter } from '../Lang/Interpreter/Interpreter';
-import { Instruction } from '../Lang/Parser/Instruction';
 import { Angle } from '../Lang/Types/Angle';
 import { Color } from '../Lang/Types/Color';
-import { Log } from '../Util/Log';
 import { Pen } from './Pen';
 import { Point } from './Point';
 
@@ -115,15 +112,6 @@ export class DrawContext {
             center.y + radius * angleMinusPenAnglePlusRight.sin(),
         );
         this.pen.angle = Angle.reduce(Angle.add(this.pen.angle, angle));
-    }
-
-    public execute(instructions: Instruction[]): void {
-        const interpreter = new Interpreter(this);
-        for (const instruction of instructions) {
-            instruction.accept(interpreter);
-            Log.debug(`${instruction}: ${this.pen.toString()}`);
-        }
-        this.drawCursor();
     }
 
     public drawCursor(): void {

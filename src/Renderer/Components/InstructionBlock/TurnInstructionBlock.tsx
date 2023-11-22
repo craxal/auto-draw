@@ -1,6 +1,6 @@
-import { Token, TurnLeftToken, TurnRightToken } from '../../../Core/Lang/Lexical/Token';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
+import { Token, TurnLeftToken, TurnRightToken } from './Token';
 
 export function TurnInstructionBlock(props: {
     instruction: TurnLeftToken | TurnRightToken;

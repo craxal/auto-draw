@@ -1,5 +1,5 @@
-import { Token } from '../../../Core/Lang/Lexical/Token';
 import { openContextMenu } from '../../AppWindow';
+import { Token } from './Token';
 
 export async function openInstructionContextMenu(onClick: (instruction: Token) => void): Promise<void> {
     await openContextMenu({

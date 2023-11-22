@@ -1,6 +1,6 @@
-import { PenDownToken, PenUpToken, Token } from '../../../Core/Lang/Lexical/Token';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
+import { PenDownToken, PenUpToken, Token } from './Token';
 
 export function PenPositionBlock(props: {
     instruction: PenDownToken | PenUpToken;

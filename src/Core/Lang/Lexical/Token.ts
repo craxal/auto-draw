@@ -1,27 +1,68 @@
-export type ArcLeftToken = { type: 'arcLeft'; line: number; angle: number; radius: number; };
-export type ArcRightToken = { type: 'arcRight'; line: number; angle: number; radius: number; };
-export type CallFunctionToken = { type: 'callFunction'; line: number; name: string; };
-export type DefineFunctionToken = { type: 'defineFunction'; line: number; name: string; };
-export type EndFunctionToken = { type: 'endFunction'; line: number; name: string; };
-export type EndProgramToken = { type: 'endProgram'; line: number; };
-export type MoveForwardToken = { type: 'moveForward'; line: number; distance: number; };
-export type PenColorToken = { type: 'penColor'; line: number; color: string; };
-export type PenDownToken = { type: 'penDown'; line: number; };
-export type PenUpToken = { type: 'penUp'; line: number; };
-export type TurnLeftToken = { type: 'turnLeft'; line: number; angle: number };
-export type TurnRightToken = { type: 'turnRight'; line: number; angle: number; };
+import { Value } from "../Types/Value";
 
-export type Token =
-    | ArcLeftToken
-    | ArcRightToken
-    | CallFunctionToken
-    | DefineFunctionToken
-    | EndFunctionToken
-    | EndProgramToken
-    | MoveForwardToken
-    | PenColorToken
-    | PenDownToken
-    | PenUpToken
-    | TurnLeftToken
-    | TurnRightToken
+export type TokenType =
+    | 'LEFT_PAREN'
+    | 'RIGHT_PAREN'
+    | 'LEFT_BRACE'
+    | 'RIGHT_BRACE'
+    | 'COMMA'
+    | 'MINUS'
+    | 'PLUS'
+    | 'SEMICOLON'
+    | 'SLASH'
+    | 'STAR'
+
+    // One or two character tokens
+    | 'ARROW'
+    | 'BANG'
+    | 'BANG_EQUAL'
+    | 'EQUAL'
+    | 'EQUAL_EQUAL'
+    | 'GREATER'
+    | 'GREATER_EQUAL'
+    | 'LESS'
+    | 'LESS_EQUAL'
+    | 'MOD'
+
+    // Literals
+    | 'ANGLE'
+    | 'BLACK'
+    | 'BLUE'
+    | 'COLOR'
+    | 'GREEN'
+    | 'IDENTIFIER'
+    | 'NUMBER'
+    | 'ORANGE'
+    | 'RED'
+    | 'VIOLET'
+    | 'WHITE'
+    | 'YELLOW'
+
+    // Keywords
+    | 'AND'
+    | 'ELSE'
+    | 'FALSE'
+    | 'FUNC'
+    | 'IF'
+    | 'LET'
+    | 'OR'
+    | 'RETURN'
+    | 'TRUE'
+    | 'VAR'
+    | 'WHILE'
+    | 'EOF'
     ;
+
+export class Token {
+    constructor(
+        public readonly type: TokenType,
+        public readonly lexeme: string,
+        public readonly literal: Value | undefined,
+        public readonly line: number,
+        public readonly char: number,
+    ) { }
+
+    public toString(): string {
+        return `${this.type}:${this.line}:${this.char} '${this.lexeme}'${this.literal ? ` ${this.literal}` : ''}`;
+    }
+}

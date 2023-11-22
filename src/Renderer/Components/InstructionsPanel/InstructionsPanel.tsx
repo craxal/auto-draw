@@ -1,7 +1,7 @@
 import { DragEvent, useState } from 'react';
-import { Token } from '../../../Core/Lang/Lexical/Token';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
+import { Token } from '../InstructionBlock/Token';
 import { InstructionRow } from '../InstructionRow/InstructionRow';
 
 export function InstructionsPanel(props: {

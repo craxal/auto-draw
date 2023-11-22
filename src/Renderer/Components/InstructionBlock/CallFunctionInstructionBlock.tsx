@@ -1,6 +1,6 @@
-import { CallFunctionToken, Token } from '../../../Core/Lang/Lexical/Token';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
+import { CallFunctionToken, Token } from './Token';
 
 export function CallFunctionInstructionBlock(props: {
     instruction: CallFunctionToken;

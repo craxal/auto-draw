@@ -1,9 +1,9 @@
 import { DrawContext } from '../../../Core/Graphics/DrawContext';
-import { Interpreter2 } from '../../../Core/Lang/Interpreter2/Interpreter2';
-import { Token } from '../../../Core/Lang/Lexical/Token';
+import { Interpreter2 } from '../../../Core/Lang/Interpreter/Interpreter';
 import { Canvas } from '../Canvas/Canvas';
 import { CodePanel } from '../CodePanel/CodePanel';
 import { Expander } from '../Expander/Expander';
+import { Token } from '../InstructionBlock/Token';
 import { useShellContext } from './ShellContext';
 
 export function Shell(props: {

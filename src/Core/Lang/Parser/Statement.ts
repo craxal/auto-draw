@@ -1,4 +1,4 @@
-import { Token2 } from '../Lexical/Token2';
+import { Token } from '../Lexical/Token';
 import { Expression } from './Expression';
 
 export interface IStatementVisitor<T> {
@@ -41,8 +41,8 @@ export class ExpressionStatement extends Statement {
 
 export class FunctionStatement extends Statement {
     constructor(
-        public readonly name: Token2,
-        public readonly parameters: Token2[],
+        public readonly name: Token,
+        public readonly parameters: Token[],
         public readonly body: BlockStatement
     ) {
         super();
@@ -69,7 +69,7 @@ export class IfStatement extends Statement {
 
 export class ReturnStatement extends Statement {
     constructor(
-        public readonly keyword: Token2,
+        public readonly keyword: Token,
         public readonly expression?: Expression,
     ) {
         super();
@@ -82,7 +82,7 @@ export class ReturnStatement extends Statement {
 
 export class VarStatement extends Statement {
     constructor(
-        public readonly name: Token2,
+        public readonly name: Token,
         public readonly initializer: Expression
     ) {
         super();

@@ -1,7 +1,7 @@
 import { DragEvent } from 'react';
-import { Token } from '../../../Core/Lang/Lexical/Token';
 import { match } from '../../../Core/Util/Match';
 import { InstructionBlock } from '../InstructionBlock/InstructionBlock';
+import { Token } from '../InstructionBlock/Token';
 
 export function InstructionRow(props: {
     index: number;
@@ -46,5 +46,5 @@ export function InstructionRow(props: {
                 />
             </div>
         </div>
-    )
+    );
 }

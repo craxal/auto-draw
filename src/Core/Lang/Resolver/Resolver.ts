@@ -1,10 +1,10 @@
 import { Result } from "../../Util/Result";
-import { Interpreter2 } from "../Interpreter2/Interpreter2";
-import { Token2 } from "../Lexical/Token2";
-import { AssignmentExpression, BinaryExpression, CallExpression, Expression, GroupingExpression, IExpressionVisitor, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from "../Parser2/Expression";
-import { ParseError } from "../Parser2/Parser2";
-import { Program2 } from "../Parser2/Program2";
-import { BlockStatement, ExpressionStatement, FunctionStatement, IStatementVisitor, IfStatement, ReturnStatement, Statement, VarStatement, WhileStatement } from "../Parser2/Statement";
+import { Interpreter2 } from "../Interpreter/Interpreter";
+import { Token } from "../Lexical/Token";
+import { AssignmentExpression, BinaryExpression, CallExpression, Expression, GroupingExpression, IExpressionVisitor, LiteralExpression, LogicalExpression, UnaryExpression, VariableExpression } from "../Parser/Expression";
+import { ParseError } from "../Parser/Parser";
+import { Program2 } from "../Parser/Program";
+import { BlockStatement, ExpressionStatement, FunctionStatement, IStatementVisitor, IfStatement, ReturnStatement, Statement, VarStatement, WhileStatement } from "../Parser/Statement";
 
 type FunctionType = 'none' | 'function';
 
@@ -127,7 +127,7 @@ export class Resolver implements IExpressionVisitor<void>, IStatementVisitor<voi
         expression.accept(this);
     }
 
-    #resolveLocal(expression: Expression, name: Token2): void {
+    #resolveLocal(expression: Expression, name: Token): void {
         let depth = 0;
         for (const scope of this.#scopes) {
             if (scope.has(name.lexeme)) {
@@ -161,7 +161,7 @@ export class Resolver implements IExpressionVisitor<void>, IStatementVisitor<voi
         this.#scopes.shift();
     };
 
-    #declare(name: Token2): void {
+    #declare(name: Token): void {
         if (this.#scopes.at(0)?.has(name.lexeme)) {
             this.#errors.push({ token: name, message: "Cannot redeclare a variable in the same scope." });
         }
@@ -169,7 +169,7 @@ export class Resolver implements IExpressionVisitor<void>, IStatementVisitor<voi
         this.#scopes.at(0)?.set(name.lexeme, false);
     };
 
-    #define(name: Token2): void {
+    #define(name: Token): void {
         this.#scopes.at(0)?.set(name.lexeme, true);
     }
 }

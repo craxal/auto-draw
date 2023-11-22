@@ -1,6 +1,6 @@
-import { MoveForwardToken, Token } from '../../../Core/Lang/Lexical/Token';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
+import { MoveForwardToken, Token } from './Token';
 
 export function MoveForwardInstructionBlock(props: {
     instruction: MoveForwardToken;

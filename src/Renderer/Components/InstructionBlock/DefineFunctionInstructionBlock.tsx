@@ -1,6 +1,6 @@
-import { DefineFunctionToken, Token } from '../../../Core/Lang/Lexical/Token';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
+import { DefineFunctionToken, Token } from './Token';
 
 export function DefineFunctionInstructionBlock(props: {
     instruction: DefineFunctionToken;

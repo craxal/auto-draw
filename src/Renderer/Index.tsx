@@ -1,6 +1,6 @@
 import type * as monaco from 'monaco-editor';
 import * as ReactDOM from 'react-dom/client';
-import { Token } from '../Core/Lang/Lexical/Token';
+import { Token } from './Components/InstructionBlock/Token';
 import { Shell } from './Components/Shell/Shell';
 
 const path = require('path');

@@ -1,11 +1,16 @@
-import { Instruction } from './Instruction';
+import { IExpressionVisitor } from './Expression';
+import { IStatementVisitor, Statement } from './Statement';
 
-export class Program {
-    #instructions: Instruction[];
+export interface IProgramVisitor<T, TStmt = T, TExpr = T> extends IStatementVisitor<TStmt>, IExpressionVisitor<TExpr> {
+    visitProgram(program: Program2): T;
+}
 
-    constructor(instructions: Instruction[]) {
-        this.#instructions = instructions;
+export class Program2 {
+    constructor(
+        public statements: Statement[]
+    ) { }
+
+    public accept<T>(visitor: IProgramVisitor<T>): T {
+        return visitor.visitProgram(this);
     }
-
-    public get instructions(): Instruction[] { return this.#instructions; }
 }

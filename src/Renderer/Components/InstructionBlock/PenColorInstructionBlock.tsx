@@ -1,6 +1,6 @@
-import { PenColorToken, Token } from '../../../Core/Lang/Lexical/Token';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
+import { PenColorToken, Token } from './Token';
 
 export function PenColorInstructionBlock(props: {
     instruction: PenColorToken;

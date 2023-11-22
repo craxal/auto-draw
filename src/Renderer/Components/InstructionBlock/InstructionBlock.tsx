@@ -1,5 +1,4 @@
 import { DragEvent } from 'react';
-import { ArcLeftToken, ArcRightToken, CallFunctionToken, DefineFunctionToken, MoveForwardToken, PenColorToken, PenDownToken, PenUpToken, Token, TurnLeftToken, TurnRightToken } from '../../../Core/Lang/Lexical/Token';
 import { match } from '../../../Core/Util/Match';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
@@ -9,6 +8,7 @@ import { DefineFunctionInstructionBlock } from './DefineFunctionInstructionBlock
 import { MoveForwardInstructionBlock } from './MoveForwardInstructionBlock';
 import { PenColorInstructionBlock } from './PenColorInstructionBlock';
 import { PenPositionBlock } from './PenPositionBlock';
+import { ArcLeftToken, ArcRightToken, CallFunctionToken, DefineFunctionToken, MoveForwardToken, PenColorToken, PenDownToken, PenUpToken, Token, TurnLeftToken, TurnRightToken } from './Token';
 import { TurnInstructionBlock } from './TurnInstructionBlock';
 
 export function InstructionBlock(props: {

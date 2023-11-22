@@ -1,6 +1,6 @@
-import { ArcLeftToken, ArcRightToken, Token } from '../../../Core/Lang/Lexical/Token';
 import { Icon } from '../Icon/Icon';
 import { openInstructionContextMenu } from './InstructionBlockMenu';
+import { ArcLeftToken, ArcRightToken, Token } from './Token';
 
 export function ArcInstructionBlock(props: {
     instruction: ArcLeftToken | ArcRightToken;

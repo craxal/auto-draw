@@ -147,8 +147,8 @@ export class Resolver implements IExpressionVisitor<void>, IStatementVisitor<voi
             this.#declare(param);
             this.#define(param);
         }
-        this.#resolveStatement(fn.body);
         this.#endScope();
+        this.#resolveStatement(fn.body);
 
         this.#currentFunction = enclosingFunction;
     }
